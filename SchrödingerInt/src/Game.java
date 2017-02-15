@@ -12,7 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class Game extends JPanel{
-	
+	int rest = 0;
 	int xsize = 1200;
 	int ysize = 700;
 	int width = 1920;
@@ -66,7 +66,7 @@ public class Game extends JPanel{
 	
 	// sets the plot range so that all data points are in the plot
 	public void MaxandMin(double[][] mea){
-		for(int i = 0; i < mea.length; i++){
+		for(int i = 0; i < mea.length && i < rest; i++){
 			if(!init){
 				init = true;
 				xmin = mea[i][0];
@@ -89,11 +89,12 @@ public class Game extends JPanel{
 		}
 		double px =(xsize/Math.abs(xmax - xmin));
 		double py =(ysize/Math.abs(ymax - ymin));
-		xmin = xmin - recsize/px;
-		xmax = xmax + recsize/px;
-		ymin = ymin - recsize/py;
-		ymax = ymax + recsize/py;
-		
+		if(drawpoints){
+			xmin = xmin - recsize/px;
+			xmax = xmax + recsize/px;
+			ymin = ymin - recsize/py;
+			ymax = ymax + recsize/py;
+		}
 	}
 	
 	//creates a random color
@@ -198,12 +199,15 @@ public class Game extends JPanel{
 		double px =(xsize/Math.abs(xmax - xmin));
 		double py =(ysize/Math.abs(ymax - ymin));
 		g.setColor(colorList[s]);
-		for(int i = 0; i < mea.length; i++){
+		MaxandMin(mea);
+		for(int i = 0; i < mea.length && i < rest; i++){
+			// wertebereich anpassen
 			if(mea[i][1]==mea[i][1]){//Nan.check
 				if(drawpoints){
 					int xr = (int)(width/2 -xsize/2 + mea[i][0]*px-recsize/2 + (-xmin)*px);
 					int yr = (int)(height/2+ysize/2-mea[i][1]*py+(ymin)*py+recsize/2);
 					g.fill3DRect(xr,yr, recsize, recsize,true);
+					//fehlerbalken
 					int xl1 = (int) (width/2 - xsize/2 + mea[i][0]*px + (-xmin)*px);
 					int yl1 = (int)(height/2+ysize/2-mea[i][2]*py+(ymin)*py);
 					int xl2 = (int)(width/2 -xsize/2 + mea[i][0]*px + (-xmin)*px);
@@ -216,11 +220,12 @@ public class Game extends JPanel{
 						int xl = (int)(width/2 -xsize/2 + mea[i-1][0]*px-recsize/2 + (-xmin)*px);
 						int yl = (int)(height/2+ysize/2-mea[i-1][1]*py+(ymin)*py+recsize/2);
 						g.drawLine(xl,yl,xr,yr);
-						int xl1 = (int) (width/2 - xsize/2 + mea[i][0]*px + (-xmin)*px);
+						//fehlerbalken
+						/*int xl1 = (int)(width/2 - xsize/2 + mea[i][0]*px + (-xmin)*px);
 						int yl1 = (int)(height/2+ysize/2-mea[i][2]*py+(ymin)*py);
 						int xl2 = (int)(width/2 -xsize/2 + mea[i][0]*px + (-xmin)*px);
 						int yl2 = (int)(height/2+ysize/2-mea[i][3]*py+(ymin)*py);
-						g.drawLine(xl1,yl1,xl2,yl2);
+						g.drawLine(xl1,yl1,xl2,yl2);*/
 					}
 				}
 			}
@@ -357,10 +362,10 @@ public class Game extends JPanel{
 		for(int i = 0; i < colorList.length; i++){
 			colorList[i] = randomColor();
 		}
-		
 		while(true){
+			rest += 5;
 			this.repaint();
-			Thread.sleep(10000); // sleeping time
+			Thread.sleep(100); // sleeping time
 		}
 	}
 }
