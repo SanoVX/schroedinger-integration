@@ -128,7 +128,8 @@ public class Game extends JPanel{
 			g.drawLine(x1, y1, x2, y2);
 			
 		}
-		for(double i = ymin; i<= ymax ; i+=Math.abs((ymax-ymin)/((double)10))){
+		//problem here
+		/*for(double i = ymin; i<= ymax ; i+=Math.abs((ymax-ymin)/((double)10))){
 			double k = ((double)py)*i;
 			String str = KsDigit(Math.pow(10,i), 3);
 			int x = width/2 -xsize/2 - g.getFontMetrics().stringWidth(str) - 5;
@@ -139,7 +140,8 @@ public class Game extends JPanel{
 			int x2 = width/2 -xsize/2 - 5;
 			int y2 = (int)(height/2+ysize/2-k+ymin*py);
 			g.drawLine(x1, y1, x2, y2);
-		}
+		}*/
+
 		//legend
 		if(legend != null){
 		for(int i = 0; i < legend.length; i++){
@@ -196,10 +198,10 @@ public class Game extends JPanel{
 	
 	// draws datapoints of the given list
 	public void drawMeasure(double[][] mea, boolean errorbars , Graphics2D g, int s){ // creates measured points
+		MaxandMin(mea);
 		double px =(xsize/Math.abs(xmax - xmin));
 		double py =(ysize/Math.abs(ymax - ymin));
 		g.setColor(colorList[s]);
-		MaxandMin(mea);
 		for(int i = 0; i < mea.length && i < rest; i++){
 			// wertebereich anpassen
 			if(mea[i][1]==mea[i][1]){//Nan.check
@@ -215,11 +217,12 @@ public class Game extends JPanel{
 					g.drawLine(xl1,yl1,xl2,yl2);
 				}else{
 					if(i != 0){
-						int xr = (int)(width/2 -xsize/2 + mea[i][0]*px-recsize/2 + (-xmin)*px);
-						int yr = (int)(height/2+ysize/2-mea[i][1]*py+(ymin)*py+recsize/2);
-						int xl = (int)(width/2 -xsize/2 + mea[i-1][0]*px-recsize/2 + (-xmin)*px);
-						int yl = (int)(height/2+ysize/2-mea[i-1][1]*py+(ymin)*py+recsize/2);
+						int xr = (int)(width/2 -xsize/2 + mea[i][0]*px + (-xmin)*px);
+						int yr = (int)(height/2+ysize/2-mea[i][1]*py+(ymin)*py);
+						int xl = (int)(width/2 -xsize/2 + mea[i-1][0]*px + (-xmin)*px);
+						int yl = (int)(height/2+ysize/2-mea[i-1][1]*py+(ymin)*py);
 						g.drawLine(xl,yl,xr,yr);
+
 						//fehlerbalken
 						/*int xl1 = (int)(width/2 - xsize/2 + mea[i][0]*px + (-xmin)*px);
 						int yl1 = (int)(height/2+ysize/2-mea[i][2]*py+(ymin)*py);
@@ -235,6 +238,7 @@ public class Game extends JPanel{
 	
 	// draws all funktions of the given list
 	public void drawFunktions(ArrayList<Funktion> funktions2,Graphics2D g){
+
 		if(funktions2 != null){
 			double py =(ysize/Math.abs(ymax - ymin));
 			for(int i = 0; i < funktions2.size(); i++){
@@ -341,10 +345,13 @@ public class Game extends JPanel{
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		for(int i = 0; i < measure.size(); i++){
-			
+
 			drawMeasure(measure.get(i), true,g2d,i);
+
 		}
+
 		drawKs(g2d);
+
 		drawFunktions(funktions, g2d);
 		
 		}
@@ -363,6 +370,7 @@ public class Game extends JPanel{
 			colorList[i] = randomColor();
 		}
 		while(true){
+
 			rest += 5;
 			this.repaint();
 			Thread.sleep(100); // sleeping time
