@@ -17,10 +17,10 @@ public class SchroedingerIntegration {
 		step = xrange/10000;
 		//Anfangsbedingungen
 		ArrayList<Double> Sx = new ArrayList<>(); // Liste mit x,y koordinaten der punkte 
-		Sx.add(-step/2); Sx.add((1-ti(-1))*1.0); // initialisiere ersten Punkt auf 0/0
+		Sx.add(-step/2); Sx.add(-(1-ti(-1))*step); // initialisiere ersten Punkt auf 0/0
 		f.add(Sx);				// f�gt punkt in liste f hinzu
 		Sx = new ArrayList<>();
-		Sx.add(step/2); Sx.add((1-ti(1))*1.0); // initialisiere zweiten punkt auf step/step
+		Sx.add(step/2); Sx.add((1-ti(1))*step); // initialisiere zweiten punkt auf step/step
 		f.add(Sx);
 
 		for(int s = 0; s < (int)(xrange/step); s++){
@@ -32,7 +32,6 @@ public class SchroedingerIntegration {
 				//double y = (2+10*ti(i))/(1-ti(i))-1/Ri(i-1); // berechnet y kooordinate des n�chsten Punktes mit der Rekursionsformel
 				Sx.add(x);
 				Sx.add(y);
-				System.out.println(x + " " + y);
 				f.add(Sx);
 			}
 

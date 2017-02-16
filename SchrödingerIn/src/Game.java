@@ -371,7 +371,7 @@ public class Game extends JPanel{
 		}
 		while(true){
 
-			rest += 5;
+			rest += 100;
 			this.repaint();
 			Thread.sleep(100); // sleeping time
 		}
