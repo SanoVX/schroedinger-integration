@@ -64,8 +64,6 @@ public class SchroedingerIntegration {
 			recursion(g);
 			g.addMeasures(f); // f�gt f zu den plottbaren funktionen hinzu
 			f.clear();
-
-			step = step/((double)10);
 		}
 		g.plot();
 		
