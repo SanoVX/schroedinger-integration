@@ -328,7 +328,7 @@ public class Game extends JPanel{
 			}
 		}
 		return p;
-	}
+	}//
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);

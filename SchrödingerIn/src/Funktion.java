@@ -3,7 +3,7 @@
 public class Funktion {
 	int xPixel;
 	int yPixel; //pixel for one step
-	double xmin;
+	double xmin;//
 	double xmax; //
 	double ymin = 0;
 	double ymax = 0;
