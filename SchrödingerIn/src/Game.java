@@ -19,6 +19,7 @@ public class Game extends JPanel{
 	int height = 1080;
 	ArrayList<Funktion> funktions = new ArrayList<>();
 	ArrayList<double[][]> measure = new ArrayList<>();
+	ArrayList<Double> energy = new ArrayList<>();
 	double xmin = 0;
 	double xmax = 0;
 	double ymin = 0;
@@ -39,18 +40,13 @@ public class Game extends JPanel{
 	Color[] colorList;
 	
 	// method to linear fit datas
-	public void addFunktions(boolean fit){
-		if(fit){
-			funktions = new ArrayList<>();
-			for(int i = 0; i < measure.size(); i++){
-				double[] para = linearFit.parameters(measure.get(i));
-				Funktion f = new Funktion(this,0, para[0], para[1],false);
-				funktions.add(f);
-			}
-		}
-			
+	public void addEnergy(double e){
+		energy.add(e);
+		Funktion f = new Funktion(this,0,e,false);
+		funktions.add(f);
 		
 	}
+				
 	
 	// adds data to a global data list
 	public void addMeasures(ArrayList<ArrayList<Double>> mea){
@@ -66,7 +62,7 @@ public class Game extends JPanel{
 	
 	// sets the plot range so that all data points are in the plot
 	public void MaxandMin(double[][] mea){
-		for(int i = 0; i < mea.length && i < rest; i++){
+		for(int i = 0; i < mea.length /*&& i < rest*/; i++){
 			if(!init){
 				init = true;
 				xmin = mea[i][0];
@@ -128,19 +124,21 @@ public class Game extends JPanel{
 			g.drawLine(x1, y1, x2, y2);
 			
 		}
-		//problem here
-		/*for(double i = ymin; i<= ymax ; i+=Math.abs((ymax-ymin)/((double)10))){
-			double k = ((double)py)*i;
-			String str = KsDigit(Math.pow(10,i), 3);
-			int x = width/2 -xsize/2 - g.getFontMetrics().stringWidth(str) - 5;
-			int y = (int)(height/2+ysize/2-k+g.getFontMetrics().getHeight()/4.0+ymin*py);
-			g.drawString(str, x, y);
-			int x1 = width/2 -xsize/2 + 5;
-			int y1 = (int)(height/2+ysize/2-k+ymin*py);
-			int x2 = width/2 -xsize/2 - 5;
-			int y2 = (int)(height/2+ysize/2-k+ymin*py);
-			g.drawLine(x1, y1, x2, y2);
-		}*/
+		//y axis
+		if(energy.size()>0){
+			for(int i = 0; i< energy.size() ; i+=1){
+				double k = ((double)py)*(energy.get(i));
+				String str = KsDigit(energy.get(i), 2);
+				int x = width/2 -xsize/2 - g.getFontMetrics().stringWidth(str) - 5;
+				int y = (int)(height/2+ysize/2-k+g.getFontMetrics().getHeight()/4.0+ymin*py);
+				g.drawString(str, x, y);
+				int x1 = width/2 -xsize/2 + 5;
+				int y1 = (int)(height/2+ysize/2-k+ymin*py);
+				int x2 = width/2 -xsize/2 - 5;
+				int y2 = (int)(height/2+ysize/2-k+ymin*py);
+				g.drawLine(x1, y1, x2, y2);
+			}
+		}
 
 		//legend
 		if(legend != null){
@@ -223,12 +221,6 @@ public class Game extends JPanel{
 						int yl = (int)(height/2+ysize/2-mea[i-1][1]*py+(ymin)*py);
 						g.drawLine(xl,yl,xr,yr);
 
-						//fehlerbalken
-						/*int xl1 = (int)(width/2 - xsize/2 + mea[i][0]*px + (-xmin)*px);
-						int yl1 = (int)(height/2+ysize/2-mea[i][2]*py+(ymin)*py);
-						int xl2 = (int)(width/2 -xsize/2 + mea[i][0]*px + (-xmin)*px);
-						int yl2 = (int)(height/2+ysize/2-mea[i][3]*py+(ymin)*py);
-						g.drawLine(xl1,yl1,xl2,yl2);*/
 					}
 				}
 			}
@@ -242,19 +234,17 @@ public class Game extends JPanel{
 		if(funktions2 != null){
 			double py =(ysize/Math.abs(ymax - ymin));
 			for(int i = 0; i < funktions2.size(); i++){
-				g.setColor(colorList[i]);
+				g.setColor(Color.BLACK);
 				if(funktions2.get(i) != null){
+					funktions2.get(i).refresh(this);
 					for(int j = 0; j+1 < funktions2.get(i).plot.length; j++){
 						double d1 = funktions2.get(i).plot[j];
 						double d2 = funktions2.get(i).plot[j+1];
-						//if(d1 == d1 && d2 == d2){//Nan check
-							int x1= width/2 -xsize/2 + j;
-							int y1 = (int)(height/2 + ysize/2 +((ymin)*py) -(d1*py));//fix +2 stuff
-							int x2 = width/2 -xsize/2 + j+1;
-							int y2 = (int)(height/2 + ysize/2 +((ymin)*py) -(d2*py));
-							g.drawLine(x1,y1,x2,y2);
-							
-						//}	
+						int x1= width/2 -xsize/2 + j;
+						int y1 = (int)(height/2 + ysize/2 +((ymin)*py) -(d1*py));//fix +2 stuff
+						int x2 = width/2 -xsize/2 + j+1;
+						int y2 = (int)(height/2 + ysize/2 +((ymin)*py) -(d2*py));
+						g.drawLine(x1,y1,x2,y2);
 					}
 				}
 			}
@@ -364,7 +354,6 @@ public class Game extends JPanel{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setDoubleBuffered(false);
 
-		addFunktions(false);
 		colorList = new Color[measure.size()];
 		for(int i = 0; i < colorList.length; i++){
 			colorList[i] = randomColor();
