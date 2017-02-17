@@ -14,7 +14,6 @@ public class SchroedingerIntegration {
 	
 	
 	public static void recursion(Game g){
-		//xrange = -e/(4*pi*e0*E);
 		step = xrange/10000;
 		//Anfangsbedingungen
 		ArrayList<Double> Sx = new ArrayList<>(); // Liste mit x,y koordinaten der punkte 
