@@ -4,7 +4,7 @@ public class Funktion {
 	int xPixel;
 	int yPixel; //pixel for one step
 	double xmin;
-	double xmax;
+	double xmax; //
 	double ymin = 0;
 	double ymax = 0;
 	double[] plot;
