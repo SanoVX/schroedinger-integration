@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-//
+
 public class SchroedingerIntegration {
 
 	public static double h = 6.626070040*Math.pow(10, -34); // wirkungsquantum
