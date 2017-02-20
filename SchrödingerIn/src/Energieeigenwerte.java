@@ -45,8 +45,17 @@ public class Energieeigenwerte {
 				}
 			}
 			E_current -= Math.pow(10,-i)*e;
-			searched = true;
 		}
+		
+		int size = solution.size();
+		
+		for(int j=size-1;j>size-400 && j>0;j--){
+			solution.remove(j);
+		}
+		
+		normalizeMaximum(solution);
+		
+		searched = true;
 	}
 	
 	/*
@@ -64,16 +73,12 @@ public class Energieeigenwerte {
 		Sx.add(step); Sx.add(1.0); // initialisiere zweiten punkt auf step/step
 		temp.add(Sx);
 		
-		double max = 0;
 		for(int i = 1; i < (int)(xrange/step)+1; i++){
 
 			double x = temp.get(i).get(0) + step*i; // berechnet x koordinate des n�chsten punktes
 			Sx = new ArrayList<>();
 			double y = Qi(step*i,step)*temp.get(i).get(1)-temp.get(i-1).get(1);
-				
-			if(Math.abs(y) > max){
-					max = Math.abs(y);
-			}
+
 			Sx.add(x);
 			Sx.add(y);
 			temp.add(Sx);
@@ -87,14 +92,35 @@ public class Energieeigenwerte {
 				return -1;
 			}
 		}
-		for(int i = 0; i < temp.size(); i++){
-
-			//System.out.println("max" + " " + max + " " + temp.get(i).set(1,temp.get(i).get(1)));
-			temp.get(i).set(1, temp.get(i).get(1)/(max/4));
-			temp.get(i).set(1,temp.get(i).get(1) + E_current/e);
-		}
 		return 0;
 	}	
+	
+	private void normalizeIntegral(ArrayList<ArrayList<Double>> solution){
+		double integral = 0;
+		for(int i = 0; i<solution.size();i++){
+			integral+=solution.get(i).get(1)*xrange/10000;
+		}
+	
+		integral = integral/xrange;
+		
+		for(int i = 0; i < solution.size(); i++){
+			solution.get(i).set(1, solution.get(i).get(1)/(integral));
+			solution.get(i).set(1,solution.get(i).get(1) + E_current/e);
+		}
+	}
+	
+	private void normalizeMaximum(ArrayList<ArrayList<Double>> solution){
+		double max = 0;
+		for(int i = 0; i<solution.size();i++){
+			if(Math.abs(solution.get(i).get(1)) > max){
+				max = Math.abs(solution.get(i).get(1));
+			}
+		}
+		for(int i = 0; i < solution.size(); i++){
+			solution.get(i).set(1, solution.get(i).get(1)/(max));
+			solution.get(i).set(1,solution.get(i).get(1) + E_current/e);
+		}
+	}
 	
 	/*
 	 * Berechnung der Proportionalitaetskonstanten
