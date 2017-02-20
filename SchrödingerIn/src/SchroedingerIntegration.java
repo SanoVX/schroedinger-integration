@@ -24,7 +24,6 @@ public class SchroedingerIntegration {
 			g.addEnergy(E.getEnergy()/e);			
 			g.addMeasures(E.getSolution());
 		}
-		g.addMeasures(new Coulomb().getPlot(Math.pow(10,-8)));
 		g.plot();
 		
 	}
