@@ -16,7 +16,7 @@ public class SchroedingerIntegration {
 		g.growingrange = true;
 		g.plotThickness = 2;
 		g.calcTime = 5;
-		Energieeigenwerte E = new Energieeigenwerte(new Potential(), -16*e, -0.1*e);
+		Energieeigenwerte E = new Energieeigenwerte(new Coulomb(), -16*e, -0.1*e);
 		for(int i = 0; i<5;i++){
 			E.step();
 		
@@ -24,7 +24,7 @@ public class SchroedingerIntegration {
 			g.addEnergy(E.getEnergy()/e);			
 			g.addMeasures(E.getSolution());
 		}
-		
+		g.addMeasures(new Coulomb().getPlot(Math.pow(10,-8)));
 		g.plot();
 		
 	}

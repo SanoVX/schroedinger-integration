@@ -2,20 +2,24 @@ import java.util.ArrayList;
 
 
 public class Energieeigenwerte {
+	//Variablendefinition
 	private Potential potential;
 	private double E_current,E_max,E_min;
 	private int accuracy = 15;
 	private double xrange = Math.pow(10,-8);
 	private boolean searched;
 	
+	//Variable fuer die Loesungskurve
 	private ArrayList<ArrayList<Double>> solution = new ArrayList<>();
 	
-	public static double h = SchroedingerIntegration.h; // wirkungsquantum
-	public static double u = SchroedingerIntegration.u; //elementarmasse
-	public static double e = SchroedingerIntegration.e; //elementarladung
-	public static double pi = Math.PI; 
-	public static double e0 = SchroedingerIntegration.e0;
+	//Import der Konstanten
+	private double h = SchroedingerIntegration.h; // wirkungsquantum
+	private double u = SchroedingerIntegration.u; //elementarmasse
+	private double e = SchroedingerIntegration.e; //elementarladung
+	private double pi = Math.PI; 
+	private double e0 = SchroedingerIntegration.e0;
 	
+	//Konstruktor
 	public Energieeigenwerte(Potential potential, double E_min, double E_max){
 		this.potential = potential;
 		
@@ -26,6 +30,9 @@ public class Energieeigenwerte {
 		searched = false;
 	}
 	
+	/*
+	 * Fuehrt die Berechung des naechsten Energieeigenwerts aus
+	 */
 	public void step(){
 		searched = false;
 		E_current += 0.00001*e;
@@ -42,7 +49,9 @@ public class Energieeigenwerte {
 		}
 	}
 	
-	
+	/*
+	 * Integration fuer einen Energiewert
+	 */
 	private int recursion(){
 		ArrayList<ArrayList<Double>> temp = new ArrayList<>();
 		//xrange = -e/(4*pi*e0*E);
@@ -87,10 +96,18 @@ public class Energieeigenwerte {
 		return 0;
 	}	
 	
+	/*
+	 * Berechnung der Proportionalitaetskonstanten
+	 */
 	private double Qi(double x, double step){
 		return 2-step*step*8*pi*pi*u*(E_current-potential.getPotential(x))/(h*h);
 	}
 	
+	/*
+	 * Gibt Energiewert zurueck
+	 * return: Energiewert, falls bereits gesucht
+	 * 			-infinity falls noch nicht gesucht
+	 */
 	public double getEnergy(){
 		if(searched){
 			return E_current;
@@ -99,6 +116,11 @@ public class Energieeigenwerte {
 		}
 	}
 	
+	/*
+	 * Gibt Loesungskurve zurueck
+	 * return: Loesungskurve, falls bereits gesucht
+	 * 			null, falls noch nicht gesucht
+	 */
 	public ArrayList<ArrayList<Double>> getSolution(){
 		if(searched){
 			return solution;
@@ -107,6 +129,11 @@ public class Energieeigenwerte {
 		}
 	}
 	
+	/*
+	 * Einstellen des Genauigkeitswertes
+	 * @return: true, umgestellt
+	 * 			falls, Fehler beim Umstellen
+	 */
 	public boolean setAccuracy(int accuracy){
 		if(searched){
 			this.accuracy = accuracy;
