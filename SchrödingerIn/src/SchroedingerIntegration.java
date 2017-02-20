@@ -15,7 +15,9 @@ public class SchroedingerIntegration {
 		g.drawpoints = false; // Befehl sodass die Punkte des Plots miteinander verbunden werden
 		g.growingrange = true;
 		g.plotThickness = 2;
-		g.calcTime = 5;
+		g.calcTime = 100;
+		g.xlabel = "Abstand des Kerns in m";
+		g.ylabel = "Energie in eV";
 		Energieeigenwerte E = new Energieeigenwerte(new Coulomb(), -16*e, -0.1*e);
 		for(int i = 0; i<5;i++){
 			E.step();
