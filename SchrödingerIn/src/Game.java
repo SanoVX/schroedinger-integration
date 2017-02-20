@@ -37,7 +37,13 @@ public class Game extends JPanel{
 	public int legendFontSize = 20;
 	boolean init = false;
 	boolean drawpoints = true;
+	boolean growingrange = false;
 	Color[] colorList;
+	//time
+	int calcTime = 100;
+	
+	//plot
+	int plotThickness = 0;
 	
 	// method to linear fit datas
 	public void addEnergy(double e){
@@ -62,7 +68,11 @@ public class Game extends JPanel{
 	
 	// sets the plot range so that all data points are in the plot
 	public void MaxandMin(double[][] mea){
-		for(int i = 0; i < mea.length /*&& i < rest*/; i++){
+		int k = mea.length;
+		if(growingrange && rest < mea.length){
+			k = rest;
+		}
+		for(int i = 0; i < k /*&& i < rest*/; i++){
 			if(!init){
 				init = true;
 				xmin = mea[i][0];
@@ -215,11 +225,13 @@ public class Game extends JPanel{
 					g.drawLine(xl1,yl1,xl2,yl2);
 				}else{
 					if(i != 0){
-						int xr = (int)(width/2 -xsize/2 + mea[i][0]*px + (-xmin)*px);
-						int yr = (int)(height/2+ysize/2-mea[i][1]*py+(ymin)*py);
+						for(int j = -plotThickness; Math.abs(j) <= plotThickness; j++){
+						int xr = (int)(width/2 -xsize/2 + mea[i][0]*px + (-xmin)*px );
+						int yr = (int)(height/2+ysize/2-mea[i][1]*py+(ymin)*py +j);
 						int xl = (int)(width/2 -xsize/2 + mea[i-1][0]*px + (-xmin)*px);
-						int yl = (int)(height/2+ysize/2-mea[i-1][1]*py+(ymin)*py);
+						int yl = (int)(height/2+ysize/2-mea[i-1][1]*py+(ymin)*py+j);
 						g.drawLine(xl,yl,xr,yr);
+						}
 
 					}
 				}
@@ -334,6 +346,8 @@ public class Game extends JPanel{
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+		drawFunktions(funktions, g2d);
 		for(int i = 0; i < measure.size(); i++){
 
 			drawMeasure(measure.get(i), true,g2d,i);
@@ -342,7 +356,6 @@ public class Game extends JPanel{
 
 		drawKs(g2d);
 
-		drawFunktions(funktions, g2d);
 		
 		}
 	// method to plot whatever is inside the data and funktionlist
@@ -360,7 +373,7 @@ public class Game extends JPanel{
 		}
 		while(true){
 
-			rest += 100;
+			rest += this.calcTime;
 			this.repaint();
 			Thread.sleep(100); // sleeping time
 		}
