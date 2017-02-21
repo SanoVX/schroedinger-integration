@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-
+//
 public class Parser {
 	ArrayList<Double> numbers = new ArrayList<>();
 	
