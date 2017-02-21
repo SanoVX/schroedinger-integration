@@ -7,7 +7,7 @@ public abstract class Potential {
 	protected double e = SchroedingerIntegration.e; //elementarladung
 	protected double pi = Math.PI; 
 	protected double e0 = SchroedingerIntegration.e0;
-	
+		
 	
 	public Potential(){
 		

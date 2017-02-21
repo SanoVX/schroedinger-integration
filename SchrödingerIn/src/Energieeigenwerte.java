@@ -100,8 +100,6 @@ public class Energieeigenwerte {
 		for(int i = 0; i<solution.size();i++){
 			integral+=solution.get(i).get(1)*xrange/10000;
 		}
-	
-		integral = integral/xrange;
 		
 		for(int i = 0; i < solution.size(); i++){
 			solution.get(i).set(1, solution.get(i).get(1)/(integral));

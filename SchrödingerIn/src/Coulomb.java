@@ -13,10 +13,10 @@ public class Coulomb extends Potential {
 		ArrayList<Double> point = new ArrayList<>();
 		double step = xRange/1000;
 		
-		for(int i = 0; i<1000; i++){
+		for(int i = 10; i<1000; i++){
 			point.clear();
 			point.add(step*i);
-			point.add(getPotential(step*i));
+			point.add(getPotential(step*i)/e);
 			
 			ret.add(point);
 		}
