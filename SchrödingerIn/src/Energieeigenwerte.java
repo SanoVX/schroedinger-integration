@@ -49,11 +49,11 @@ public class Energieeigenwerte {
 		
 		int size = solution.size();
 		
-		for(int j=size-1;j>size-400 && j>0;j--){
+		for(int j=size-1;j>size-500 && j>0;j--){
 			solution.remove(j);
 		}
 		
-		normalizeMaximum(solution);
+		normalizeIntegral(solution);
 		
 		searched = true;
 	}
@@ -102,7 +102,7 @@ public class Energieeigenwerte {
 		}
 		
 		for(int i = 0; i < solution.size(); i++){
-			solution.get(i).set(1, solution.get(i).get(1)/(integral));
+			solution.get(i).set(1, solution.get(i).get(1)/(integral*7E9));
 			solution.get(i).set(1,solution.get(i).get(1) + E_current/e);
 		}
 	}
