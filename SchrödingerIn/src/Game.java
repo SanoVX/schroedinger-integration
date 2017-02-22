@@ -1,14 +1,10 @@
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -20,8 +16,8 @@ public class Game extends JPanel{
 	int width = (int) screenSize.getWidth();
 	int height = (int) screenSize.getHeight();
 	int rest = 0;
-	int xsize = 1200;
-	int ysize = 700;
+	int xsize = width/4*3;
+	int ysize = height/4*3;
 	//int width = 1920;
 	//int height = 1080;
 	ArrayList<Funktion> funktions = new ArrayList<>();
