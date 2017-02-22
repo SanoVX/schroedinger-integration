@@ -8,9 +8,12 @@ public class Energieeigenwerte {
 	private int accuracy = 15;
 	private double xrange = Math.pow(10,-8);
 	private boolean searched;
+	private boolean ungerade;
 	
 	//Variable fuer die Loesungskurve
 	private ArrayList<ArrayList<Double>> solution = new ArrayList<>();
+	
+	private ArrayList<ArrayList<ArrayList<ArrayList<Double>>>> loesungsschritte = new ArrayList<>();
 	
 	//Import der Konstanten
 	private double h = SchroedingerIntegration.h; // wirkungsquantum
@@ -27,6 +30,7 @@ public class Energieeigenwerte {
 		this.E_min = E_min;
 		this.E_current = E_min;
 		
+		ungerade = true;
 		searched = false;
 	}
 	
@@ -36,6 +40,9 @@ public class Energieeigenwerte {
 	public void step(){
 		searched = false;
 		E_current += 0.00001*e;
+		
+		ArrayList<ArrayList<ArrayList<Double>>> loesungsblock = new ArrayList<>();
+		
 		for(int i = 1; i< accuracy; i++){
 			int change_sign = (-1)*recursion();
 			while(recursion()!=change_sign){
@@ -43,7 +50,10 @@ public class Energieeigenwerte {
 				if(E_current>E_max){
 					break;
 				}
+				loesungsblock.add(solution);
 			}
+			loesungsschritte.add(loesungsblock);
+			loesungsblock.clear();
 			E_current -= Math.pow(10,-i)*e;
 		}
 		
@@ -67,11 +77,20 @@ public class Energieeigenwerte {
 		double step = xrange/10000;
 		//Anfangsbedingungen
 		ArrayList<Double> Sx = new ArrayList<>(); // Liste mit x,y koordinaten der punkte 
-		Sx.add(0.); Sx.add(0.); // initialisiere ersten Punkt auf 0/0
-		temp.add(Sx);				// f�gt punkt in liste f hinzu
-		Sx = new ArrayList<>();
-		Sx.add(step); Sx.add(1.0); // initialisiere zweiten punkt auf step/step
-		temp.add(Sx);
+		
+		if(ungerade){
+			Sx.add(0.); Sx.add(0.); // initialisiere ersten Punkt auf 0/0
+			temp.add(Sx);				// f�gt punkt in liste f hinzu
+			Sx = new ArrayList<>();
+			Sx.add(step); Sx.add(1.0); // initialisiere zweiten punkt auf step/step
+			temp.add(Sx);
+		}else{
+			Sx.add(0.); Sx.add(1.); // initialisiere ersten Punkt auf 0/0
+			temp.add(Sx);				// f�gt punkt in liste f hinzu
+			Sx = new ArrayList<>();
+			Sx.add(step); Sx.add(1.2); // initialisiere zweiten punkt auf step/step
+			temp.add(Sx);
+		}
 		
 		for(int i = 1; i < (int)(xrange/step)+1; i++){
 
@@ -167,6 +186,37 @@ public class Energieeigenwerte {
 		}
 	}
 	
+	/*
+	 * Wenn true uebergeben wird nach ungeraden funktionen gesucht ansonsten nach geraden
+	 */
+	public void setUngerade(boolean ungerade){
+		this.ungerade = ungerade;
+	}
 	
+	/*
+	 * Setzt die Energiewerte auf den Anfang zurueck, z.B. vor Beginn einer neuen suche
+	 * 
+	 */
+	public void reset(){
+		E_current = E_min;
+		searched = false;
+	}
+	
+	/*
+	 * Gibt alle Loesungsschritte aus
+	 * Format:
+	 * - 1. Iteration:  1.Kurve
+	 * 					2.Kruve
+	 * 					3.Kurve ...
+	 * - 2. Iteration: 	1.Kurve
+	 * 					2.Kurve ...
+	 */
+	public ArrayList<ArrayList<ArrayList<ArrayList<Double>>>> gibloesungsschritte(){
+		if(searched){
+			return loesungsschritte;
+		}else{
+			return null;
+		}
+	}
 	
 }
