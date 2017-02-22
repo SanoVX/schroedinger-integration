@@ -258,21 +258,23 @@ public class Game extends JPanel{
 	
 	// draws all funktions of the given list
 	public void drawFunktions(ArrayList<Funktion> funktions2,Graphics2D g){
-
 		if(funktions2 != null){
 			double py =(ysize/Math.abs(ymax - ymin));
 			for(int i = 0; i < funktions2.size(); i++){
 				g.setColor(Color.BLACK);
 				if(funktions2.get(i) != null){
 					funktions2.get(i).refresh(this);
-					for(int j = 0; j+1 < funktions2.get(i).plot.length; j++){
-						double d1 = funktions2.get(i).plot[j];
-						double d2 = funktions2.get(i).plot[j+1];
-						int x1= width/2 -xsize/2 + j;
-						int y1 = (int)(height/2 + ysize/2 +((ymin)*py) -(d1*py));//fix +2 stuff
-						int x2 = width/2 -xsize/2 + j+1;
-						int y2 = (int)(height/2 + ysize/2 +((ymin)*py) -(d2*py));
-						g.drawLine(x1,y1,x2,y2);
+					if(funktions2.get(i).plot != null){
+						for(int j = 0; j+1 < funktions2.get(i).plot.length; j++){
+							
+							double d1 = funktions2.get(i).plot[j];
+							double d2 = funktions2.get(i).plot[j+1];
+							int x1= width/2 -xsize/2 + j;
+							int y1 = (int)(height/2 + ysize/2 +((ymin)*py) -(d1*py));//fix +2 stuff
+							int x2 = width/2 -xsize/2 + j+1;
+							int y2 = (int)(height/2 + ysize/2 +((ymin)*py) -(d2*py));
+							g.drawLine(x1,y1,x2,y2);
+						}
 					}
 				}
 			}
