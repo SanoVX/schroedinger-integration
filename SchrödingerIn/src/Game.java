@@ -1,9 +1,13 @@
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Random;
@@ -12,11 +16,14 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class Game extends JPanel{
+	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	int width = (int) screenSize.getWidth();
+	int height = (int) screenSize.getHeight();
 	int rest = 0;
 	int xsize = 1200;
 	int ysize = 700;
-	int width = 1920;
-	int height = 1080;
+	//int width = 1920;
+	//int height = 1080;
 	ArrayList<Funktion> funktions = new ArrayList<>();
 	ArrayList<double[][]> measure = new ArrayList<>();
 	ArrayList<Double> energy = new ArrayList<>();
@@ -225,12 +232,21 @@ public class Game extends JPanel{
 					g.drawLine(xl1,yl1,xl2,yl2);
 				}else{
 					if(i != 0){
-						for(int j = -plotThickness; Math.abs(j) <= plotThickness; j++){
-						int xr = (int)(width/2 -xsize/2 + mea[i][0]*px + (-xmin)*px );
-						int yr = (int)(height/2+ysize/2-mea[i][1]*py+(ymin)*py +j);
-						int xl = (int)(width/2 -xsize/2 + mea[i-1][0]*px + (-xmin)*px);
-						int yl = (int)(height/2+ysize/2-mea[i-1][1]*py+(ymin)*py+j);
-						g.drawLine(xl,yl,xr,yr);
+						//better thickness
+						double[] vect = {mea[i][0]-mea[i-1][0], mea[i][1]-mea[i-1][1]};
+						double xcomp = -vect[1];
+						double ycomp = vect[0];
+						double length = Math.sqrt(Math.pow(xcomp, 2)+Math.pow(ycomp, 2));
+						if(length != 0){
+							xcomp /= length;
+							ycomp /= length;
+						}
+						for(int j = -plotThickness; Math.abs(j) <= plotThickness; j++){//for thickness
+							int xr = (int)(width/2 -xsize/2 + mea[i][0]*px + (-xmin)*px + xcomp*j);
+							int yr = (int)(height/2+ysize/2-mea[i][1]*py+(ymin)*py + ycomp*j);
+							int xl = (int)(width/2 -xsize/2 + mea[i-1][0]*px + (-xmin)*px + xcomp*j);
+							int yl = (int)(height/2+ysize/2-mea[i-1][1]*py+(ymin)*py + ycomp*j);
+							g.drawLine(xl,yl,xr,yr);
 						}
 
 					}
