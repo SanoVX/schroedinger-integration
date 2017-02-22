@@ -18,8 +18,6 @@ public class Game extends JPanel{
 	int rest = 0;
 	int xsize = width/4*3;
 	int ysize = height/4*3;
-	//int width = 1920;
-	//int height = 1080;
 	ArrayList<Funktion> funktions = new ArrayList<>();
 	ArrayList<double[][]> measure = new ArrayList<>();
 	ArrayList<Double> energy = new ArrayList<>();
@@ -237,11 +235,15 @@ public class Game extends JPanel{
 							xcomp /= length;
 							ycomp /= length;
 						}
-						for(int j = -plotThickness; Math.abs(j) <= plotThickness; j++){//for thickness
-							int xr = (int)(width/2 -xsize/2 + mea[i][0]*px + (-xmin)*px + xcomp*j);
-							int yr = (int)(height/2+ysize/2-mea[i][1]*py+(ymin)*py + ycomp*j);
-							int xl = (int)(width/2 -xsize/2 + mea[i-1][0]*px + (-xmin)*px + xcomp*j);
-							int yl = (int)(height/2+ysize/2-mea[i-1][1]*py+(ymin)*py + ycomp*j);
+						for(int j = -plotThickness; Math.abs(j) <= plotThickness+1; j++){//for thickness
+							int xr = (int)(width/2 -xsize/2 + mea[i][0]*px + (-xmin)*px);
+							xr += (int)(xcomp*j);
+							int yr = (int)(height/2+ysize/2-mea[i][1]*py+(ymin)*py);
+							yr += (int)(ycomp*j);
+							int xl = (int)(width/2 -xsize/2 + mea[i-1][0]*px + (-xmin)*px);
+							xl += (int)(xcomp*j);
+							int yl = (int)(height/2+ysize/2-mea[i-1][1]*py+(ymin)*py);
+							yl += (int)(ycomp*j);
 							g.drawLine(xl,yl,xr,yr);
 						}
 

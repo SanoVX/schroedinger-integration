@@ -14,7 +14,7 @@ public class SchroedingerIntegration {
 		Game g = new Game();
 		g.drawpoints = false; // Befehl sodass die Punkte des Plots miteinander verbunden werden
 		g.growingrange = true;
-		g.plotThickness = 2;
+		g.plotThickness = 1;
 		g.calcTime = 100;
 		g.xlabel = "Abstand des Kerns in m";
 		g.ylabel = "Energie in eV";
