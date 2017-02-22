@@ -41,6 +41,7 @@ public class Energieeigenwerte {
 		searched = false;
 		E_current += 0.00001*e;
 		
+		loesungsschritte.clear();
 		ArrayList<ArrayList<ArrayList<Double>>> loesungsblock = new ArrayList<>();
 		
 		for(int i = 1; i< accuracy; i++){
@@ -52,8 +53,10 @@ public class Energieeigenwerte {
 				}
 				loesungsblock.add(solution);
 			}
+			loesungsblock.add(solution);
+
 			loesungsschritte.add(loesungsblock);
-			loesungsblock.clear();
+			loesungsblock = new ArrayList<>();
 			E_current -= Math.pow(10,-i)*e;
 		}
 		
