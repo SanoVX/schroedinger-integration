@@ -29,7 +29,13 @@ public class SchroedingerIntegration {
 			g.addMeasures(E.getSolution());
 		}
 		g.plot();
+		 /*	E.step();
 		
+		ArrayList<ArrayList<ArrayList<ArrayList<Double>>>> l = E.gibloesungsschritte();
+		
+		for(int i = 0; i< l.get(0).size();i++){
+			g.addMeasures(l.get(0).get(i));
+		}*/
 	}
 
 }
