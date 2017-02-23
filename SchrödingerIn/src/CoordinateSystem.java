@@ -20,6 +20,9 @@ public class CoordinateSystem {
 	double ymin = 0;
 	double ymax = 0;
 	int recsize = 6; // size of rectangle representing the data point
+	
+	//legend
+	public int numberTextSize = 10;
 	public String xlabel = " ";
 	public int xlabelFontSize = 20;
 	public String ylabel = " ";
@@ -30,6 +33,7 @@ public class CoordinateSystem {
 	public int textFontSize = 20;
 	public String[] legend;
 	public int legendFontSize = 20;
+	
 	boolean init = false;
 	boolean drawpoints = true;
 	boolean growingrange = false;
@@ -212,6 +216,8 @@ public class CoordinateSystem {
 
 		g.draw3DRect(xpos, ypos, xsize, ysize, false);
 		// xaxis numbers
+
+		g.setFont(new Font("TimesRoman", Font.PLAIN, numberTextSize));
 		for(double i = xmin; i <= xmax ; i+=(Math.abs((xmax-xmin)))/((double)10)){
 			String str = KsDigit(i, 5); 
 			double k = ((double)px)*i;
@@ -255,11 +261,11 @@ public class CoordinateSystem {
 			g.setColor(Color.BLACK);
 		}
 		}
-		// Aufgabe
+		// headline
 		String str = headline;
 		g.setFont(new Font("TimesRoman", Font.PLAIN, headlineFontSize));
 		int x = xpos + xsize/2 - g.getFontMetrics().stringWidth(str)/2;
-		int y = ypos + ysize - 5 - g.getFontMetrics().getHeight();
+		int y = ypos - 5 - g.getFontMetrics().getHeight();
 		g.drawString(str, x, y);
 		// x-achse
 		str = xlabel;
