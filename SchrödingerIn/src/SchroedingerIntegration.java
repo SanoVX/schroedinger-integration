@@ -12,21 +12,26 @@ public class SchroedingerIntegration {
 	
 	public static void main(String[] args) throws InterruptedException{
 		Game g = new Game();
-		g.drawpoints = false; // Befehl sodass die Punkte des Plots miteinander verbunden werden
-		g.growingrange = true;
-		g.plotThickness = 1;
+		int xsize = g.width*3/4;
+		int ysize = g.height*3/4;
+		CoordinateSystem k = new CoordinateSystem(g,g.width/2 - xsize/2, g.height/2 - ysize/2, xsize, ysize);
+		g.ks.add(k);
+		k.drawpoints = false; // Befehl sodass die Punkte des Plots miteinander verbunden werden
+		k.growingrange = true;
+		k.plotThickness = 1;
 		g.calcTime = 100;
-		g.xlabel = "Abstand des Kerns in m";
-		g.ylabel = "Energie in eV";
-		Funktion coulomb = new CoulombFunktion(g,0,0,false); 
-		g.funktions.add(coulomb);
+		k.xlabel = "Abstand des Kerns in m";
+		k.ylabel = "Energie in eV";
+		Funktion coulomb = new CoulombFunktion(k,0,0,false); 
+		k.funktions.add(coulomb);
 		Energieeigenwerte E = new Energieeigenwerte(new Coulomb(), -16*e, -0.1*e);
 		for(int i = 0; i<5;i++){
 			E.step();
 		
 			System.out.println(E.getEnergy()/e);
-			g.addEnergy(E.getEnergy()/e);			
-			g.addMeasures(E.getSolution());
+			k.addEnergy(E.getEnergy()/e);	
+			k.addMeasures(E.getSolution());
+			System.out.println(k.measure.size());
 		}
 		g.plot();
 		 /*	E.step();

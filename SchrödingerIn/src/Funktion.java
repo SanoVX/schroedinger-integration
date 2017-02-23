@@ -14,13 +14,13 @@ public class Funktion {
 	double a;
 	boolean showallYs;
 	
-	public Funktion(Game g,double a, double b, boolean showallYs){
+	public Funktion(CoordinateSystem g,double a, double b, boolean showallYs){
 		this.a = a;
 		this.b = b;
 		this.showallYs = showallYs;
 		refresh(g);
 	}
-	public void refresh(Game g){
+	public void refresh(CoordinateSystem g){
 		this.xmin = g.xmin;
 		this.xmax = g.xmax;
 		this.ymin = g.ymin;

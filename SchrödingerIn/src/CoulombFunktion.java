@@ -20,7 +20,7 @@ public class CoulombFunktion extends Funktion{
 	double a;
 	boolean showallYs;
 	
-	public CoulombFunktion(Game g, double a, double b, boolean showallYs) {
+	public CoulombFunktion(CoordinateSystem g, double a, double b, boolean showallYs) {
 		super(g, a, b, showallYs);
 		this.a = a;
 		this.b = b;
@@ -30,7 +30,7 @@ public class CoulombFunktion extends Funktion{
 	}
 	
 	
-	public void refresh(Game g){
+	public void refresh(CoordinateSystem g){
 		this.xmin = g.xmin;
 		this.xmax = g.xmax;
 		this.ymin = g.ymin;
