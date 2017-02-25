@@ -2,11 +2,12 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class CoordinateSystem {
-	int showRange = 0;
+
 	Game game;
 	int xpos;
 	int ypos;
@@ -37,10 +38,14 @@ public class CoordinateSystem {
 	boolean init = false;
 	boolean drawpoints = true;
 	boolean growingrange = false;
+	ArrayList<Integer> showRange = new ArrayList<>();
 	Color[] colorList = {Color.RED, Color.BLUE, Color.GREEN, Color.ORANGE, Color.PINK};
 
 	//plot
 	int plotThickness = 0;
+	int calcTime = 100;
+	//
+	int tryNumber = 1;
 	
 	
 	public CoordinateSystem(Game game, int xpos, int ypos, int xsize, int ysize){
@@ -74,8 +79,8 @@ public class CoordinateSystem {
 	// sets the plot range so that all data points are in the plot
 	public void MaxandMin(double[][] mea){
 		int k = mea.length;
-		if(growingrange && showRange < mea.length){
-			k = showRange;
+		if(growingrange && searchRangeMax() < mea.length){
+			k = searchRangeMax();
 		}
 		for(int i = 0; i < k /*&& i < rest*/; i++){
 			if(!init){
@@ -108,6 +113,15 @@ public class CoordinateSystem {
 		}
 	}
 	
+	public int searchRangeMax(){
+		int range = 0;
+		for(int i = 0; i < showRange.size(); i++){
+			if(range < showRange.get(i)){
+				range = showRange.get(i);
+			}
+		}
+		return range;
+	}
 	//creates a random color
 	public Color randomColor(){
 		Random rand = new Random();
@@ -122,52 +136,56 @@ public class CoordinateSystem {
 
 	
 	// draws datapoints of the given list
-	public void drawMeasure(double[][] mea, boolean errorbars , Graphics2D g, int s){ // creates measured points
-		MaxandMin(mea);
-		double px =(xsize/Math.abs(xmax - xmin));
-		double py =(ysize/Math.abs(ymax - ymin));
-		g.setColor(colorList[s%colorList.length]);
-		for(int i = 0; i < mea.length && i < showRange; i++){
-			//wertebereich anpassen
-			if(mea[i][1]==mea[i][1]){//Nan.check
-				if(drawpoints){
-					int xr = (int)(xpos + mea[i][0]*px-recsize/2 + (-xmin)*px);
-					int yr = (int)(ypos + ysize -mea[i][1]*py+(ymin)*py+recsize/2);
-					g.fill3DRect(xr,yr, recsize, recsize,true);
-					//fehlerbalken
-					int xl1 = (int) (xpos + mea[i][0]*px + (-xmin)*px);
-					int yl1 = (int)(ypos + ysize -mea[i][2]*py+(ymin)*py);
-					int xl2 = (int)(xpos + mea[i][0]*px + (-xmin)*px);
-					int yl2 = (int)(ypos + ysize -mea[i][3]*py+(ymin)*py);
-					g.drawLine(xl1,yl1,xl2,yl2);
-				}else{
-					if(i != 0){
-						//better thickness
-						double[] vect = {mea[i][0]-mea[i-1][0], mea[i][1]-mea[i-1][1]};
-						double xcomp = -vect[1];
-						double ycomp = vect[0];
-						double length = Math.sqrt(Math.pow(xcomp, 2)+Math.pow(ycomp, 2));
-						if(length != 0){
-							xcomp /= length;
-							ycomp /= length;
+	public void drawMeasure(boolean errorbars , Graphics2D g){ // creates measured points
+		for(int s = 0; s < measure.size() && s < tryNumber; s++){
+			double[][] mea = measure.get(s);
+			MaxandMin(mea);
+			double px =(xsize/Math.abs(xmax - xmin));
+			double py =(ysize/Math.abs(ymax - ymin));
+			g.setColor(colorList[s%colorList.length]);
+			
+			for(int i = 0; i < mea.length && i < showRange.get(s); i++){
+				//wertebereich anpassen
+				if(mea[i][1]==mea[i][1]){//Nan.check
+					if(drawpoints){
+						int xr = (int)(xpos + mea[i][0]*px-recsize/2 + (-xmin)*px);
+						int yr = (int)(ypos + ysize -mea[i][1]*py+(ymin)*py+recsize/2);
+						g.fill3DRect(xr,yr, recsize, recsize,true);
+						//fehlerbalken
+						int xl1 = (int) (xpos + mea[i][0]*px + (-xmin)*px);
+						int yl1 = (int)(ypos + ysize -mea[i][2]*py+(ymin)*py);
+						int xl2 = (int)(xpos + mea[i][0]*px + (-xmin)*px);
+						int yl2 = (int)(ypos + ysize -mea[i][3]*py+(ymin)*py);
+						g.drawLine(xl1,yl1,xl2,yl2);
+					}else{
+						if(i != 0){
+							//better thickness
+							double[] vect = {mea[i][0]-mea[i-1][0], mea[i][1]-mea[i-1][1]};
+							double xcomp = -vect[1];
+							double ycomp = vect[0];
+							double length = Math.sqrt(Math.pow(xcomp, 2)+Math.pow(ycomp, 2));
+							if(length != 0){
+								xcomp /= length;
+								ycomp /= length;
+							}
+							for(int j = -plotThickness; Math.abs(j) <= plotThickness+1; j++){//for thickness
+								int xr = (int)(xpos + mea[i][0]*px + (-xmin)*px);
+								xr += (int)(xcomp*j);
+								int yr = (int)(ypos + ysize -mea[i][1]*py+(ymin)*py);
+								yr += (int)(ycomp*j);
+								int xl = (int)(xpos + mea[i-1][0]*px + (-xmin)*px);
+								xl += (int)(xcomp*j);
+								int yl = (int)(ypos + ysize -mea[i-1][1]*py+(ymin)*py);
+								yl += (int)(ycomp*j);
+								g.drawLine(xl,yl,xr,yr);
+							}
+	
 						}
-						for(int j = -plotThickness; Math.abs(j) <= plotThickness+1; j++){//for thickness
-							int xr = (int)(xpos + mea[i][0]*px + (-xmin)*px);
-							xr += (int)(xcomp*j);
-							int yr = (int)(ypos + ysize -mea[i][1]*py+(ymin)*py);
-							yr += (int)(ycomp*j);
-							int xl = (int)(xpos + mea[i-1][0]*px + (-xmin)*px);
-							xl += (int)(xcomp*j);
-							int yl = (int)(ypos + ysize -mea[i-1][1]*py+(ymin)*py);
-							yl += (int)(ycomp*j);
-							g.drawLine(xl,yl,xr,yr);
-						}
-
 					}
 				}
 			}
-
 		}
+		
 	}
 	
 	// draws all funktions of the given list
@@ -275,9 +293,15 @@ public class CoordinateSystem {
 		g.drawString(str, x, y);
 		// y Achse
 		str = ylabel;
-		g.setFont(new Font("TimesRoman", Font.PLAIN, ylabelFontSize));
-		x = xpos - g.getFontMetrics().stringWidth(str) - 100;
+		//g.setFont(new Font("TimesRoman", Font.PLAIN, ylabelFontSize));
+		x = xpos - 100;
 		y = ypos + ysize/2 - g.getFontMetrics().getHeight()/2;
+		Font font = new Font("TimesRoman", Font.PLAIN, ylabelFontSize);    
+		AffineTransform affineTransform = new AffineTransform();
+		affineTransform.rotate(Math.toRadians(90), x, y);
+		Font rotatedFont = font.deriveFont(affineTransform);
+		g.setFont(rotatedFont);
+		System.out.println("test");
 		g.drawString(str, x, y);
 		//text
 		str = text;

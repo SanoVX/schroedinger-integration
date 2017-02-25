@@ -20,8 +20,10 @@ public class SchroedingerIntegration {
 		for(int i = 0; i < anzahlks; i++ ){
 			CoordinateSystem k = new CoordinateSystem(g,g.width/2*i + g.width*1/16, g.height/2 - ysize/2, xsize, ysize);
 			g.ks.add(k);
-			k.drawpoints = false; 
-			k.growingrange = true;
+			k.drawpoints = false;
+			if(i == 0){// growing range only in left coordinate system
+				k.growingrange = true;
+			}
 			k.plotThickness = 1;
 			g.calcTime = 100;
 			if(i == anzahlks -1){

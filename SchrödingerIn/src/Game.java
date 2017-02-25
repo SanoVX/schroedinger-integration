@@ -19,26 +19,42 @@ public class Game extends JPanel{
 	//time
 	int calcTime = 100;
 	ArrayList<CoordinateSystem> ks = new ArrayList<>();
+	//while loop
+	boolean finished = false;
+	boolean init = false;
+	boolean firstPaint = true;
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+		for(int i = 0; i < ks.size(); i++){
+			ks.get(i).tryNumber += 1;
+			for(int j = 0; j < ks.get(i).measure.size(); j++){
+				if(ks.get(i).showRange.size() < j + 1){
+					ks.get(i).showRange.add(0);
+				}
+				ks.get(i).showRange.set(j, ks.get(i).showRange.get(j) + calcTime);
+			}
+		}
+		
 		if(ks != null){
 			for(int i = 0; i < ks.size(); i++){
-				ks.get(i).showRange += calcTime;
+				ks.get(i).calcTime = calcTime;
 				ks.get(i).drawFunktions(ks.get(i).funktions, g2d);
-				for(int j = 0; j < ks.get(i).measure.size(); j++){
-					ks.get(i).drawMeasure(ks.get(i).measure.get(j), true,g2d,j);
-	
-				}
-	
+				ks.get(i).drawMeasure(false,g2d);
+		
 				ks.get(i).drawKs(g2d);
 			}
 		}
-		}
+		
+	}
+	
+	
 	// method to plot whatever is inside the data and funktionlist
 	public void plot() throws InterruptedException{
+
 		JFrame frame = new JFrame("2-D Plot");
 		frame.add(this);
 		frame.setSize(width, height);
@@ -46,10 +62,7 @@ public class Game extends JPanel{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setDoubleBuffered(false);
 
-		/*colorList = new Color[measure.size()];
-		for(int i = 0; i < colorList.length; i++){
-			colorList[i] = randomColor();
-		}*/
+		this.repaint();
 		while(true){
 			this.repaint();
 			Thread.sleep(100); // sleeping time
