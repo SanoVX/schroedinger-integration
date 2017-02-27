@@ -51,6 +51,9 @@ public class Energieeigenwerte {
 				if(E_current>E_max){
 					break;
 				}
+				cutoff(solution);
+				normalizeIntegral(solution);
+
 				loesungsblock.add(solution);
 			}
 			loesungsblock.add(solution);
