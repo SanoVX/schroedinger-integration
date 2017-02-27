@@ -12,35 +12,51 @@ public class SchroedingerIntegration {
 	
 	public static void main(String[] args) throws InterruptedException{
 		Game g = new Game();
-		int xsize = g.width*3/4;
-		int ysize = g.height*3/4;
-		CoordinateSystem k = new CoordinateSystem(g,g.width/2 - xsize/2, g.height/2 - ysize/2, xsize, ysize);
-		g.ks.add(k);
-		k.drawpoints = false; // Befehl sodass die Punkte des Plots miteinander verbunden werden
-		k.growingrange = true;
-		k.plotThickness = 1;
-		g.calcTime = 100;
-		k.xlabel = "Abstand des Kerns in m";
-		k.ylabel = "Energie in eV";
-		Funktion coulomb = new CoulombFunktion(k,0,0,false); 
-		k.funktions.add(coulomb);
+		int energylevels = 5;
+		int xsize = g.width*3/8;
+		int ysize = g.height*3/8;
+		//erstellen der koordinatensysteme
+		int anzahlks = 2;
+		for(int i = 0; i < anzahlks; i++ ){
+			CoordinateSystem k = new CoordinateSystem(g,g.width/2*i + g.width*1/16, g.height/2 - ysize/2, xsize, ysize);
+			g.ks.add(k);
+			k.drawpoints = false;
+			if(true){// growing range only in left coordinate system
+				k.growingrange = true;
+			}
+			k.plotThickness = 1;
+			g.calcTime = 1000;
+			if(i == anzahlks -1){
+				k.headline = "Energieniveaus";
+			}else{
+				k.headline = "Suche nach Energieniveaus";
+			}
+			k.xlabel = "Abstand des Kerns in m";
+			k.ylabel = "Energie in eV";
+			Funktion coulomb = new CoulombFunktion(k,0,0,false); 
+			k.funktions.add(coulomb);
+		}
+
+		//numerische integration
 		Energieeigenwerte E = new Energieeigenwerte(new Coulomb(), -16*e, -0.1*e);
-		for(int i = 0; i<5;i++){
+		for(int i = 0; i < energylevels; i++){
 			E.step();
-		
+			
+			ArrayList<ArrayList<ArrayList<ArrayList<Double>>>> l = E.gibloesungsschritte();
+			for(int s = 0; s < l.size(); s++){
+				for(int j = 0; j< l.get(s).size();j++){
+
+					//g.ks.get(0).addEnergy(E.getEnergy()/e);	
+					g.ks.get(0).simulation.add(l.get(s));
+				}
+			}
 			System.out.println(E.getEnergy()/e);
-			k.addEnergy(E.getEnergy()/e);	
-			k.addMeasures(E.getSolution());
-			System.out.println(k.measure.size());
+			g.ks.get(1).addEnergy(E.getEnergy()/e);	
+			g.ks.get(1).solution.add(E.getSolution());
 		}
 		g.plot();
-		 /*	E.step();
 		
-		ArrayList<ArrayList<ArrayList<ArrayList<Double>>>> l = E.gibloesungsschritte();
-		
-		for(int i = 0; i< l.get(0).size();i++){
-			g.addMeasures(l.get(0).get(i));
-		}*/
+
 	}
 
 }

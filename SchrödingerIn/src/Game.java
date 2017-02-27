@@ -17,28 +17,90 @@ public class Game extends JPanel{
 	int height = (int) screenSize.getHeight();
 	int rest = 0;
 	//time
-	int calcTime = 100;
+	int calcTime = 10;
 	ArrayList<CoordinateSystem> ks = new ArrayList<>();
+	//while loop
+	boolean finished = false;
+	boolean init = false;
+	boolean firstPaint = true;
+	
+	int funktNr = 1;
+	int currRange = 0;
+	int s = 0;
+	
+	public ArrayList<ArrayList<Double>> copyList(ArrayList<ArrayList<Double>> funkt , int currRange){
+		ArrayList<ArrayList<Double>> rfunkt = new ArrayList<>();
+		for(int i = 0; i < funkt.size() && i < currRange; i++){
+			rfunkt.add(funkt.get(i));
+			//System.out.println(rfunkt.size() + " " + currRange);
+		}
+		return rfunkt;
+		
+	}
+	
+	public void funktionCleaner(){
+		if(ks.get(0).measure.size() > 20){
+			ks.get(0).measure.remove(0);
+		}
+	}
+	
+	public void simulate(){
+
+		if(currRange == 0){
+			funktNr += 1;
+		}			
+		if(ks.get(0).simulation.get(s).size() < funktNr){
+			System.out.println(ks.get(1).solution.size());
+			ks.get(1).addMeasures(ks.get(1).solution.get(s));
+			if(s <= ks.get(1).solution.size()){
+				s += 1;
+			}
+			funktNr = 1;
+			ks.get(0).measure.clear();
+		}
+
+		currRange += calcTime;
+		for(int j = 0; j < ks.get(0).simulation.get(s).size() && j < funktNr; j++){
+			System.out.println(s);
+			ArrayList<ArrayList<Double>> add = copyList(ks.get(0).simulation.get(s).get(funktNr -1), currRange);
+			if(ks.get(0).simulation.get(funktNr -1).size() < currRange){
+				currRange = 0;
+			}
+			ks.get(0).addMeasures(add);
+		}
+		
+	}
+	
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		
+		simulate();
+
+		try {
+			Thread.sleep(0);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} // sleeping time
+		
 		if(ks != null){
 			for(int i = 0; i < ks.size(); i++){
-				ks.get(i).showRange += calcTime;
 				ks.get(i).drawFunktions(ks.get(i).funktions, g2d);
-				for(int j = 0; j < ks.get(i).measure.size(); j++){
-					ks.get(i).drawMeasure(ks.get(i).measure.get(j), true,g2d,j);
-	
-				}
-	
+				ks.get(i).drawMeasure(false,g2d);
 				ks.get(i).drawKs(g2d);
 			}
 		}
-		}
-	// method to plot whatever is inside the data and funktionlist
+
+		funktionCleaner();
+
+		
+	}
+	
 	public void plot() throws InterruptedException{
+
 		JFrame frame = new JFrame("2-D Plot");
 		frame.add(this);
 		frame.setSize(width, height);
@@ -46,10 +108,7 @@ public class Game extends JPanel{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setDoubleBuffered(false);
 
-		/*colorList = new Color[measure.size()];
-		for(int i = 0; i < colorList.length; i++){
-			colorList[i] = randomColor();
-		}*/
+
 		while(true){
 			this.repaint();
 			Thread.sleep(100); // sleeping time
