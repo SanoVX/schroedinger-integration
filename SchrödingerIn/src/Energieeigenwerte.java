@@ -62,9 +62,7 @@ public class Energieeigenwerte {
 		
 		int size = solution.size();
 		
-		for(int j=size-1;j>size-700 && j>0;j--){
-			solution.remove(j);
-		}
+		cutoff(solution);
 		
 		normalizeIntegral(solution);
 		
@@ -139,6 +137,25 @@ public class Energieeigenwerte {
 		for(int i = 0; i < solution.size(); i++){
 			solution.get(i).set(1, solution.get(i).get(1)/(max));
 			solution.get(i).set(1,solution.get(i).get(1) + E_current/e);
+		}
+	}
+	
+	public void cutoff(ArrayList<ArrayList<Double>> solution){
+		double epsilon = 0.1;
+		int counter = 0;
+		
+		for(int i = 0; i < solution.size(); i++){
+			if(counter > 50){
+				for(int j = solution.size()-1; j > i; j--){
+					solution.remove(j);
+				}
+				break;
+			}
+			if(Math.abs(solution.get(i).get(1))<epsilon){
+				counter++;
+			}else{
+				counter = 0;
+			}
 		}
 	}
 	
