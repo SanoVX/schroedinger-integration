@@ -40,6 +40,9 @@ public class Game extends JPanel{
 	}
 	
 	public void funktionCleaner(){
+		if(ks.size()==0){
+			return;
+		}
 		if(ks.get(0).measure.size() > 20){
 			ks.get(0).measure.remove(0);
 		}
@@ -49,7 +52,10 @@ public class Game extends JPanel{
 
 		if(currRange == 0){
 			funktNr += 1;
-		}			
+		}		
+		if(ks.size()==0){
+			return;
+		}
 		if(ks.get(0).simulation.get(s).size() < funktNr){
 			ks.get(1).addMeasures(ks.get(1).solution.get(s));
 			if(s < ks.get(1).solution.size() -1){
@@ -104,14 +110,6 @@ public class Game extends JPanel{
 
 
 	public void plot() throws InterruptedException{
-
-		JFrame frame = new JFrame("2-D Plot");
-		frame.add(this);
-		frame.setSize(width, height);
-		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setDoubleBuffered(false);
-
 
 		while(true){
 			this.repaint();

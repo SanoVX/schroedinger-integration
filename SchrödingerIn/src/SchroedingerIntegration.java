@@ -8,10 +8,14 @@ public class SchroedingerIntegration {
 
 	public static double e0 = 8.85418781762*Math.pow(10,-12);
 
+	private Game g;
+
+	public SchroedingerIntegration(Game g) {
+		this.g = g;
+	}
 	
 	
-	public static void main(String[] args) throws InterruptedException{
-		Game g = new Game();
+	public void run() throws InterruptedException{
 		int energylevels = 5;
 		int xsize = g.width*3/8;
 		int ysize = g.height*3/8;
@@ -52,7 +56,17 @@ public class SchroedingerIntegration {
 			g.ks.get(1).addEnergy(E.getEnergy()/e);	
 			g.ks.get(1).solution.add(E.getSolution());
 		}
-		g.plot();
+		
+		new Thread(){
+			public void run(){
+				try {
+					g.plot();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}.start();
 		
 
 	}
