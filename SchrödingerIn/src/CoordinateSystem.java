@@ -66,7 +66,12 @@ public class CoordinateSystem {
 		
 	}
 				
-	
+	public void resetRange(){
+		xmin = 0;
+		xmax = 0;
+		ymin = 0;
+		ymax = 0;
+	}
 	// adds data to a global data list
 	public void addMeasures(ArrayList<ArrayList<Double>> mea){
 		

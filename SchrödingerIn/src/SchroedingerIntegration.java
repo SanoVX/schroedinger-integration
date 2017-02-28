@@ -25,7 +25,7 @@ public class SchroedingerIntegration {
 				k.growingrange = true;
 			}
 			k.plotThickness = 1;
-			g.calcTime = 1000;
+			g.calcTime = 50;
 			if(i == anzahlks -1){
 				k.headline = "Energieniveaus";
 			}else{

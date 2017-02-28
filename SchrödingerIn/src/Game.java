@@ -23,6 +23,7 @@ public class Game extends JPanel{
 	boolean finished = false;
 	boolean init = false;
 	boolean firstPaint = true;
+	boolean simulated = false;
 	
 	int funktNr = 1;
 	int currRange = 0;
@@ -44,26 +45,26 @@ public class Game extends JPanel{
 		}
 	}
 	
-	public void simulate(){
+	public void simulate(Graphics2D g2d){
 
 		if(currRange == 0){
 			funktNr += 1;
 		}			
 		if(ks.get(0).simulation.get(s).size() < funktNr){
-			System.out.println(ks.get(1).solution.size());
 			ks.get(1).addMeasures(ks.get(1).solution.get(s));
-			if(s <= ks.get(1).solution.size()){
+			if(s < ks.get(1).solution.size() -1){
 				s += 1;
+			}else{
+				simulated = true;
 			}
 			funktNr = 1;
 			ks.get(0).measure.clear();
+			ks.get(0).resetRange();
 		}
-
 		currRange += calcTime;
 		for(int j = 0; j < ks.get(0).simulation.get(s).size() && j < funktNr; j++){
-			System.out.println(s);
 			ArrayList<ArrayList<Double>> add = copyList(ks.get(0).simulation.get(s).get(funktNr -1), currRange);
-			if(ks.get(0).simulation.get(funktNr -1).size() < currRange){
+			if(ks.get(0).simulation.get(s).get(funktNr -1).size() < currRange){
 				currRange = 0;
 			}
 			ks.get(0).addMeasures(add);
@@ -76,8 +77,9 @@ public class Game extends JPanel{
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		
-		simulate();
+		if(!simulated){
+			simulate(g2d);
+		}
 
 		try {
 			Thread.sleep(0);
@@ -94,11 +96,13 @@ public class Game extends JPanel{
 			}
 		}
 
-		funktionCleaner();
+		//funktionCleaner();
 
 		
 	}
 	
+
+
 	public void plot() throws InterruptedException{
 
 		JFrame frame = new JFrame("2-D Plot");
