@@ -44,11 +44,9 @@ public class SchroedingerIntegration {
 			
 			ArrayList<ArrayList<ArrayList<ArrayList<Double>>>> l = E.gibloesungsschritte();
 			for(int s = 0; s < l.size(); s++){
-				for(int j = 0; j< l.get(s).size();j++){
 
 					//g.ks.get(0).addEnergy(E.getEnergy()/e);	
 					g.ks.get(0).simulation.add(l.get(s));
-				}
 			}
 			System.out.println(E.getEnergy()/e);
 			g.ks.get(1).addEnergy(E.getEnergy()/e);	

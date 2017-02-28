@@ -134,7 +134,7 @@ public class CoordinateSystem {
 	public void drawMeasure(boolean errorbars , Graphics2D g){ // creates measured points
 		if(measure != null){
 			for(int s = 0; s < measure.size(); s++){
-
+				if(measure.get(s) != null){
 				double[][] mea = measure.get(s);
 				MaxandMin(mea);
 				drawable = true;
@@ -184,6 +184,7 @@ public class CoordinateSystem {
 					}
 				}
 			}
+		}
 		}
 		
 	}

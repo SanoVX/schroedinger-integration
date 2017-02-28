@@ -51,10 +51,18 @@ public class Energieeigenwerte {
 				if(E_current>E_max){
 					break;
 				}
-				cutoff(solution);
+				int size = solution.size();
+				
+				for(int j=size-1;j>size-100 && j>1;j--){
+					solution.remove(j);
+				}
+				
 				normalizeIntegral(solution);
+				
+				cutoff(solution);
 
 				loesungsblock.add(solution);
+				
 			}
 			loesungsblock.add(solution);
 
@@ -67,7 +75,7 @@ public class Energieeigenwerte {
 		
 		cutoff(solution);
 		
-		normalizeIntegral(solution);
+		normalizeMaximum(solution);
 		
 		searched = true;
 	}
@@ -144,7 +152,7 @@ public class Energieeigenwerte {
 	}
 	
 	public void cutoff(ArrayList<ArrayList<Double>> solution){
-		double epsilon = 0.1;
+		double epsilon = 2;
 		int counter = 0;
 		
 		for(int i = 0; i < solution.size(); i++){
