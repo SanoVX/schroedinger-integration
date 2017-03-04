@@ -5,24 +5,39 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JMenu;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Toolkit;
+
+import javax.imageio.ImageIO;
+import javax.imageio.stream.FileImageOutputStream;
 import javax.swing.BoxLayout;
 import java.awt.Component;
+import javax.swing.JMenuItem;
+import javax.swing.JSeparator;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Hauptfenster extends JFrame {
 
 	private JPanel contentPane;
 	private SchroedingerIntegration simulation;
+	private Game g = new Game();
 
 	/**
 	 * Launch the application.
@@ -54,36 +69,92 @@ public class Hauptfenster extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
-		JMenu mnBlabla = new JMenu("blabla");
-		menuBar.add(mnBlabla);
+		JMenu Datei = new JMenu("Datei");
+		menuBar.add(Datei);
 		
-		JMenu mnEinstellungen = new JMenu("Einstellungen");
-		mnEinstellungen.addMouseListener(new MouseAdapter() {
+		JMenuItem scrShot = new JMenuItem("Screenshot speichern");
+		scrShot.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				JOptionPane.showMessageDialog(null, "Einstellungen");
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser fc = new JFileChooser();
+				fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				fc.setAcceptAllFileFilterUsed(false);
+				FileNameExtensionFilter fextf = new FileNameExtensionFilter("Bild", "png");
+				fc.setFileFilter(fextf);
+				if(fc.showSaveDialog(null)==fc.APPROVE_OPTION){
+					File f = fc.getSelectedFile();
+					if (!f.getPath().endsWith(".png"))
+					    f = new File(f.getPath() + ".png");
+					BufferedImage i = new BufferedImage(1920, 1080, BufferedImage.TYPE_INT_ARGB);
+					g.paint(i.getGraphics());
+					try {
+						ImageIO.write(i, "png", f);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					JOptionPane.showMessageDialog(null, "Not yet implemented");
+				}
 			}
 		});
+		Datei.add(scrShot);
+		
+		JSeparator separator = new JSeparator();
+		Datei.add(separator);
+		
+		JMenuItem exit = new JMenuItem("Beenden");
+		exit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				System.exit(0);
+			}
+		});
+		Datei.add(exit);
+		
+		JMenu mnEinstellungen = new JMenu("Einstellungen");
 		menuBar.add(mnEinstellungen);
+		
+		JMenuItem setPot = new JMenuItem("Potential");
+		setPot.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JOptionPane.showMessageDialog(null, "Not yet implemented");
+			}
+		});
+		mnEinstellungen.add(setPot);
+		
+		JMenuItem setSim = new JMenuItem("Simulation");
+		setSim.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JOptionPane.showMessageDialog(null, "Not yet implemented");
+			}
+		});
+		mnEinstellungen.add(setSim);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		Game g = new Game();
+
 		g.setBounds(5, 5, width-200, height);
 		contentPane.add(g);
-		
+
 		simulation = new SchroedingerIntegration(g);
 		g.setLayout(new GridLayout(1, 0, 0, 0));
 		
-		JButton btnStart = new JButton("Start");
+		final JButton btnStart = new JButton("Start");
 		btnStart.setBounds(width-150, height-200, 100, 50);
 		btnStart.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				try{
-					simulation.run();
+					if(btnStart.getText().equals("Start")){
+						simulation.run();
+						btnStart.setText("Stopp");
+					}else{
+						simulation.stop();
+						btnStart.setText("Start");
+					}
 				}catch(Exception e){
 					e.printStackTrace();
 				}
@@ -92,5 +163,6 @@ public class Hauptfenster extends JFrame {
 		contentPane.add(btnStart);
 		
 	}
+
 
 }
