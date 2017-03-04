@@ -9,7 +9,6 @@ public class SchroedingerIntegration {
 	public static double e0 = 8.85418781762*Math.pow(10,-12);
 
 	private Game g;
-	private Thread t1;
 
 	public SchroedingerIntegration(Game g) {
 		this.g = g;
@@ -48,35 +47,28 @@ public class SchroedingerIntegration {
 			E.step();
 			
 			ArrayList<ArrayList<ArrayList<ArrayList<Double>>>> l = E.gibloesungsschritte();
-			//for(int s = 0; s < l.size(); s++){
+			for(int s = 0; s < l.size(); s++){
 
 					//g.ks.get(0).addEnergy(E.getEnergy()/e);	
-					g.ks.get(0).simulation.add(l.get(0));
-			//}
+					g.ks.get(0).simulation.add(l.get(s));
+			}
 			System.out.println(E.getEnergy()/e);
 			g.ks.get(1).addEnergy(E.getEnergy()/e);	
 			g.ks.get(1).solution.add(E.getSolution());
-			
-			
-			t1 = new Thread(){
-				public void run(){
-					try {
-						while(!g.simulated&&!isInterrupted()){
-							g.repaint();
-							Thread.sleep(100); // sleeping time
-						}
-					} catch (InterruptedException e) {
-					}
-				}
-			};
-			t1.start();
 		}
-	}
+		
+		new Thread(){
+			public void run(){
+				try {
+					g.plot();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}.start();
+		
 
-
-	public void stop() {
-		t1.interrupt();
-		t1 = null;
 	}
 
 }
