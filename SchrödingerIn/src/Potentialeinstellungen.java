@@ -1,0 +1,279 @@
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.ButtonGroup;
+import javax.swing.InputVerifier;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.LayoutFocusTraversalPolicy;
+import javax.swing.BoxLayout;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import java.awt.LayoutManager;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.jar.JarInputStream;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+import javax.swing.JButton;
+
+public class Potentialeinstellungen extends JFrame {
+
+	private JPanel contentPane;
+	private enum Potentialarten{Coulomb, Kasten, Parabel, benutzerdefiniert}
+	
+	private Potentialarten potentialAuswahl;
+	
+	private JTextField coulomb1, kastenBoden, kastenBreite, kastenHoehe;
+	private Potential potential;
+	
+	private double e = Einstellungen.e;
+
+
+	/**
+	 * Create the frame.
+	 */
+	public Potentialeinstellungen() {
+		setAlwaysOnTop(true);
+		this.potential = SchroedingerIntegration.potential;
+		
+		setTitle("Einstellungen zum Potential");
+		setBounds(100, 100, 550, 350);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel Erklaerung = new JLabel("Hier koennen Einstellungen fuer das Potential gemacht werden:");
+		Erklaerung.setBounds(10, 11, 414, 28);
+		contentPane.add(Erklaerung);
+		
+		JLabel lblAuswahlDerPotentialart = new JLabel("Auswahl der Potentialart");
+		lblAuswahlDerPotentialart.setBounds(10, 38, 160, 22);
+		contentPane.add(lblAuswahlDerPotentialart);
+		
+		ButtonGroup bg = new ButtonGroup();
+		
+		final JPanel settings = new JPanel();
+		settings.setBounds(202, 70, 322, 231);
+		settings.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+		contentPane.add(settings);
+		
+		JRadioButton potOpt1 = new JRadioButton("Coulomb");
+		potOpt1.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				if(arg0.getStateChange() == ItemEvent.SELECTED){
+					potentialAuswahl = Potentialarten.Coulomb;
+					drawDetails(settings);
+				}
+			}
+		});
+		potOpt1.setBounds(10, 63, 106, 17);
+		potOpt1.setSelected(true);
+		contentPane.add(potOpt1);
+		bg.add(potOpt1);
+		
+		JRadioButton potOpt2 = new JRadioButton("Kasten");
+		potOpt2.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				if(arg0.getStateChange() == ItemEvent.SELECTED){
+					potentialAuswahl = Potentialarten.Kasten;
+					drawDetails(settings);
+				}
+			}
+		});
+		potOpt2.setBounds(10, 83, 109, 17);
+		contentPane.add(potOpt2);
+		bg.add(potOpt2);
+		
+		JRadioButton potOpt3 = new JRadioButton("Parabel");
+		potOpt3.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				if(arg0.getStateChange() == ItemEvent.SELECTED){
+					potentialAuswahl = Potentialarten.Parabel;
+					drawDetails(settings);
+				}
+			}
+		});
+		potOpt3.setBounds(10, 103, 101, 17);
+		contentPane.add(potOpt3);
+		bg.add(potOpt3);
+		
+		
+		JRadioButton potOpt4 = new JRadioButton("benutzerdefiniert");
+		potOpt1.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				if(arg0.getStateChange() == ItemEvent.SELECTED){
+					potentialAuswahl = Potentialarten.benutzerdefiniert;
+					drawDetails(settings);
+				}
+			}
+		});
+		potOpt4.setBounds(10, 123, 160, 17);
+		contentPane.add(potOpt4);
+		bg.add(potOpt4);
+		
+		JLabel lblDetails = new JLabel("Details:");
+		lblDetails.setBounds(201, 38, 117, 22);
+		contentPane.add(lblDetails);
+		
+		potentialAuswahl = Potentialarten.Coulomb;
+		
+		drawDetails(settings);
+		
+		JButton btnNewButton = new JButton("Fertig");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				finish();			
+			}
+		});
+		btnNewButton.setBounds(10, 278, 89, 23);
+		contentPane.add(btnNewButton);
+		
+		JButton btnNewButton_1 = new JButton("Abbrechen");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
+		btnNewButton_1.setBounds(103, 278, 89, 23);
+		contentPane.add(btnNewButton_1);
+		
+	}
+
+
+	protected void finish() {
+		this.dispose();
+		switch(potentialAuswahl){
+		case Coulomb:
+			potential = new Coulomb(Double.parseDouble(coulomb1.getText())*e);
+			break;
+		case Kasten:
+			potential = new Kasten(Double.parseDouble(kastenBoden.getText())*e,Double.parseDouble(kastenHoehe.getText())*e,Double.parseDouble(kastenBreite.getText())*1E-9);
+			break;
+		case Parabel:
+			potential = null;
+			break;
+		case benutzerdefiniert:
+			potential = null;
+			break;
+		default:
+			potential = null;
+			break;	
+		}
+		SchroedingerIntegration.potential = potential;
+	}
+
+
+	private void drawDetails(JPanel settings) {
+		settings.removeAll();
+		LayoutManager l = settings.getLayout();
+		settings.removeAll();
+		settings.setLayout(l);
+
+		switch(potentialAuswahl){
+		case Coulomb:
+			JLabel label1 = new JLabel("Ladung des Kerns in e:");
+			label1.setBounds(5,5,200,20);
+			settings.add(label1);
+			
+			coulomb1 = new JTextField("1");
+			coulomb1.setBounds(205,5,50,20);
+			settings.add(coulomb1);
+			coulomb1.setColumns(4);
+			coulomb1.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					try{
+						Double.parseDouble(coulomb1.getText());
+					}catch(Exception exception){
+						coulomb1.setText("1");
+					}
+				}
+			});
+			break;
+		case Kasten:
+			JLabel label2 = new JLabel("unteres Niveau des Kasten in eV");
+			label2.setBounds(5,5,200,10);
+			settings.add(label2);
+			
+			kastenBoden = new JTextField("-20");
+			kastenBoden.setBounds(205,5,50,20);
+			settings.add(kastenBoden);
+			kastenBoden.setColumns(4);
+			kastenBoden.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					try{
+						Double.parseDouble(kastenBoden.getText());
+					}catch(Exception exception){
+						kastenBoden.setText("1");
+					}
+				}
+			});
+			
+			JLabel label3 = new JLabel("Hoehe des Kasten in eV");
+			label3.setBounds(5,30,200,20);
+			settings.add(label3);
+			
+			kastenHoehe = new JTextField("30");
+			kastenHoehe.setBounds(205,30,50,20);
+			settings.add(kastenHoehe);
+			kastenHoehe.setColumns(4);
+			kastenHoehe.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					try{
+						double value = Double.parseDouble(kastenHoehe.getText());
+						if(value<=0){
+							kastenHoehe.setText("30");
+						}
+					}catch(Exception exception){
+						kastenHoehe.setText("30");
+					}
+				}
+			});
+			
+			JLabel label4 = new JLabel("Breite des Kasten in nm");
+			label4.setBounds(5,55,200,20);
+			settings.add(label4);
+			
+			kastenBreite = new JTextField("1");
+			kastenBreite.setBounds(205,55,50,20);
+			settings.add(kastenBreite);
+			kastenBreite.setColumns(4);
+			kastenBreite.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					try{
+						double value = Double.parseDouble(kastenBreite.getText());
+						if(value<=0){
+							kastenBreite.setText("1");
+						}
+					}catch(Exception exception){
+						kastenBreite.setText("1");
+					}
+				}
+			});
+			break;
+		case Parabel:
+			break;
+		case benutzerdefiniert:
+			break;
+		default:
+			break;
+		}
+		repaint();
+	}
+}

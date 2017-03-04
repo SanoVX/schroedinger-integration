@@ -2,9 +2,16 @@ import java.util.ArrayList;
 
 public class Coulomb extends Potential {
 
+	private double q_c;
+
+	public Coulomb(double q_c){
+		super();
+		this.q_c = q_c;
+	}
+	
 	@Override
 	public double getPotential(double x) {
-		return -e*e/(4*pi*e0*Math.abs(x));
+		return -q_c*e/(4*pi*e0*Math.abs(x));
 	}
 
 	@Override

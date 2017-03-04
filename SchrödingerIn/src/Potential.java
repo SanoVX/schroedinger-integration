@@ -2,11 +2,11 @@ import java.util.ArrayList;
 
 public abstract class Potential {
 
-	protected double h = SchroedingerIntegration.h; // wirkungsquantum
-	protected double u = SchroedingerIntegration.u; //elementarmasse
-	protected double e = SchroedingerIntegration.e; //elementarladung
+	protected double h = Einstellungen.h; // wirkungsquantum
+	protected double u = Einstellungen.u; //elementarmasse
+	protected double e = Einstellungen.e; //elementarladung
 	protected double pi = Math.PI; 
-	protected double e0 = SchroedingerIntegration.e0;
+	protected double e0 = Einstellungen.e0;
 		
 	
 	public Potential(){

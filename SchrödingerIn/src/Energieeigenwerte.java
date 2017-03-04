@@ -16,11 +16,11 @@ public class Energieeigenwerte {
 	private ArrayList<ArrayList<ArrayList<ArrayList<Double>>>> loesungsschritte = new ArrayList<>();
 	
 	//Import der Konstanten
-	private double h = SchroedingerIntegration.h; // wirkungsquantum
-	private double u = SchroedingerIntegration.u; //elementarmasse
-	private double e = SchroedingerIntegration.e; //elementarladung
+	private double h = Einstellungen.h; // wirkungsquantum
+	private double u = Einstellungen.u; //elementarmasse
+	private double e = Einstellungen.e; //elementarladung
 	private double pi = Math.PI; 
-	private double e0 = SchroedingerIntegration.e0;
+	private double e0 = Einstellungen.e0;
 	
 	//Konstruktor
 	public Energieeigenwerte(Potential potential, double E_min, double E_max){
@@ -58,7 +58,11 @@ public class Energieeigenwerte {
 					solution.remove(j);
 				}
 				
-				normalizeIntegral(solution);
+				if(Einstellungen.normalizeIntegral){
+					normalizeIntegral(solution);
+				}else{
+					normalizeMaximum(solution);
+				}
 				
 				cutoff(solution);
 				
@@ -69,18 +73,31 @@ public class Energieeigenwerte {
 				loesungsblock.add(solution);
 				
 			}
-			loesungsblock.add(solution);
+			int size = solution.size();
+			
+			for(int j=size-1;j>size-100 && j>1;j--){
+				solution.remove(j);
+			}
+			
+			if(Einstellungen.normalizeIntegral){
+				normalizeIntegral(solution);
+			}else{
+				normalizeMaximum(solution);
+			}
+			
+			cutoff(solution);
+			
+			for(int j = 0; j< solution.size(); j++){
+				solution.get(j).set(1, solution.get(j).get(1)+E_start);
+			}
 
+			loesungsblock.add(solution);
+			
+			
 			loesungsschritte.add(loesungsblock);
 			loesungsblock = new ArrayList<>();
 			E_current -= Math.pow(10,-i)*e;
 		}
-		
-		int size = solution.size();
-		
-		cutoff(solution);
-		
-		normalizeMaximum(solution);
 		
 		searched = true;
 	}

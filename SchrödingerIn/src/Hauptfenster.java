@@ -1,4 +1,3 @@
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 
@@ -59,6 +58,7 @@ public class Hauptfenster extends JFrame {
 	 * Create the frame.
 	 */
 	public Hauptfenster() {
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = (int) screenSize.getWidth();
@@ -66,7 +66,7 @@ public class Hauptfenster extends JFrame {
 		setBounds(0, 0, width, height);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		
-		JMenuBar menuBar = new JMenuBar();
+		final JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
 		JMenu Datei = new JMenu("Datei");
@@ -92,7 +92,6 @@ public class Hauptfenster extends JFrame {
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-					JOptionPane.showMessageDialog(null, "Not yet implemented");
 				}
 			}
 		});
@@ -117,7 +116,8 @@ public class Hauptfenster extends JFrame {
 		setPot.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				JOptionPane.showMessageDialog(null, "Not yet implemented");
+				Potentialeinstellungen potSet = new Potentialeinstellungen();
+				potSet.setVisible(true);		
 			}
 		});
 		mnEinstellungen.add(setPot);
@@ -126,7 +126,8 @@ public class Hauptfenster extends JFrame {
 		setSim.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				JOptionPane.showMessageDialog(null, "Not yet implemented");
+				Simulationseinstellungen simSet = new Simulationseinstellungen();
+				simSet.setVisible(true);
 			}
 		});
 		mnEinstellungen.add(setSim);
@@ -149,7 +150,9 @@ public class Hauptfenster extends JFrame {
 			public void mouseClicked(MouseEvent arg0) {
 				try{
 					if(btnStart.getText().equals("Start")){
+						menuBar.getMenu(1).getItem(0).setEnabled(false);;
 						simulation.run();
+						menuBar.getMenu(1).getItem(0).setEnabled(true);;
 						btnStart.setText("Stopp");
 					}else{
 						simulation.stop();

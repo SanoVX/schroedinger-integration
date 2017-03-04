@@ -1,12 +1,10 @@
 import java.util.ArrayList;
 
 public class SchroedingerIntegration {
-
-	public static double h = 6.626070040*Math.pow(10, -34); // wirkungsquantum
-	public static double u = 9.10938356*Math.pow(10,-31); //elementarmasse
-	public static double e = 1.6021766208*Math.pow(10,-19); //elementarladung
-
-	public static double e0 = 8.85418781762*Math.pow(10,-12);
+	
+	private double e = Einstellungen.e;
+	
+	public static Potential potential = new Coulomb(Einstellungen.e);
 
 	private Game g;
 	private Thread t1;
@@ -43,15 +41,22 @@ public class SchroedingerIntegration {
 		}
 
 		//numerische integration
-		Energieeigenwerte E = new Energieeigenwerte(new Coulomb(), -16*e, -0.1*e);
+		Energieeigenwerte E = new Energieeigenwerte(potential, -16*e, -0.1*e);
 		for(int i = 0; i < energylevels; i++){
 			E.step();
 			
-			ArrayList<ArrayList<ArrayList<ArrayList<Double>>>> l = E.gibloesungsschritte();
+			ArrayList<ArrayList<ArrayList<Double>>> l = E.gibloesungsschritte().get(0);
+			if(l.size() > 15){
+				int size = l.size();
+				for(int j=size-15; j>0; j-- ){
+						l.remove(j);
+				}
+			}
 			//for(int s = 0; s < l.size(); s++){
 
 					//g.ks.get(0).addEnergy(E.getEnergy()/e);	
-					g.ks.get(0).simulation.add(l.get(0));
+					g.ks.get(0).simulation.add(l);
+					
 			//}
 			System.out.println(E.getEnergy()/e);
 			g.ks.get(1).addEnergy(E.getEnergy()/e);	
