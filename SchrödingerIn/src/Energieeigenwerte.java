@@ -40,6 +40,7 @@ public class Energieeigenwerte {
 	public void step(){
 		searched = false;
 		E_current += 0.00001*e;
+		double E_start = E_current;
 		
 		loesungsschritte.clear();
 		ArrayList<ArrayList<ArrayList<Double>>> loesungsblock = new ArrayList<>();
@@ -60,6 +61,10 @@ public class Energieeigenwerte {
 				normalizeIntegral(solution);
 				
 				cutoff(solution);
+				
+				for(int j = 0; j< solution.size(); j++){
+					solution.get(j).set(1, solution.get(j).get(1)+E_start);
+				}
 
 				loesungsblock.add(solution);
 				
