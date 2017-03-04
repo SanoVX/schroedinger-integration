@@ -109,11 +109,11 @@ public class Game extends JPanel{
 	
 
 
-	public void plot() throws InterruptedException{
-
-		while(true){
+	/*public void plot() throws InterruptedException{
+		
+		while(!simulated){
 			this.repaint();
 			Thread.sleep(100); // sleeping time
 		}
-	}
+	}*/
 }
