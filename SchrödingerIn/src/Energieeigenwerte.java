@@ -97,13 +97,13 @@ public class Energieeigenwerte {
 		
 		if(ungerade){
 			Sx.add(0.); Sx.add(0.); // initialisiere ersten Punkt auf 0/0
-			temp.add(Sx);				// f�gt punkt in liste f hinzu
+			temp.add(Sx);				// fï¿½gt punkt in liste f hinzu
 			Sx = new ArrayList<>();
 			Sx.add(step); Sx.add(1.0); // initialisiere zweiten punkt auf step/step
 			temp.add(Sx);
 		}else{
 			Sx.add(0.); Sx.add(1.); // initialisiere ersten Punkt auf 0/0
-			temp.add(Sx);				// f�gt punkt in liste f hinzu
+			temp.add(Sx);				// fï¿½gt punkt in liste f hinzu
 			Sx = new ArrayList<>();
 			Sx.add(step); Sx.add(1.2); // initialisiere zweiten punkt auf step/step
 			temp.add(Sx);
@@ -111,7 +111,7 @@ public class Energieeigenwerte {
 		
 		for(int i = 1; i < (int)(xrange/step)+1; i++){
 
-			double x = temp.get(i).get(0) + step*i; // berechnet x koordinate des n�chsten punktes
+			double x = temp.get(i).get(0) + step*i; // berechnet x koordinate des nï¿½chsten punktes
 			Sx = new ArrayList<>();
 			double y = Qi(step*i,step)*temp.get(i).get(1)-temp.get(i-1).get(1);
 
