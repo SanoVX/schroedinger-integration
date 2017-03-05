@@ -48,7 +48,7 @@ public class SchroedingerIntegration {
 			ArrayList<ArrayList<ArrayList<Double>>> l = E.gibloesungsschritte().get(0);
 			if(l.size() > 1){
 				int size = l.size();
-				for(int j=size-1; j>0; j-- ){
+				for(int j=size-15; j>0; j-- ){
 						l.remove(j);
 				}
 			}
