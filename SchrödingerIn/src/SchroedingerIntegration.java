@@ -41,14 +41,14 @@ public class SchroedingerIntegration {
 		}
 
 		//numerische integration
-		Energieeigenwerte E = new Energieeigenwerte(potential, -16*e, -0.1*e);
+		Energieeigenwerte E = new Energieeigenwerte(potential, Einstellungen.E_min, Einstellungen.E_max);
 		for(int i = 0; i < energylevels; i++){
 			E.step();
 			
 			ArrayList<ArrayList<ArrayList<Double>>> l = E.gibloesungsschritte().get(0);
-			if(l.size() > 15){
+			if(l.size() > 1){
 				int size = l.size();
-				for(int j=size-15; j>0; j-- ){
+				for(int j=size-1; j>0; j-- ){
 						l.remove(j);
 				}
 			}

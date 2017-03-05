@@ -79,17 +79,14 @@ public class Energieeigenwerte {
 				solution.remove(j);
 			}
 			
+			cutoff(solution);
+			
 			if(Einstellungen.normalizeIntegral){
 				normalizeIntegral(solution);
 			}else{
 				normalizeMaximum(solution);
 			}
 			
-			cutoff(solution);
-			
-			for(int j = 0; j< solution.size(); j++){
-				solution.get(j).set(1, solution.get(j).get(1)+E_start);
-			}
 
 			loesungsblock.add(solution);
 			
@@ -174,11 +171,11 @@ public class Energieeigenwerte {
 	}
 	
 	public void cutoff(ArrayList<ArrayList<Double>> solution){
-		double epsilon = 2;
+		double epsilon = 0.1;
 		int counter = 0;
 		
 		for(int i = 0; i < solution.size(); i++){
-			if(counter > 50){
+			if(counter >10){
 				for(int j = solution.size()-1; j > i; j--){
 					solution.remove(j);
 				}

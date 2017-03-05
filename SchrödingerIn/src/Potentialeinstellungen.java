@@ -39,6 +39,8 @@ public class Potentialeinstellungen extends JFrame {
 	private Potential potential;
 	
 	private double e = Einstellungen.e;
+	private JTextField E_min_Eingabe;
+	private JTextField E_max_Eingabe;
 
 
 	/**
@@ -149,6 +151,52 @@ public class Potentialeinstellungen extends JFrame {
 		});
 		btnNewButton_1.setBounds(103, 278, 89, 23);
 		contentPane.add(btnNewButton_1);
+		
+		JLabel lblEnergienFuerDie = new JLabel("Energien fuer die Suche in eV:");
+		lblEnergienFuerDie.setBounds(10, 147, 145, 14);
+		contentPane.add(lblEnergienFuerDie);
+		
+		JLabel lblMaximum = new JLabel("Maximum");
+		lblMaximum.setBounds(10, 172, 46, 20);
+		contentPane.add(lblMaximum);
+		
+		JLabel lblMinimum = new JLabel("Minimum");
+		lblMinimum.setBounds(10, 203, 46, 17);
+		contentPane.add(lblMinimum);
+		
+		E_min_Eingabe = new JTextField();
+		E_min_Eingabe.setText("-20");
+		E_min_Eingabe.setBounds(84, 172, 86, 20);
+		contentPane.add(E_min_Eingabe);
+		E_min_Eingabe.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				try{
+					double d = Double.parseDouble(E_min_Eingabe.getText());
+					Einstellungen.E_min=d*e;
+				}catch(Exception exception){
+					kastenBoden.setText("-20");
+				}
+			}
+		});
+		E_min_Eingabe.setColumns(10);
+		
+		E_max_Eingabe = new JTextField();
+		E_max_Eingabe.setText("0");
+		E_max_Eingabe.setColumns(10);
+		E_max_Eingabe.setBounds(84, 200, 86, 20);
+		E_max_Eingabe.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				try{
+					double d = Double.parseDouble(E_min_Eingabe.getText());
+					Einstellungen.E_max=d*e;
+				}catch(Exception exception){
+					kastenBoden.setText("0");
+				}
+			}
+		});
+		contentPane.add(E_max_Eingabe);
 		
 	}
 
