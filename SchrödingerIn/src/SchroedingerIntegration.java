@@ -14,7 +14,8 @@ public class SchroedingerIntegration {
 	}
 	
 	
-	public void run() throws InterruptedException{
+	public ArrayList<Double> run() throws InterruptedException{
+		ArrayList<Double> energies = new ArrayList<>();
 		int energylevels = 5;
 		int xsize = g.width*3/8;
 		int ysize = g.height*3/8;
@@ -61,6 +62,7 @@ public class SchroedingerIntegration {
 			System.out.println(E.getEnergy()/e);
 			g.ks.get(1).addEnergy(E.getEnergy()/e);	
 			g.ks.get(1).solution.add(E.getSolution());
+			energies.add(E.getEnergy()/e);
 			
 			
 			t1 = new Thread(){
@@ -76,6 +78,7 @@ public class SchroedingerIntegration {
 			};
 			t1.start();
 		}
+		return energies;
 	}
 
 

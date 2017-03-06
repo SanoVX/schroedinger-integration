@@ -18,6 +18,8 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -31,12 +33,15 @@ import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 public class Hauptfenster extends JFrame {
 
 	private JPanel contentPane;
+	private JLabel lblEnergies;
 	private SchroedingerIntegration simulation;
-	private Game g = new Game();
+	private Game g;
 
 	/**
 	 * Launch the application.
@@ -66,6 +71,8 @@ public class Hauptfenster extends JFrame {
 		setBounds(0, 0, width, height);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		
+		g = new Game();
+		
 		final JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
@@ -81,7 +88,7 @@ public class Hauptfenster extends JFrame {
 				fc.setAcceptAllFileFilterUsed(false);
 				FileNameExtensionFilter fextf = new FileNameExtensionFilter("Bild", "png");
 				fc.setFileFilter(fextf);
-				if(fc.showSaveDialog(null)==fc.APPROVE_OPTION){
+				if(fc.showSaveDialog(null)==JFileChooser.APPROVE_OPTION){
 					File f = fc.getSelectedFile();
 					if (!f.getPath().endsWith(".png"))
 					    f = new File(f.getPath() + ".png");
@@ -151,7 +158,13 @@ public class Hauptfenster extends JFrame {
 				try{
 					if(btnStart.getText().equals("Start")){
 						menuBar.getMenu(1).getItem(0).setEnabled(false);;
-						simulation.run();
+						ArrayList<Double>energies = simulation.run();
+						lblEnergies.setText("<html>Energieniveaus:");
+						for(int i = 0; i<energies.size();i++){
+							lblEnergies.setText(lblEnergies.getText()+"<br>"+
+										new DecimalFormat("###.###").format(energies.get(i))+" eV");
+						}
+						lblEnergies.setText(lblEnergies.getText()+"</html>");
 						menuBar.getMenu(1).getItem(0).setEnabled(true);;
 						btnStart.setText("Stopp");
 					}else{
@@ -163,7 +176,22 @@ public class Hauptfenster extends JFrame {
 				}
 			}
 		});
+		
+		JButton btnclear = new JButton("Clear");
+		btnclear.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				g = new Game();
+			}
+		});
+		btnclear.setBounds(width-150, height-270, 100, 50);
+		contentPane.add(btnclear);
 		contentPane.add(btnStart);
+		
+		lblEnergies = new JLabel("Energieniveaus:");
+		lblEnergies.setVerticalAlignment(SwingConstants.TOP);
+		lblEnergies.setBounds(width-170, 10, 150, height-200);
+		contentPane.add(lblEnergies);
 		
 	}
 
