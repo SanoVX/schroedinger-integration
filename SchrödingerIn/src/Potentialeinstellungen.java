@@ -1,35 +1,21 @@
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
-import javax.swing.ButtonGroup;
-import javax.swing.InputVerifier;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-import javax.swing.LayoutFocusTraversalPolicy;
-import javax.swing.BoxLayout;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.jar.JarInputStream;
-import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
-import javax.swing.JButton;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
 public class Potentialeinstellungen extends JFrame {
 
@@ -38,7 +24,7 @@ public class Potentialeinstellungen extends JFrame {
 	
 	private Potentialarten potentialAuswahl;
 	
-	private JTextField coulomb1, kastenBoden, kastenBreite, kastenHoehe;
+	private JTextField coulomb1, kastenBoden, kastenBreite, kastenHoehe, benutzerdefiniert;
 	private Potential potential;
 	
 	private double e = Einstellungen.e;
@@ -328,6 +314,25 @@ public class Potentialeinstellungen extends JFrame {
 		case Parabel:
 			break;
 		case benutzerdefiniert:
+			JLabel lblben = new JLabel("<html>Hier kann ein benutzerdefriniertes Potential eingegeben werden."
+					+ "<br>Die Funktion enthaelt als Variable x dies symbolisiert den Abstand vom Zentrum x=0<br>"
+					+ "Als Konstanten koennen folgende Werte verwendet werden:"
+					+ "<ul><li>e: Elementarladung</li>"
+					+ "<li>u: Masse des Elektrons</li>"
+					+ "<li>h: Plancksches Wirkungsquantum</li></ul></html>");
+			lblben.setBounds(5,5,200,100);
+			settings.add(lblben);
+			
+			benutzerdefiniert = new JTextField("1/x");
+			benutzerdefiniert.setBounds(5,105,50,20);
+			settings.add(benutzerdefiniert);
+			benutzerdefiniert.setColumns(20);
+			benutzerdefiniert.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					//Check syntax
+				}
+			});
 			break;
 		default:
 			break;

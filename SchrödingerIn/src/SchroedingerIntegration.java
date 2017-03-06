@@ -62,22 +62,25 @@ public class SchroedingerIntegration {
 			g.ks.get(1).addEnergy(E.getEnergy()/e);	
 			g.ks.get(1).solution.add(E.getSolution());
 			energies.add(E.getEnergy()/e);
+
 			
-			
-			t1 = new Thread(){
-				public void run(){
-					try {
-						while(!g.simulated&&!isInterrupted()){
-							g.repaint();
-							Thread.sleep(100); // sleeping time
-						}
-					} catch (InterruptedException e) {
-					}
-				}
-			};
-			t1.start();
 			count ++;
 		}while(E.step()&&count<Einstellungen.maxNiveaus);
+			
+			t1 = new Thread(){
+			public void run(){
+				while(!g.simulated&&!isInterrupted()){
+					g.repaint();
+					try {
+						Thread.sleep(100); // sleeping time
+					} catch (InterruptedException e) {
+						Thread.currentThread().interrupt();
+					}
+				}
+			}
+		};
+		t1.start();
+
 		return energies;
 	}
 
