@@ -1,18 +1,9 @@
 import java.awt.Dimension;
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.filechooser.FileSystemView;
-import javax.swing.JMenuBar;
-import javax.swing.JOptionPane;
-import javax.swing.JMenu;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-
+import java.awt.GridLayout;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -20,21 +11,20 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Toolkit;
 
 import javax.imageio.ImageIO;
-import javax.imageio.stream.FileImageOutputStream;
-import javax.swing.BoxLayout;
-import java.awt.Component;
-import javax.swing.JMenuItem;
-import javax.swing.JSeparator;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Hauptfenster extends JFrame {
 
@@ -63,6 +53,7 @@ public class Hauptfenster extends JFrame {
 	 * Create the frame.
 	 */
 	public Hauptfenster() {
+		setTitle("Schroedingerintegration");
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -181,7 +172,6 @@ public class Hauptfenster extends JFrame {
 		btnclear.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				g = new Game();
 			}
 		});
 		btnclear.setBounds(width-150, height-270, 100, 50);

@@ -12,5 +12,7 @@ public class Einstellungen {
 	//Einstellung fuer Berechnung
 	public static double E_max = 0.0;
 	public static double E_min = -20*e;
+	public static int maxNiveaus = 8;
+	public static double Amplitudengrenze = 1E4;
 	
 }

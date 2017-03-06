@@ -27,6 +27,9 @@ import java.util.jar.JarInputStream;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import javax.swing.JButton;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.text.DecimalFormat;
 
 public class Potentialeinstellungen extends JFrame {
 
@@ -140,29 +143,30 @@ public class Potentialeinstellungen extends JFrame {
 				finish();			
 			}
 		});
-		btnNewButton.setBounds(10, 278, 89, 23);
+		btnNewButton.setBounds(10, 278, 77, 23);
 		contentPane.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("Abbrechen");
-		btnNewButton_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		btnNewButton_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
 				dispose();
 			}
 		});
-		btnNewButton_1.setBounds(103, 278, 89, 23);
+		btnNewButton_1.setBounds(97, 278, 101, 23);
 		contentPane.add(btnNewButton_1);
 		
 		JLabel lblEnergienFuerDie = new JLabel("Energien fuer die Suche in eV:");
-		lblEnergienFuerDie.setBounds(10, 147, 145, 14);
+		lblEnergienFuerDie.setBounds(10, 147, 182, 14);
 		contentPane.add(lblEnergienFuerDie);
 		
-		JLabel lblMaximum = new JLabel("Maximum");
-		lblMaximum.setBounds(10, 172, 46, 20);
-		contentPane.add(lblMaximum);
-		
 		JLabel lblMinimum = new JLabel("Minimum");
-		lblMinimum.setBounds(10, 203, 46, 17);
+		lblMinimum.setBounds(10, 172, 64, 20);
 		contentPane.add(lblMinimum);
+		
+		JLabel lblMaximum = new JLabel("Maximum");
+		lblMaximum.setBounds(10, 203, 64, 17);
+		contentPane.add(lblMaximum);
 		
 		E_min_Eingabe = new JTextField();
 		E_min_Eingabe.setText("-20");
@@ -173,9 +177,11 @@ public class Potentialeinstellungen extends JFrame {
 			public void actionPerformed(ActionEvent event) {
 				try{
 					double d = Double.parseDouble(E_min_Eingabe.getText());
-					Einstellungen.E_min=d*e;
+					if(d>Double.parseDouble(E_max_Eingabe.getText())){
+						E_min_Eingabe.setText(new DecimalFormat("#######.########").format(Einstellungen.E_min/e));
+					}
 				}catch(Exception exception){
-					kastenBoden.setText("-20");
+					E_min_Eingabe.setText("-20");
 				}
 			}
 		});
@@ -189,10 +195,12 @@ public class Potentialeinstellungen extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				try{
-					double d = Double.parseDouble(E_min_Eingabe.getText());
-					Einstellungen.E_max=d*e;
+					double d = Double.parseDouble(E_max_Eingabe.getText());
+					if(d<Double.parseDouble(E_min_Eingabe.getText())){
+						E_max_Eingabe.setText(new DecimalFormat("#######.########").format(Einstellungen.E_max/e));
+					}
 				}catch(Exception exception){
-					kastenBoden.setText("0");
+					E_max_Eingabe.setText("0");
 				}
 			}
 		});
@@ -220,6 +228,8 @@ public class Potentialeinstellungen extends JFrame {
 			potential = null;
 			break;	
 		}
+		Einstellungen.E_max = Double.parseDouble(E_max_Eingabe.getText())*e;
+		Einstellungen.E_min = Double.parseDouble(E_min_Eingabe.getText())*e;
 		SchroedingerIntegration.potential = potential;
 	}
 

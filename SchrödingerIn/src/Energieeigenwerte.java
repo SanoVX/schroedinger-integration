@@ -6,7 +6,7 @@ public class Energieeigenwerte {
 	private Potential potential;
 	private double E_current,E_max,E_min;
 	private int accuracy = 15;
-	private double xrange = Math.pow(10,-8);
+	private double xrange = Math.pow(10,-6);
 	private boolean searched;
 	private boolean ungerade;
 	
@@ -37,7 +37,7 @@ public class Energieeigenwerte {
 	/*
 	 * Fuehrt die Berechung des naechsten Energieeigenwerts aus
 	 */
-	public void step(){
+	public boolean step(){
 		searched = false;
 		E_current += 0.00001*e;
 		double E_start = E_current;
@@ -54,14 +54,8 @@ public class Energieeigenwerte {
 				}
 				int size = solution.size();
 				
-				for(int j=size-1;j>size-100 && j>1;j--){
+				for(int j=size-1;j>size-700 && j>1;j--){
 					solution.remove(j);
-				}
-				
-				if(Einstellungen.normalizeIntegral){
-					normalizeIntegral(solution);
-				}else{
-					normalizeMaximum(solution);
 				}
 				
 				cutoff(solution);
@@ -75,6 +69,19 @@ public class Energieeigenwerte {
 			}
 			int size = solution.size();
 			
+			ArrayList<ArrayList<Double>>solutionTemp = new ArrayList<>();
+			for(int a = 0; a<solution.size();a++){
+				solutionTemp.add(new ArrayList<>(solution.get(a)));		
+			}
+						
+			for(int j=size-1;j>size-700 && j>1;j--){
+				solutionTemp.remove(j);
+			}
+			
+			cutoff(solutionTemp);
+	
+			loesungsblock.add(solutionTemp);
+			
 			for(int j=size-1;j>size-100 && j>1;j--){
 				solution.remove(j);
 			}
@@ -86,17 +93,18 @@ public class Energieeigenwerte {
 			}else{
 				normalizeMaximum(solution);
 			}
-			
 
-			loesungsblock.add(solution);
-			
-			
 			loesungsschritte.add(loesungsblock);
 			loesungsblock = new ArrayList<>();
 			E_current -= Math.pow(10,-i)*e;
 		}
 		
 		searched = true;
+		if(E_current>E_max){
+			return false;
+		}else{
+			return true;
+		}
 	}
 	
 	/*
@@ -105,7 +113,7 @@ public class Energieeigenwerte {
 	private int recursion(){
 		ArrayList<ArrayList<Double>> temp = new ArrayList<>();
 		//xrange = -e/(4*pi*e0*E);
-		double step = xrange/10000;
+		double step = xrange/1000000;
 		//Anfangsbedingungen
 		ArrayList<Double> Sx = new ArrayList<>(); // Liste mit x,y koordinaten der punkte 
 		
@@ -134,10 +142,10 @@ public class Energieeigenwerte {
 			temp.add(Sx);
 
 				
-			if(y>100){
+			if(y>Einstellungen.Amplitudengrenze){
 				solution = temp;
 				return 1;
-			}else if (y<-100){
+			}else if (y<-Einstellungen.Amplitudengrenze){
 				solution = temp;
 				return -1;
 			}

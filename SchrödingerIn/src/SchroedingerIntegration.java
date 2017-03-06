@@ -16,7 +16,6 @@ public class SchroedingerIntegration {
 	
 	public ArrayList<Double> run() throws InterruptedException{
 		ArrayList<Double> energies = new ArrayList<>();
-		int energylevels = 5;
 		int xsize = g.width*3/8;
 		int ysize = g.height*3/8;
 		//erstellen der koordinatensysteme
@@ -43,13 +42,13 @@ public class SchroedingerIntegration {
 
 		//numerische integration
 		Energieeigenwerte E = new Energieeigenwerte(potential, Einstellungen.E_min, Einstellungen.E_max);
-		for(int i = 0; i < energylevels; i++){
-			E.step();
-			
+		E.step();
+		int count = 0;
+		do{			
 			ArrayList<ArrayList<ArrayList<Double>>> l = E.gibloesungsschritte().get(0);
 			if(l.size() > 1){
 				int size = l.size();
-				for(int j=size-15; j>0; j-- ){
+				for(int j=size-15; j>=0; j-- ){
 						l.remove(j);
 				}
 			}
@@ -77,14 +76,14 @@ public class SchroedingerIntegration {
 				}
 			};
 			t1.start();
-		}
+			count ++;
+		}while(E.step()&&count<Einstellungen.maxNiveaus);
 		return energies;
 	}
 
 
 	public void stop() {
 		t1.interrupt();
-		t1 = null;
 	}
 
 }
