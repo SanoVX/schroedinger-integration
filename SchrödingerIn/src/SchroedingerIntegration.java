@@ -36,8 +36,6 @@ public class SchroedingerIntegration {
 			}
 			k.xlabel = "Abstand des Kerns in m";
 			k.ylabel = "Energie in eV";
-			Funktion coulomb = new CoulombFunktion(k,0,0,false); 
-			k.funktions.add(coulomb);
 		}
 
 		//numerische integration

@@ -61,7 +61,7 @@ public class CoordinateSystem {
 	// method to linear fit datas
 	public void addEnergy(double e){
 		energy.add(e);
-		Funktion f = new Funktion(this,0,e,false);
+		Funktion f = new Funktion(this,Double.toString(e),false);
 		funktions.add(f);
 		
 	}

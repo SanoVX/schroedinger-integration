@@ -1,24 +1,36 @@
-
+import java.util.ArrayList;
 
 public class Funktion {
 	int xPixel;
 	int yPixel; //pixel for one step
 	double xmin;//
-	double xmax; //
+	double xmax; ///
 	double ymin = 0;
 	double ymax = 0;
 	double[] plot;
 	
-	//variables
-	double b;
-	double a;
-	boolean showallYs;
+	ArrayList<ArrayList<Integer>> idx2; 
+	ArrayList<ArrayList<Integer>> idx3;
 	
-	public Funktion(CoordinateSystem g,double a, double b, boolean showallYs){
-		this.a = a;
-		this.b = b;
+	
+	//variables
+	String message;
+	String funktion;
+	boolean showallYs;
+
+	Parser p;
+	
+	
+	//konstanten 
+	
+	public Funktion(CoordinateSystem g, String str, boolean showallYs){
 		this.showallYs = showallYs;
-		refresh(g);
+
+		Parser p = new Parser(str, this);
+		this.p = p;
+		if(p.valid){
+			refresh(g);
+		}
 	}
 	public void refresh(CoordinateSystem g){
 		this.xmin = g.xmin;
@@ -30,33 +42,20 @@ public class Funktion {
 		this.plot = new double[g.xsize]; 
 		for(int i = 0; i < this.plot.length; i++){
 			double x = ((double)i)/(xPixel) + xmin;
-			double y = Fitfunkt(a,b,x);///////////////////
-			
+			double y = CalculateString.returnY(this, x, p.SyntaxList); ///////////////////
+			//System.out.println(y);
 			if(showallYs || (y >= ymin && y<ymax)){
 				this.plot[i] = y; // use k and not i here
-			}if(y < ymin){
+			}
+			if(y < ymin){
 				this.plot[i] = ymin;
 			}
 			if(y > ymax){
 				this.plot[i] = ymax;
 			}
 		}
+		
 	}
 
 	
-
-	
-	
-	public double testfunktion(double I,double b,double l,double phi){
-		phi = phi*(2*Math.PI)/360;
-		double y = I*Math.pow(Math.sin(Math.PI*b/l*Math.sin(phi))/(Math.PI*b/l*Math.sin(phi)),2);
-		y = Math.log10(y);
-		return y;
-	}
-	
-	
-	public double Fitfunkt(double a, double b, double x){
-		double y = a*x+b;
-		return y;
-	}
 }
