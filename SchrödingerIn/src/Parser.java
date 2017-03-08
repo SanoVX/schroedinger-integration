@@ -24,7 +24,7 @@ public class Parser {
 	static String[] validNumbers = {"0","1","2","3","4","5","6","7","8","9","."};
 	static ArrayList<String> variable = new ArrayList<>();
 	static ArrayList<Double> values = new ArrayList<>();
-	static String[] funktions = {"sin","cos", "tan", "arctan", "arcsin", "abs", "arccos","sinh", "cosh", "tanh"};
+	static String[] funktions = {"sin","cos", "tan", "arctan", "arcsin", "abs", "arccos","sinh", "cosh", "tanh", "theta"};
 	
 	public Parser(String syntax, Funktion f){
 		this.f = f;

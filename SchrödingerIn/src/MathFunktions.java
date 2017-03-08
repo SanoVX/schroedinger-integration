@@ -1,7 +1,6 @@
 
 public class MathFunktions {
 
-	static String[] funktions = {"sin","cos", "tan", "arctan", "arcsin", "abs", "arccos","sinh", "cosh", "tanh"};
 	
 	public static String calc(int i, String s){
 		String str = "";
@@ -35,6 +34,13 @@ public class MathFunktions {
 		}
 		if(i == 9){
 			d = Math.tanh(d);
+		}
+		if(i == 10){
+			if(d >= 0){
+				d = 1;
+			}else{
+				d = 0;
+			}
 		}
 		
 		return Double.toString(d);
