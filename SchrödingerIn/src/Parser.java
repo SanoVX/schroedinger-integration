@@ -48,6 +48,13 @@ public class Parser {
 	public void setVariables(){
 		variable.add("x");
 		values.add(0.0);
+		variable.add("e");
+		values.add(Math.E);
+		variable.add("pi");
+		values.add(Math.PI);
+		variable.add("e0");
+		values.add(8.854*Math.pow(10, -12));
+
 	}
 	
 	public void addVariable(String str, double value){

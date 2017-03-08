@@ -27,7 +27,7 @@ public class SchroedingerIntegration {
 			if(true){// growing range only in left coordinate system
 				k.growingrange = true;
 			}
-			k.plotThickness = 1;
+			k.plotThickness = 0;
 			g.calcTime = 50;
 			if(i == anzahlks -1){
 				k.headline = "Energieniveaus";
@@ -67,10 +67,29 @@ public class SchroedingerIntegration {
 			
 			t1 = new Thread(){
 			public void run(){
+
+				long initsleeptime = 100;
+				long sleeptime = 100;
+				int i = 0;
+				long calctime = 0;
 				while(!g.simulated&&!isInterrupted()){
+					if(i == 0){
+					long startTime = System.currentTimeMillis();
 					g.repaint();
+					long endTime = System.currentTimeMillis();
+					calctime = (endTime - startTime);
+					i += 1;
+					}else{
+						long startTime = System.currentTimeMillis();
+						g.repaint();
+						long endTime = System.currentTimeMillis();
+						long calculated = (endTime - startTime);
+						sleeptime = initsleeptime + calctime - calculated;
+					}
+					
 					try {
-						Thread.sleep(100); // sleeping time
+						System.out.println(sleeptime);
+						Thread.sleep(sleeptime); // sleeping time
 					} catch (InterruptedException e) {
 						Thread.currentThread().interrupt();
 					}
