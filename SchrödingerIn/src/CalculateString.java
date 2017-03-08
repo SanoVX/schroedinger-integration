@@ -7,51 +7,115 @@ public class CalculateString {
 	static ArrayList<Integer> firstPriority;
 	static ArrayList<Integer> secondPriority;
 	static ArrayList<Integer> thirdPriority;
+	static ArrayList<Integer> Identity;
+	static ArrayList<ArrayList<Integer>> idx2 = new ArrayList<>(); 
+	static ArrayList<ArrayList<Integer>> idx3 = new ArrayList<>();
 	
-	public static double returnY(Funktion f, double x, ArrayList<String> stringList){
+	public static double returnY(Funktion f, double x, ArrayList<String> List){
 		f.p.values.set(0,x);
+		Identity = new ArrayList<>();
+		for(int i = 0; i < f.p.Identity.size(); i++){
+			Identity.add(f.p.Identity.get(i));
+
+		}
+		ArrayList<String> stringList = new ArrayList<>();
+		for(int i = 0; i < List.size(); i++){
+			stringList.add(List.get(i));
+
+		}
 		//System.out.println(f.p.syntax);
-		ArrayList<ArrayList<Integer>> idx2 = f.idx2;
-		ArrayList<ArrayList<Integer>> idx3 = f.idx3;
+		/*for(int j = 0; j < f.idx2.size(); j++){
+			System.out.println(j + " " + f.idx2.get(j));
+
+			System.out.println(j + " " + f.idx3.get(j));
+		}*/
+		updateIndexLists();
 		String str = f.funktion;
-		for(int i = 0; i < idx2.size(); i++){
-			for(int j = 0; j < idx2.get(i).size(); j++){
-				stringList = calculate(stringList, x, idx2.get(i).get(idx2.get(i).size()-1-j), idx3.get(i).get(j), f);
-				for(int s = 0; s < idx2.size(); s++){
-					for(int d = 0; d < idx2.get(s).size(); s++){
-						if(idx2.get(s).get(d) < idx3.get(i).get(j)){
-							idx2.get(s).set(d,idx2.get(s).get(d) - (idx3.get(i).get(j)-idx2.get(i).get(idx2.get(i).size()-1-j)-2));
-						}
-						if(idx3.get(s).get(d) < idx3.get(i).get(j)){
-							idx3.get(s).set(d,idx3.get(s).get(d) - (idx3.get(i).get(j)-idx2.get(i).get(idx2.get(i).size()-1-j)-2));
-						}
-					}
-				}
+		while(idx2.size()>0 && idx2.get(0).size() != 0){
+			while(idx2.size() != 0 && idx2.get(idx2.size()-1).size()>0){
+				stringList = calculate(stringList, x, idx2.get(idx2.size() - 1).get(idx2.get(idx2.size() - 1).size()-1), idx3.get(idx2.size() - 1).get(0), f);
+				updateIndexLists();
 			}
 		}
 		stringList = calculate(stringList ,x,-1,stringList.size(), f);
-
-		//System.out.println(x + " " + stringList.get(0));
 		return Double.parseDouble(stringList.get(0));
 	}
 
 	public static ArrayList<String> calculate(ArrayList<String> stringList, double x, int one, int two, Funktion f){
+
+		/*System.out.println(one + " " + two);
+		for(int j = 0; j < stringList.size(); j++){
+			System.out.println(j + " " + stringList.get(j));
+		}
+		for(int j = 0; j < Identity.size(); j++){
+			System.out.println(j + " " + Identity.get(j));
+		}*/
 		for(int i = one + 1; i < two; i++){
 			if(isVar(stringList.get(i), f.p)){
 				String str = getCorrespondingValue(stringList.get(i), f.p);
 				stringList.set(i, str);
 			}
-			if(f.p.Identity.get(i) == 2){
+			if(Identity.get(i) == 2){
 				String str = calcFunktion(stringList.get(i), stringList.get(i+1), f.p);
 				stringList.set(i, str);
+				stringList.remove(i+1);
+				Identity.remove(i+1);
+				two -= 1;
 			}
 		}
-		ArrayList<String> str = CalculateStringList(stringList);
-		
+		ArrayList<String> str = CalculateStringList(stringList, Identity, one, two);
+
+		if(one != -1 && two != stringList.size()){
+			stringList.remove(one+2);
+			stringList.remove(one);
+			Identity.remove(one+2);
+			Identity.remove(one);
+		}
+		/*for(int j = 0; j < stringList.size(); j++){
+			System.out.println(j + " " + stringList.get(j));
+		}*/
 		return str;
 	}
+	public static void updateIndexLists(){
+		ArrayList<Integer> syntax = Identity;
+		idx2.clear();
+		idx3.clear();
+		int BraceColl = 0;
+		int lastBrace = 0;
+		for(int i = 0 ; i < syntax.size(); i++){
+			if(BraceColl >= idx2.size()){//increase list
+				ArrayList<Integer> b = new ArrayList<>();
+				ArrayList<Integer> d = new ArrayList<>();
+				idx2.add(b);
+				idx3.add(d);
+			}
+			if(syntax.get(i) == 5){
+				if(lastBrace == 6){
+					BraceColl += 1;
+					if(BraceColl >= idx2.size()){//increase list
+						ArrayList<Integer> b = new ArrayList<>();
+						ArrayList<Integer> d = new ArrayList<>();
+						idx2.add(b);
+						idx3.add(d);
+					}
+				}
+				idx2.get(BraceColl).add(i);
 	
-	public static ArrayList<String> CalculateStringList(ArrayList<String> list){
+				lastBrace = 5;
+			}
+			if(syntax.get(i) == 6){
+				lastBrace = 6;
+				idx3.get(BraceColl).add(i);
+			}
+		}
+		if(idx2.get(0).size()==0){
+			idx2.clear();
+			idx3.clear();
+		}
+		
+	}
+	
+	public static ArrayList<String> CalculateStringList(ArrayList<String> list, ArrayList<Integer> Identitiy, int one, int two){
 		
 		firstPriority = new ArrayList<>();
 		secondPriority = new ArrayList<>();
@@ -60,18 +124,11 @@ public class CalculateString {
 		priorities.add(firstPriority);
 		priorities.add(secondPriority);
 		priorities.add(thirdPriority);
+		updatePriorityLists(list, one , two);
 		for(int s = 0; s < 3; s++){
-			/*if(s < 4){
-
-			System.out.println(" listsize"+ " : " + list.size());
-			//System.out.println(" secondPrioritySize"+ " : " + secondPriority.size());
-			for(int i = 0; i < list.size(); i++){
-				System.out.println(i + " : " + list.get(i));
-			}}*/
-			updatePriorityLists(list);
 			calcPriorityLists(s, list);
-			s+= 1;
 		}
+
 		
 		
 		return list;
@@ -86,8 +143,10 @@ public class CalculateString {
 				double d = Math.pow(Double.parseDouble(number1), Double.parseDouble(number2));
 				for(int j = 1; j > -1; j--){
 					list.remove(idx + j);
+					Identity.remove(idx + j);
 				}
 				list.set(idx -1, Double.toString(d));
+				Identity.set(idx -1, 1);
 			}
 		}
 		if(priorityidx == 1){
@@ -100,12 +159,16 @@ public class CalculateString {
 					d = Double.parseDouble(number1) * Double.parseDouble(number2);
 				}
 				if(list.get(idx).equals("/")){
-					d = Double.parseDouble(number1) / Double.parseDouble(number2);
+					if(Double.parseDouble(number2)!=0){
+						d = Double.parseDouble(number1) / Double.parseDouble(number2);
+					}
 				}
 				for(int j = 1; j > -1; j--){
 					list.remove(idx + j);
+					Identity.remove(idx + j);
 				}
 				list.set(idx -1, Double.toString(d));
+				Identity.set(idx -1, 1);
 			}
 		}
 		if(priorityidx == 2){
@@ -122,17 +185,19 @@ public class CalculateString {
 				}
 				for(int j = 1; j > -1; j--){
 					list.remove(idx + j);
+					Identity.remove(idx + j);
 				}
 				list.set(idx -1, Double.toString(d));
+				Identity.set(idx -1, 1);
 			}
 		}
 	}
 	
-	public static void updatePriorityLists(ArrayList<String> list){
+	public static void updatePriorityLists(ArrayList<String> list, int one, int two){
 		firstPriority.clear();
 		secondPriority.clear();
 		thirdPriority.clear();
-		for(int i = 0; i < list.size(); i++){
+		for(int i = one + 1; i < two; i++){
 			if(list.get(i).equals("^")){
 				firstPriority.add(i);
 			}
@@ -165,6 +230,7 @@ public class CalculateString {
 	public static String calcFunktion(String str, String str2, Parser p){
 		for(int i = 0; i < p.funktions.length; i++){
 			if(str.equals(p.funktions[i])){
+				
 				return MathFunktions.calc(i, str2);
 			}
 		}

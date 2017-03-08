@@ -38,7 +38,7 @@ public class IdentityCheck {
 			}
 			if(str.equals(p.variable.get(j))){
 				p.helpString = str;
-				p.index = idx + str.length(); 
+				p.index = idx + str.length() - 1; 
 				return true;
 			}
 			char c = str2.charAt(idx);
@@ -64,7 +64,7 @@ public class IdentityCheck {
 			}
 			if(str.equals(p.funktions[j])){
 					p.helpString = str;
-					p.index = idx + str.length(); 
+					p.index = idx + str.length() - 1; 
 					return true;
 			}
 			char c = str2.charAt(idx);

@@ -49,7 +49,6 @@ public class Game extends JPanel{
 	}
 	
 	public void simulate(Graphics2D g2d){
-
 		if(currRange == 0){
 			funktNr += 1;
 		}		
@@ -72,6 +71,9 @@ public class Game extends JPanel{
 			ArrayList<ArrayList<Double>> add = copyList(ks.get(0).simulation.get(s).get(funktNr -1), currRange);
 			if(ks.get(0).simulation.get(s).get(funktNr -1).size() < currRange){
 				currRange = 0;
+			}
+			if(ks.get(0).measure.size() > 0 && currRange != 0){
+				ks.get(0).measure.remove(ks.get(0).measure.size()-1);
 			}
 			ks.get(0).addMeasures(add);
 		}
@@ -96,13 +98,17 @@ public class Game extends JPanel{
 		
 		if(ks != null){
 			for(int i = 0; i < ks.size(); i++){
-				ks.get(i).drawFunktions(ks.get(i).funktions, g2d);
-				ks.get(i).drawMeasure(false,g2d);
-				ks.get(i).drawKs(g2d);
+				if((i == 1 || !simulated)){
+					ks.get(i).drawFunktions(ks.get(i).funktions, g2d);
+					ks.get(i).drawMeasure(false,g2d);
+					ks.get(i).drawKs(g2d);
+				}
 			}
 		}
-
-		//funktionCleaner();
+		if(simulated){
+			ks.get(1).changePos(width/20,height/20);
+			ks.get(1).changeSize((int)(width*2.5/3.0), height*2/3);
+		}
 
 		
 	}

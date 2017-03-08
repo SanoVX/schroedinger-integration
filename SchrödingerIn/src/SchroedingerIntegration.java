@@ -36,6 +36,8 @@ public class SchroedingerIntegration {
 			}
 			k.xlabel = "Abstand des Kerns in m";
 			k.ylabel = "Energie in eV";
+			Funktion f = new Funktion(k, "1/(4*pi*b)*1/abs(x)", false);
+			k.funktions.add(f);
 		}
 
 		//numerische integration
@@ -85,10 +87,13 @@ public class SchroedingerIntegration {
 						long endTime = System.currentTimeMillis();
 						long calculated = (endTime - startTime);
 						sleeptime = initsleeptime + calctime - calculated;
+						if(sleeptime < 0){
+							sleeptime = 0;
+						}
 					}
 					
 					try {
-						System.out.println(sleeptime);
+						//System.out.println(sleeptime);
 						Thread.sleep(sleeptime); // sleeping time
 					} catch (InterruptedException e) {
 						Thread.currentThread().interrupt();

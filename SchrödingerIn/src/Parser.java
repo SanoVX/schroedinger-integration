@@ -32,6 +32,10 @@ public class Parser {
 		syntax = deleteSpaces(syntax);
 		ConvertToList(syntax);
 		overworkSyntax();
+
+		for(int i = 0; i < Identity.size(); i++){
+			System.out.println("Printing id list " + Identity.get(i));
+		}
 		if(CheckSyntax()){
 			this.message = "Calculating...";
 		}else{
@@ -39,9 +43,11 @@ public class Parser {
 			this.message = "Syntax Error";
 		}
 		System.out.println(message);
-		
 		for(int i = 0; i < SyntaxList.size(); i++){
 			System.out.println("Printing Syntax list " + SyntaxList.get(i));
+		}
+		for(int i = 0; i < Identity.size(); i++){
+			System.out.println("Printing id list " + Identity.get(i));
 		}
 	}
 	
@@ -52,7 +58,7 @@ public class Parser {
 		values.add(Math.E);
 		variable.add("pi");
 		values.add(Math.PI);
-		variable.add("e0");
+		variable.add("b");
 		values.add(8.854*Math.pow(10, -12));
 
 	}
@@ -101,7 +107,7 @@ public class Parser {
 			}*/
 			char c = str.charAt(i);
 			String s = Character.toString(c); 
-			System.out.println("Index = " + index+ " " +str.length());
+			//System.out.println("Index = " + index+ " " +str.length());
 			if(!IdentityCheck.isNumber(this, s,str ,i)){ // adds numbers to Stringlist
 				if(!helpString.equals("")){
 					identity.add(1);
@@ -127,11 +133,13 @@ public class Parser {
 				identity.add(1);
 				stringList.add(helpString);
 				added = true;
+				i = index;
 			}
 			if(IdentityCheck.isFunktion(this, s,str, i)){
 				identity.add(2);
 				stringList.add(helpString);
 				added = true;
+				i = index;
 			}
 			}
 			if(IdentityCheck.isBrace1(this, s)){
@@ -153,10 +161,6 @@ public class Parser {
 			}
 			
 		}
-		for(int i = 0; i < stringList.size(); i++){
-			System.out.println("Printing string list " + stringList.get(i));
-		}
-		
 		SyntaxList = stringList;
 		Identity = identity;
 	}
@@ -183,12 +187,12 @@ public class Parser {
 		for(int i = 0; i < clearIndex.size(); i++){
 
 			int m = clearIndex.get(clearIndex.size() - 1 - i);
-			Identity.remove(m);
 			String s = SyntaxList.get(clearIndex.get(clearIndex.size()-1 - i));
 			if(s.equals("-")){
 				String d = SyntaxList.get(clearIndex.get(clearIndex.size() - 1 - i) +1);
 				SyntaxList.set(clearIndex.get(clearIndex.size() - 1 - i) +1, "-" + d);
 			}
+			Identity.remove(m);
 			SyntaxList.remove(m);
 		}
 		
@@ -196,9 +200,10 @@ public class Parser {
 	
 	
 	public boolean CheckSyntax(){
+		ArrayList<Integer> id = new ArrayList<>();
 		for(int i = 0; i < Identity.size(); i++){
+			id.add(Identity.get(i));
 			if(Identity.get(i) == 7){
-				this.message = "Syntax Error";
 				return false;
 			}
 		}
@@ -208,15 +213,11 @@ public class Parser {
 		if(!checkNumbers(Identity)){
 			return false;
 		}
-		ArrayList<Integer> id = Identity;
 		if(!BraceHandler.validBraces(id)){
 			return false;
 		}
 		if(!BraceHandler.validBraceContent(f,id)){
 			return false;
-		}
-		for(int i = 0; i < id.size(); i++){
-		System.out.println(id.get(i));
 		}
 		if(!restSyntax(id)){
 			return false;
@@ -225,11 +226,12 @@ public class Parser {
 	}
 	
 	public boolean restSyntax(ArrayList<Integer> syntax){
-
+		
 		if(BraceHandler.validBegin(syntax.get(0))){
 			
 			return false;
 		}
+		
 		if(BraceHandler.validEnd(syntax.get(syntax.size()-1))){
 			return false;
 		}

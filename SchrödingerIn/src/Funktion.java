@@ -27,6 +27,7 @@ public class Funktion {
 		this.showallYs = showallYs;
 
 		Parser p = new Parser(str, this);
+		this.message = p.message;
 		this.p = p;
 		if(p.valid){
 			refresh(g);

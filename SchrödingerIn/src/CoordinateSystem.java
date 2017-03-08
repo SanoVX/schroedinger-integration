@@ -58,13 +58,23 @@ public class CoordinateSystem {
 		this.xsize = xsize;
 		this.ysize = ysize;
 	}
-	// method to linear fit datas
+	
 	public void addEnergy(double e){
 		energy.add(e);
 		Funktion f = new Funktion(this,Double.toString(e),false);
 		funktions.add(f);
 		
 	}
+	public void changeSize(int xsize, int ysize){
+		this.xsize = xsize;
+		this.ysize = ysize;
+	}
+	
+	public void changePos(int xpos, int ypos){
+		this.xpos = xpos;
+		this.ypos = ypos;
+	}
+	
 				
 	public void resetRange(){
 		xmin = 0;

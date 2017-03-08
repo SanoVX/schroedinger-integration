@@ -60,7 +60,7 @@ public class BraceHandler {
 		for(int i = 0; i < idx2.size(); i++){
 			
 			for(int j = 0; j < idx2.get(i).size(); j++){
-				if(!checkBraceSyntax(syntax, idx2.get(i).get(idx2.get(i).size()-1-j), idx3.get(i).get(j))){ // problem here
+				if(!checkBraceSyntax(syntax, idx2.get(idx2.size()-1 - i).get(idx2.get(i).size()-1-j), idx3.get(idx2.size() - 1 -i).get(j))){ // problem here
 					return false;
 				}
 			}
@@ -91,7 +91,7 @@ public class BraceHandler {
 				return false;
 			}
 		}
-		for(int i = 0; i <= Math.abs(two-one); i++){//converts brace content into numbers
+		for(int i = 1; i < Math.abs(two-one); i++){//converts brace content into numbers
 			syntax.remove(two-i);
 		}
 		return true;
