@@ -208,19 +208,25 @@ public class CoordinateSystem {
 	public void drawFunktions(ArrayList<Funktion> funktions2,Graphics2D g){
 		if(funktions2 != null){
 			if(drawable){
+				double px =(xsize/Math.abs(xmax - xmin));
 				double py =(ysize/Math.abs(ymax - ymin));
 				for(int i = 0; i < funktions2.size(); i++){
 					g.setColor(Color.RED);
 					if(funktions2.get(i) != null){
 						funktions2.get(i).refresh(this);
 						if(funktions2.get(i).plot != null){
-							for(int j = 0; j+1 < funktions2.get(i).plot.length; j++){
+							for(int j = 0; j+1 < funktions2.get(i).plot.size(); j++){
 								
-								double d1 = funktions2.get(i).plot[j];
-								double d2 = funktions2.get(i).plot[j+1];
-								int x1= xpos + j;
+								double d1 = funktions2.get(i).plot.get(j).get(1);
+								double d2 = funktions2.get(i).plot.get(j+1).get(1);
+								double xx1 = funktions2.get(i).plot.get(j).get(0);
+								double xx2 = funktions2.get(i).plot.get(j+1).get(0);
+								if(d1 != d2){
+								System.out.println(xx1 + "  " + funktions2.get(i).plot.get(j).get(1));
+								}
+								int x1= (int)(xpos  + xx1*px + (-xmin)*px);
 								int y1 = (int)(ypos + ysize +((ymin)*py) -(d1*py));//fix +2 stuff
-								int x2 = xpos + j+1;
+								int x2 = (int)(xpos  + xx2*px + (-xmin)*px);
 								int y2 = (int)(ypos + ysize +((ymin)*py) -(d2*py));
 								g.drawLine(x1,y1,x2,y2);
 							}

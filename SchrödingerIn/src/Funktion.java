@@ -7,7 +7,7 @@ public class Funktion {
 	double xmax; ///
 	double ymin = 0;
 	double ymax = 0;
-	double[] plot;
+	ArrayList<ArrayList<Double>> plot;
 	
 	ArrayList<ArrayList<Integer>> idx2; 
 	ArrayList<ArrayList<Integer>> idx3;
@@ -25,7 +25,6 @@ public class Funktion {
 	
 	public Funktion(CoordinateSystem g, String str, boolean showallYs){
 		this.showallYs = showallYs;
-
 		Parser p = new Parser(str, this);
 		this.message = p.message;
 		this.p = p;
@@ -34,27 +33,29 @@ public class Funktion {
 		}
 	}
 	public void refresh(CoordinateSystem g){
+		plot = new ArrayList<>();
 		this.xmin = g.xmin;
 		this.xmax = g.xmax;
 		this.ymin = g.ymin;
 		this.ymax = g.ymax;
 		this.xPixel = (int)(g.xsize/(xmax - xmin));
-
-		this.plot = new double[g.xsize]; 
-		for(int i = 0; i < this.plot.length; i++){
-			double x = ((double)i)/(xPixel) + xmin;
+		double x = xmin;
+		for(int i = 0; x < xmax; i++){
+			x = ((double)i)/(xPixel) + xmin;
 			double y = CalculateString.returnY(this, x, p.SyntaxList); ///////////////////
-		
+			ArrayList<Double> xy = new ArrayList<>();
+			xy.add(x);
 			//System.out.println(g + "x "+ x +"Energy"+ y);
 			if(showallYs || (y >= ymin && y<ymax)){
-				this.plot[i] = y; // use k and not i here
+				xy.add(y);
 			}
 			if(y < ymin){
-				this.plot[i] = ymin;
+				xy.add(ymin);
 			}
 			if(y > ymax){
-				this.plot[i] = ymax;
+				xy.add(ymax);
 			}
+			plot.add(xy);
 		}
 		
 	}

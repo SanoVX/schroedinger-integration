@@ -33,7 +33,6 @@ public class Game extends JPanel{
 		ArrayList<ArrayList<Double>> rfunkt = new ArrayList<>();
 		for(int i = 0; i < funkt.size() && i < currRange; i++){
 			rfunkt.add(funkt.get(i));
-			//System.out.println(rfunkt.size() + " " + currRange);
 		}
 		return rfunkt;
 		
