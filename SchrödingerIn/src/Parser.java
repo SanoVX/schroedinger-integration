@@ -34,9 +34,9 @@ public class Parser {
 		ConvertToList(syntax);
 		overworkSyntax();
 
-		for(int i = 0; i < Identity.size(); i++){
+		/*for(int i = 0; i < Identity.size(); i++){
 			System.out.println("Printing id list " + Identity.get(i));
-		}
+		}*/
 		if(CheckSyntax()){
 			this.message = "Calculating...";
 		}else{

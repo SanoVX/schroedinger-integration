@@ -53,8 +53,8 @@ public class IdentityCheck {
 			}
 		}
 		if(maxidx > -1){
-			System.out.println("variable "+variables.get(s));
-			System.out.println("index " + index.get(s));
+			//System.out.println("variable "+variables.get(s));
+			//System.out.println("index " + index.get(s));
 			p.helpString = variables.get(s);
 			p.index = maxidx;
 			return true;
@@ -63,29 +63,6 @@ public class IdentityCheck {
 	}
 	public static boolean isFunktion(Parser p, String str, String str2, int idx){
 
-		/*for(int j = 0; j < p.funktions.size(); j++){
-			String op = p.funktions.get(j);
-			if(op.length() > 1){
-				
-				for(int i = 1; i < op.length(); i++){
-					if(idx + i < str2.length()){
-						char c = str2.charAt(idx + i);
-						String s = Character.toString(c);
-						str += s;
-					}
-				}
-			}
-			if(str.equals(p.funktions.get(j))){
-					p.helpString = str;
-					p.index = idx + str.length() - 1; 
-					return true;
-			}
-			char c = str2.charAt(idx);
-			String s = Character.toString(c);
-			str = s;
-		}
-		
-		return false;*/
 		ArrayList<String> funkt = new ArrayList<>();
 		ArrayList<Integer> index = new ArrayList<>();
 		for(int j = 0; j < p.funktions.size(); j++){
@@ -116,8 +93,6 @@ public class IdentityCheck {
 			}
 		}
 		if(maxidx > -1){
-			System.out.println("variable "+funkt.get(s));
-			System.out.println("index " + index.get(s));
 			p.helpString = funkt.get(s);
 			p.index = maxidx;
 			return true;

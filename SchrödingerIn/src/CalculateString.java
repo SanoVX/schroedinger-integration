@@ -23,12 +23,7 @@ public class CalculateString {
 			stringList.add(List.get(i));
 
 		}
-		//System.out.println(f.p.syntax);
-		/*for(int j = 0; j < f.idx2.size(); j++){
-			System.out.println(j + " " + f.idx2.get(j));
 
-			System.out.println(j + " " + f.idx3.get(j));
-		}*/
 		updateIndexLists();
 		String str = f.funktion;
 		while(idx2.size()>0 && idx2.get(0).size() != 0){
@@ -42,13 +37,9 @@ public class CalculateString {
 	}
 
 	public static ArrayList<String> calculate(ArrayList<String> stringList, double x, int one, int two, Funktion f){
-
 		/*System.out.println(one + " " + two);
-		for(int j = 0; j < stringList.size(); j++){
-			System.out.println(j + " " + stringList.get(j));
-		}
-		for(int j = 0; j < Identity.size(); j++){
-			System.out.println(j + " " + Identity.get(j));
+		for(int i = 0; i < stringList.size(); i++){
+			System.out.println(i + " " + stringList.get(i));
 		}*/
 		for(int i = one + 1; i < two; i++){
 			if(isVar(stringList.get(i), f.p)){
@@ -71,9 +62,7 @@ public class CalculateString {
 			Identity.remove(one+2);
 			Identity.remove(one);
 		}
-		/*for(int j = 0; j < stringList.size(); j++){
-			System.out.println(j + " " + stringList.get(j));
-		}*/
+
 		return str;
 	}
 	public static void updateIndexLists(){
@@ -124,9 +113,11 @@ public class CalculateString {
 		priorities.add(firstPriority);
 		priorities.add(secondPriority);
 		priorities.add(thirdPriority);
-		updatePriorityLists(list, one , two);
+		int k = 0;
 		for(int s = 0; s < 3; s++){
-			calcPriorityLists(s, list);
+
+			updatePriorityLists(list, one , two - k);
+			k += calcPriorityLists(s, list);
 		}
 
 		
@@ -134,7 +125,8 @@ public class CalculateString {
 		return list;
 	}
 	
-	public static void calcPriorityLists(int priorityidx, ArrayList<String> list){
+	public static int calcPriorityLists(int priorityidx, ArrayList<String> list){
+		int s = 0;
 		if(priorityidx == 0){
 			for(int i = 0; i < firstPriority.size(); i++){
 				int idx = firstPriority.get(firstPriority.size() - 1- i);
@@ -145,6 +137,7 @@ public class CalculateString {
 					list.remove(idx + j);
 					Identity.remove(idx + j);
 				}
+				s += 2;
 				list.set(idx -1, Double.toString(d));
 				Identity.set(idx -1, 1);
 			}
@@ -167,6 +160,7 @@ public class CalculateString {
 					list.remove(idx + j);
 					Identity.remove(idx + j);
 				}
+				s += 2;
 				list.set(idx -1, Double.toString(d));
 				Identity.set(idx -1, 1);
 			}
@@ -180,6 +174,7 @@ public class CalculateString {
 				if(list.get(idx).equals("+")){
 					d = Double.parseDouble(number1) + Double.parseDouble(number2);
 				}
+				System.out.println(number1 + " "+ number2);
 				if(list.get(idx).equals("-")){
 					d = Double.parseDouble(number1) - Double.parseDouble(number2);
 				}
@@ -187,10 +182,12 @@ public class CalculateString {
 					list.remove(idx + j);
 					Identity.remove(idx + j);
 				}
+				s += 2;
 				list.set(idx -1, Double.toString(d));
 				Identity.set(idx -1, 1);
 			}
 		}
+		return s;
 	}
 	
 	public static void updatePriorityLists(ArrayList<String> list, int one, int two){

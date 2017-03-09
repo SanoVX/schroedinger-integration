@@ -44,7 +44,8 @@ public class Funktion {
 		for(int i = 0; i < this.plot.length; i++){
 			double x = ((double)i)/(xPixel) + xmin;
 			double y = CalculateString.returnY(this, x, p.SyntaxList); ///////////////////
-			//System.out.println(y);
+		
+			//System.out.println(g + "x "+ x +"Energy"+ y);
 			if(showallYs || (y >= ymin && y<ymax)){
 				this.plot[i] = y; // use k and not i here
 			}

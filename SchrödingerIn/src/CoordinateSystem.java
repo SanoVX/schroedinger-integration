@@ -210,7 +210,7 @@ public class CoordinateSystem {
 			if(drawable){
 				double py =(ysize/Math.abs(ymax - ymin));
 				for(int i = 0; i < funktions2.size(); i++){
-					g.setColor(Color.BLACK);
+					g.setColor(Color.RED);
 					if(funktions2.get(i) != null){
 						funktions2.get(i).refresh(this);
 						if(funktions2.get(i).plot != null){
