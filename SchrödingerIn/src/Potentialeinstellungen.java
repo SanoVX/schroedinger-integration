@@ -24,7 +24,8 @@ public class Potentialeinstellungen extends JFrame {
 	
 	private Potentialarten potentialAuswahl;
 	
-	private JTextField coulomb1, kastenBoden, kastenBreite, kastenHoehe, benutzerdefiniert;
+	private JTextField coulomb1, kastenBoden, kastenBreite, kastenHoehe, benutzerdefiniert,
+			parabelTiefe, parabelBreite;
 	private Potential potential;
 	
 	private double e = Einstellungen.e;
@@ -103,7 +104,7 @@ public class Potentialeinstellungen extends JFrame {
 		
 		
 		JRadioButton potOpt4 = new JRadioButton("benutzerdefiniert");
-		potOpt1.addItemListener(new ItemListener() {
+		potOpt4.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent arg0) {
 				if(arg0.getStateChange() == ItemEvent.SELECTED){
 					potentialAuswahl = Potentialarten.benutzerdefiniert;
@@ -205,9 +206,11 @@ public class Potentialeinstellungen extends JFrame {
 			potential = new Kasten(Double.parseDouble(kastenBoden.getText())*e,Double.parseDouble(kastenHoehe.getText())*e,Double.parseDouble(kastenBreite.getText())*1E-9);
 			break;
 		case Parabel:
-			potential = null;
+			potential = new Parabel(Double.parseDouble(parabelTiefe.getText())*e, Double.parseDouble(parabelBreite.getText()));
 			break;
 		case benutzerdefiniert:
+			//benutzerdefiniertes potential
+			//potential = new UserFunction(f);
 			potential = null;
 			break;
 		default:
@@ -312,19 +315,68 @@ public class Potentialeinstellungen extends JFrame {
 			});
 			break;
 		case Parabel:
+			JLabel lblparab1 = new JLabel("Tiefe des Scheitels: ");
+			lblparab1.setBounds(5, 5, 200, 10);
+			settings.add(lblparab1);
+			
+			parabelTiefe = new JTextField("-20");
+			parabelTiefe.setBounds(205,5,50,20);
+			settings.add(parabelTiefe);
+			parabelTiefe.setColumns(5);
+			parabelTiefe.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					try{
+						double value = Double.parseDouble(kastenHoehe.getText());
+						if(value<=0){
+							parabelTiefe.setText("-20");
+						}
+					}catch(Exception exception){
+						parabelTiefe.setText("-20");
+					}
+				}
+			});
+			
+			JLabel lblparab2 = new JLabel("Breite der Parabel:");
+			lblparab2.setBounds(5,30,200,20);
+			settings.add(lblparab2);
+			
+			parabelBreite = new JTextField("1");
+			parabelBreite.setBounds(205,30,50,20);
+			settings.add(parabelBreite);
+			parabelBreite.setColumns(4);
+			parabelBreite.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					try{
+						double value = Double.parseDouble(parabelBreite.getText());
+						if(value<=0){
+							parabelBreite.setText("1");
+						}
+					}catch(Exception exception){
+						parabelBreite.setText("1");
+					}
+				}
+			});
+			
 			break;
 		case benutzerdefiniert:
-			JLabel lblben = new JLabel("<html>Hier kann ein benutzerdefriniertes Potential eingegeben werden."
-					+ "<br>Die Funktion enthaelt als Variable x dies symbolisiert den Abstand vom Zentrum x=0<br>"
+			JLabel lblben = new JLabel("<html>Hier kann ein benutzerdefiniertes Potential eingegeben werden."
+					+ "<br>Die Variable x symbolisiert den Abstand vom Zentrum x=0<br>"
 					+ "Als Konstanten koennen folgende Werte verwendet werden:"
 					+ "<ul><li>e: Elementarladung</li>"
 					+ "<li>u: Masse des Elektrons</li>"
-					+ "<li>h: Plancksches Wirkungsquantum</li></ul></html>");
-			lblben.setBounds(5,5,200,100);
+					+ "<li>h: Plancksches Wirkungsquantum</li></ul><br>"
+					+ "Mehr Informationen unter Hilfe im Hauptmenue</html>");
+			lblben.setBounds(5,5,300,100);
 			settings.add(lblben);
 			
-			benutzerdefiniert = new JTextField("1/x");
-			benutzerdefiniert.setBounds(5,105,50,20);
+			JLabel Vx = new JLabel("V(x)=");
+			Vx.setBounds(5, 105, 20, 20);
+			settings.add(Vx);
+			
+			benutzerdefiniert = new JTextField("e*e/(x*1E-12)");
+			benutzerdefiniert.setBounds(25,105,50,20);
 			settings.add(benutzerdefiniert);
 			benutzerdefiniert.setColumns(20);
 			benutzerdefiniert.addActionListener(new ActionListener() {

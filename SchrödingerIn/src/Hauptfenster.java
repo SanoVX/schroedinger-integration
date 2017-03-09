@@ -31,6 +31,7 @@ public class Hauptfenster extends JFrame {
 	private JPanel contentPane;
 	private JLabel lblEnergies;
 	private SchroedingerIntegration simulation;
+	private ArrayList<Double>energies;
 	private Game g;
 
 	/**
@@ -148,16 +149,31 @@ public class Hauptfenster extends JFrame {
 			public void mouseClicked(MouseEvent arg0) {
 				try{
 					if(btnStart.getText().equals("Start")){
-						menuBar.getMenu(1).getItem(0).setEnabled(false);;
-						ArrayList<Double>energies = simulation.run();
-						lblEnergies.setText("<html>Energieniveaus:");
-						for(int i = 0; i<energies.size();i++){
-							lblEnergies.setText(lblEnergies.getText()+"<br>"+
-										new DecimalFormat("###.###").format(energies.get(i))+" eV");
-						}
-						lblEnergies.setText(lblEnergies.getText()+"</html>");
-						menuBar.getMenu(1).getItem(0).setEnabled(true);;
+						menuBar.getMenu(1).getItem(0).setEnabled(false);
+						new Thread(){
+							public void run(){
+								try {
+									energies = simulation.run();
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								if(energies == null){
+									return;
+								}
+								lblEnergies.setText("<html>Energieniveaus:");
+								for(int i = 0; i<energies.size();i++){
+									lblEnergies.setText(lblEnergies.getText()+"<br>"+
+												new DecimalFormat("###.###").format(energies.get(i))+" eV");
+								}
+								lblEnergies.setText(lblEnergies.getText()+"</html>");
+								
+								menuBar.getMenu(1).getItem(0).setEnabled(true);;
+								btnStart.setEnabled(true);
+							}		
+						}.start();
 						btnStart.setText("Stopp");
+						btnStart.setEnabled(false);
 					}else{
 						simulation.stop();
 						btnStart.setText("Start");
