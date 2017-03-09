@@ -23,11 +23,11 @@ public class IdentityCheck {
 	}
 	
 	public static boolean isVariable(Parser p, String str, String str2, int idx){
-
+		ArrayList<String> variables = new ArrayList<>();
+		ArrayList<Integer> index = new ArrayList<>();
 		for(int j = 0; j < p.variable.size(); j++){
 			String op = p.variable.get(j);
 			if(op.length() > 1){
-				
 				for(int i = 1; i < op.length(); i++){
 					if(idx + i < str2.length()){
 						char c = str2.charAt(idx + i);
@@ -37,21 +37,34 @@ public class IdentityCheck {
 				}
 			}
 			if(str.equals(p.variable.get(j))){
-				p.helpString = str;
-				p.index = idx + str.length() - 1; 
-				return true;
+				variables.add(str);
+				index.add(idx + str.length() - 1);
 			}
 			char c = str2.charAt(idx);
 			String s = Character.toString(c);
 			str = s;
 		}
-		
+		int maxidx = -1;
+		int s = 0;
+		for(int i = 0; i < variables.size(); i++){
+			if(index.get(i) > maxidx){
+				maxidx = index.get(i);
+				s = i;
+			}
+		}
+		if(maxidx > -1){
+			System.out.println("variable "+variables.get(s));
+			System.out.println("index " + index.get(s));
+			p.helpString = variables.get(s);
+			p.index = maxidx;
+			return true;
+		}
 		return false;
 	}
 	public static boolean isFunktion(Parser p, String str, String str2, int idx){
 
-		for(int j = 0; j < p.funktions.length; j++){
-			String op = p.funktions[j];
+		/*for(int j = 0; j < p.funktions.size(); j++){
+			String op = p.funktions.get(j);
 			if(op.length() > 1){
 				
 				for(int i = 1; i < op.length(); i++){
@@ -62,7 +75,7 @@ public class IdentityCheck {
 					}
 				}
 			}
-			if(str.equals(p.funktions[j])){
+			if(str.equals(p.funktions.get(j))){
 					p.helpString = str;
 					p.index = idx + str.length() - 1; 
 					return true;
@@ -72,6 +85,43 @@ public class IdentityCheck {
 			str = s;
 		}
 		
+		return false;*/
+		ArrayList<String> funkt = new ArrayList<>();
+		ArrayList<Integer> index = new ArrayList<>();
+		for(int j = 0; j < p.funktions.size(); j++){
+			String op = p.funktions.get(j);
+			if(op.length() > 1){
+				for(int i = 1; i < op.length(); i++){
+					if(idx + i < str2.length()){
+						char c = str2.charAt(idx + i);
+						String s = Character.toString(c);
+						str += s;
+					}
+				}
+			}
+			if(str.equals(p.funktions.get(j))){
+				funkt.add(str);
+				index.add(idx + str.length() - 1);
+			}
+			char c = str2.charAt(idx);
+			String s = Character.toString(c);
+			str = s;
+		}
+		int maxidx = -1;
+		int s = 0;
+		for(int i = 0; i < funkt.size(); i++){
+			if(index.get(i) > maxidx){
+				maxidx = index.get(i);
+				s = i;
+			}
+		}
+		if(maxidx > -1){
+			System.out.println("variable "+funkt.get(s));
+			System.out.println("index " + index.get(s));
+			p.helpString = funkt.get(s);
+			p.index = maxidx;
+			return true;
+		}
 		return false;
 	}
 	

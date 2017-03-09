@@ -24,11 +24,12 @@ public class Parser {
 	static String[] validNumbers = {"0","1","2","3","4","5","6","7","8","9","."};
 	static ArrayList<String> variable = new ArrayList<>();
 	static ArrayList<Double> values = new ArrayList<>();
-	static String[] funktions = {"sin","cos", "tan", "arctan", "arcsin", "abs", "arccos","sinh", "cosh", "tanh", "theta"};
+	static ArrayList<String> funktions = new ArrayList<>();
 	
 	public Parser(String syntax, Funktion f){
 		this.f = f;
 		setVariables();
+		setfunktions();
 		syntax = deleteSpaces(syntax);
 		ConvertToList(syntax);
 		overworkSyntax();
@@ -52,15 +53,23 @@ public class Parser {
 	}
 	
 	public void setVariables(){
-		variable.add("x");
-		values.add(0.0);
-		variable.add("e");
-		values.add(Math.E);
-		variable.add("pi");
-		values.add(Math.PI);
-		variable.add("b");
-		values.add(8.854*Math.pow(10, -12));
+		String[] var = {"x", "e", "pi", "e0", "q"};
+		double[] val = {0.0, Math.E, Math.PI, 8.854*Math.pow(10, -12), Einstellungen.e};
+		for(int i = 0; i < var.length; i++){
+			variable.add(var[i]);
+			values.add(val[i]);
+			variable.add("-"+var[i]);
+			values.add(-val[i]);
+		}
 
+	}
+	
+	public void setfunktions(){
+		String[] funkt = {"sin","cos", "tan", "arctan", "arcsin", "abs", "arccos","sinh", "cosh", "tanh", "theta"};
+		for(int i = 0; i < funkt.length; i++){
+			funktions.add(funkt[i]);
+			funktions.add("-" + funkt[i]);
+		}
 	}
 	
 	public void addVariable(String str, double value){
@@ -74,6 +83,8 @@ public class Parser {
 		if(!exists){
 			variable.add(str);
 			values.add(value);
+			variable.add("-"+str);
+			values.add(-value);
 			variableAdder = "Variable has ben added.";
 		}
 	}
@@ -116,46 +127,45 @@ public class Parser {
 					i = index;
 				}
 			}
-			if(IdentityCheck.isOperator1(this, s)){
-				HelpString += s;
-				identity.add(3);
-				stringList.add(HelpString);
-				added = true;
-			}
-			if(IdentityCheck.isOperator2(this, s)){
-				HelpString += s;
-				identity.add(4);
-				stringList.add(HelpString);
-				added = true;
-			}
 			if(i < str.length()){
-			if(IdentityCheck.isVariable(this, s,str, i)){
-				identity.add(1);
-				stringList.add(helpString);
-				added = true;
-				i = index;
+				if(IdentityCheck.isVariable(this, s,str, i) && !added){
+					identity.add(1);
+					stringList.add(helpString);
+					added = true;
+					i = index;
+				}
+				if(IdentityCheck.isFunktion(this, s,str, i)&& !added){
+					identity.add(2);
+					stringList.add(helpString);
+					added = true;
+					i = index;
+				}
+				if(IdentityCheck.isOperator1(this, s)&& !added){
+					HelpString += s;
+					identity.add(3);
+					stringList.add(HelpString);
+					added = true;
+				}
+				if(IdentityCheck.isOperator2(this, s)&& !added){
+					HelpString += s;
+					identity.add(4);
+					stringList.add(HelpString);
+					added = true;
+				}
 			}
-			if(IdentityCheck.isFunktion(this, s,str, i)){
-				identity.add(2);
-				stringList.add(helpString);
-				added = true;
-				i = index;
-			}
-			}
-			if(IdentityCheck.isBrace1(this, s)){
+			if(IdentityCheck.isBrace1(this, s)&& !added){
 				HelpString += s;
 				identity.add(5);
 				stringList.add(s);
 				added = true;
 			}
-			if(IdentityCheck.isBrace2(this, s)){
+			if(IdentityCheck.isBrace2(this, s)&& !added){
 				HelpString += s;
 				identity.add(6);
 				stringList.add(s);
 				added = true;
 			}
 			if(!added){
-				System.out.println(i);
 				identity.add(7);
 				stringList.add("");
 			}

@@ -212,6 +212,8 @@ public class CalculateString {
 	
 	public static boolean isVar(String str, Parser p){
 		for(int i = 0; i < p.variable.size(); i++){
+			//System.out.println(str);
+			//System.out.println(p.variable.get(i));
 			if(str.equals(p.variable.get(i))){
 				return true;
 			}
@@ -228,8 +230,8 @@ public class CalculateString {
 		return "";
 	}
 	public static String calcFunktion(String str, String str2, Parser p){
-		for(int i = 0; i < p.funktions.length; i++){
-			if(str.equals(p.funktions[i])){
+		for(int i = 0; i < p.funktions.size(); i++){
+			if(str.equals(p.funktions.get(i))){
 				
 				return MathFunktions.calc(i, str2);
 			}
