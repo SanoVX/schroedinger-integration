@@ -30,6 +30,7 @@ public class Hauptfenster extends JFrame {
 
 	private JPanel contentPane;
 	private JLabel lblEnergies;
+	private JButton btnclear, btnStart;
 	private SchroedingerIntegration simulation;
 	private ArrayList<Double>energies;
 	private Game g;
@@ -142,7 +143,17 @@ public class Hauptfenster extends JFrame {
 		simulation = new SchroedingerIntegration(g);
 		g.setLayout(new GridLayout(1, 0, 0, 0));
 		
-		final JButton btnStart = new JButton("Start");
+		btnclear = new JButton("Clear");
+		btnclear.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				btnStart.setText("Start");
+				simulation.clear();
+			}
+		});
+		btnclear.setBounds(width-150, height-270, 100, 50);
+		
+		btnStart = new JButton("Start");
 		btnStart.setBounds(width-150, height-200, 100, 50);
 		btnStart.addMouseListener(new MouseAdapter() {
 			@Override
@@ -170,10 +181,12 @@ public class Hauptfenster extends JFrame {
 								
 								menuBar.getMenu(1).getItem(0).setEnabled(true);;
 								btnStart.setEnabled(true);
+								btnclear.setEnabled(true);
 							}		
 						}.start();
 						btnStart.setText("Stopp");
 						btnStart.setEnabled(false);
+						btnclear.setEnabled(false);
 					}else{
 						simulation.stop();
 						btnStart.setText("Start");
@@ -184,13 +197,7 @@ public class Hauptfenster extends JFrame {
 			}
 		});
 		
-		JButton btnclear = new JButton("Clear");
-		btnclear.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-			}
-		});
-		btnclear.setBounds(width-150, height-270, 100, 50);
+
 		contentPane.add(btnclear);
 		contentPane.add(btnStart);
 		
