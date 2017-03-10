@@ -222,7 +222,7 @@ public class CoordinateSystem {
 								double xx1 = funktions2.get(i).plot.get(j).get(0);
 								double xx2 = funktions2.get(i).plot.get(j+1).get(0);
 								if(d1 != d2){
-								System.out.println(xx1 + "  " + funktions2.get(i).plot.get(j).get(1));
+								//System.out.println(xx1 + "  " + funktions2.get(i).plot.get(j).get(1));
 								}
 								int x1= (int)(xpos  + xx1*px + (-xmin)*px);
 								int y1 = (int)(ypos + ysize +((ymin)*py) -(d1*py));//fix +2 stuff

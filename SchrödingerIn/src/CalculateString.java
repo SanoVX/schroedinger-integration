@@ -37,10 +37,13 @@ public class CalculateString {
 	}
 
 	public static ArrayList<String> calculate(ArrayList<String> stringList, double x, int one, int two, Funktion f){
-		/*System.out.println(one + " " + two);
+		//System.out.println(one + " " + two + "" + x);
+		if(x == 0){
+		System.out.println(one + " " + two + " " + x);
 		for(int i = 0; i < stringList.size(); i++){
 			System.out.println(i + " " + stringList.get(i));
-		}*/
+		}
+		}
 		for(int i = one + 1; i < two; i++){
 			if(isVar(stringList.get(i), f.p)){
 				String str = getCorrespondingValue(stringList.get(i), f.p);
@@ -174,7 +177,6 @@ public class CalculateString {
 				if(list.get(idx).equals("+")){
 					d = Double.parseDouble(number1) + Double.parseDouble(number2);
 				}
-				System.out.println(number1 + " "+ number2);
 				if(list.get(idx).equals("-")){
 					d = Double.parseDouble(number1) - Double.parseDouble(number2);
 				}
