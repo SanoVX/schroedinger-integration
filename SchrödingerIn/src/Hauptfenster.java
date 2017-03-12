@@ -25,12 +25,14 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.JProgressBar;
 
 public class Hauptfenster extends JFrame {
 
 	private JPanel contentPane;
 	private JLabel lblEnergies;
 	private JButton btnclear, btnStart;
+	private JProgressBar progressBar;
 	private SchroedingerIntegration simulation;
 	private ArrayList<Double>energies;
 	private Game g;
@@ -56,7 +58,6 @@ public class Hauptfenster extends JFrame {
 	 */
 	public Hauptfenster() {
 		setTitle("Schroedingerintegration");
-		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = (int) screenSize.getWidth();
@@ -151,6 +152,7 @@ public class Hauptfenster extends JFrame {
 				simulation.clear();
 			}
 		});
+		btnclear.setEnabled(false);
 		btnclear.setBounds(width-150, height-270, 100, 50);
 		
 		btnStart = new JButton("Start");
@@ -161,10 +163,13 @@ public class Hauptfenster extends JFrame {
 				try{
 					if(btnStart.getText().equals("Start")){
 						menuBar.getMenu(1).getItem(0).setEnabled(false);
+						progressBar.setVisible(true);
+						progressBar.setMaximum(Einstellungen.maxNiveaus);
+						progressBar.setValue(0);
 						new Thread(){
 							public void run(){
 								try {
-									energies = simulation.run();
+									energies = simulation.run(progressBar);
 								} catch (Exception e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
@@ -182,11 +187,30 @@ public class Hauptfenster extends JFrame {
 								menuBar.getMenu(1).getItem(0).setEnabled(true);;
 								btnStart.setEnabled(true);
 								btnclear.setEnabled(true);
+								progressBar.setVisible(false);
 							}		
 						}.start();
 						btnStart.setText("Stopp");
 						btnStart.setEnabled(false);
 						btnclear.setEnabled(false);
+						
+						Einstellungen.allesGezeichnet = false;
+						new Thread(){
+							public void run(){
+								while(!Einstellungen.allesGezeichnet){
+									progressBar.setValue(Einstellungen.berechneteNiveaus);
+									try {
+										Thread.sleep(100);
+									} catch (InterruptedException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}
+								btnStart.setText("Start");
+								btnclear.setEnabled(false);
+								simulation.clear();
+							}
+						}.start();
 					}else{
 						simulation.stop();
 						btnStart.setText("Start");
@@ -206,7 +230,9 @@ public class Hauptfenster extends JFrame {
 		lblEnergies.setBounds(width-170, 10, 150, height-200);
 		contentPane.add(lblEnergies);
 		
+		progressBar = new JProgressBar();
+		progressBar.setBounds(width-170, height - 130, 150, 20);
+		progressBar.setVisible(false);
+		contentPane.add(progressBar);
 	}
-
-
 }
