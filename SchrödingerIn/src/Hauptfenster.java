@@ -187,10 +187,12 @@ public class Hauptfenster extends JFrame {
 
 					if(init){
 						double[] vect = {prevMousePosition[0] - x, prevMousePosition[1] - y};
-						s.xmin = s.xmin - (Math.abs(s.xmax-s.xmin)/((double)s.xsize))*vect[0];
-						s.xmax = s.xmax - (Math.abs(s.xmax-s.xmin)/((double)s.xsize))*vect[0];
-						s.ymin = s.ymin - (Math.abs(s.ymax-s.ymin)/((double)s.ysize))*vect[1];
-						s.ymax = s.ymax - (Math.abs(s.ymax-s.ymin)/((double)s.ysize))*vect[1];
+						double d = s.xmax-s.xmin;
+						double d2 = s.ymax-s.ymin;
+						s.xmin = s.xmin + (Math.abs(d)/((double)s.xsize))*vect[0];
+						s.xmax = s.xmax + (Math.abs(d)/((double)s.xsize))*vect[0];
+						s.ymin = s.ymin - (Math.abs(d2)/((double)s.ysize))*vect[1];
+						s.ymax = s.ymax - (Math.abs(d2)/((double)s.ysize))*vect[1];
 						prevMousePosition[0] = x;
 						prevMousePosition[1] = y;
 					}
