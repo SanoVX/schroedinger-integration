@@ -1,7 +1,5 @@
 import java.util.ArrayList;
 
-import javax.swing.JProgressBar;
-
 public class SchroedingerIntegration {
 	
 	private double e = Einstellungen.e;
@@ -16,7 +14,7 @@ public class SchroedingerIntegration {
 	}
 	
 	
-	public ArrayList<Double> run(JProgressBar progressBar) throws InterruptedException{
+	public ArrayList<Double> run() throws InterruptedException{
 		Einstellungen.berechneteNiveaus = 0;
 		ArrayList<Double> energies = new ArrayList<>();
 		int xsize = g.width*3/8;
