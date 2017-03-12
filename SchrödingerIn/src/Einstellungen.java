@@ -15,8 +15,4 @@ public class Einstellungen {
 	public static int maxNiveaus = 7;
 	public static double Amplitudengrenze = 1E4;
 	
-	//Steuerung des Hauptfensters
-	public static int berechneteNiveaus = 0;
-	public static boolean allesGezeichnet = false;
-	
 }

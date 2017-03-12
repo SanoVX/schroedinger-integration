@@ -32,15 +32,13 @@ public class CalculateString {
 				updateIndexLists();
 			}
 		}
+
 		stringList = calculate(stringList ,x,-1,stringList.size(), f);
 		return Double.parseDouble(stringList.get(0));
 	}
 
 	public static ArrayList<String> calculate(ArrayList<String> stringList, double x, int one, int two, Funktion f){
-		/*System.out.println(one + " " + two);
-		for(int i = 0; i < stringList.size(); i++){
-			System.out.println(i + " " + stringList.get(i));
-		}*/
+
 		for(int i = one + 1; i < two; i++){
 			if(isVar(stringList.get(i), f.p)){
 				String str = getCorrespondingValue(stringList.get(i), f.p);
@@ -48,6 +46,7 @@ public class CalculateString {
 			}
 			if(Identity.get(i) == 2){
 				String str = calcFunktion(stringList.get(i), stringList.get(i+1), f.p);
+				//if(xx==0){System.out.println("abs string " + str);}
 				stringList.set(i, str);
 				stringList.remove(i+1);
 				Identity.remove(i+1);
@@ -115,9 +114,14 @@ public class CalculateString {
 		priorities.add(thirdPriority);
 		int k = 0;
 		for(int s = 0; s < 3; s++){
-
+			
 			updatePriorityLists(list, one , two - k);
+
+			
 			k += calcPriorityLists(s, list);
+			if(list.size()==1){
+				s = 3;
+			}
 		}
 
 		
@@ -127,12 +131,13 @@ public class CalculateString {
 	
 	public static int calcPriorityLists(int priorityidx, ArrayList<String> list){
 		int s = 0;
+		double d = 0;
 		if(priorityidx == 0){
 			for(int i = 0; i < firstPriority.size(); i++){
 				int idx = firstPriority.get(firstPriority.size() - 1- i);
 				String number1 = list.get(idx-1);
 				String number2 = list.get(idx+1);
-				double d = Math.pow(Double.parseDouble(number1), Double.parseDouble(number2));
+				d = Math.pow(Double.parseDouble(number1), Double.parseDouble(number2));
 				for(int j = 1; j > -1; j--){
 					list.remove(idx + j);
 					Identity.remove(idx + j);
@@ -147,7 +152,7 @@ public class CalculateString {
 				int idx = secondPriority.get(secondPriority.size() - 1- i);
 				String number1 = list.get(idx-1);
 				String number2 = list.get(idx+1);
-				double d = 0;
+				d = 0;
 				if(list.get(idx).equals("*")){
 					d = Double.parseDouble(number1) * Double.parseDouble(number2);
 				}
@@ -163,6 +168,7 @@ public class CalculateString {
 				s += 2;
 				list.set(idx -1, Double.toString(d));
 				Identity.set(idx -1, 1);
+				
 			}
 		}
 		if(priorityidx == 2){
@@ -170,7 +176,7 @@ public class CalculateString {
 				int idx = thirdPriority.get(thirdPriority.size() - 1- i);
 				String number1 = list.get(idx-1);
 				String number2 = list.get(idx+1);
-				double d = 0;
+				d = 0;
 				if(list.get(idx).equals("+")){
 					d = Double.parseDouble(number1) + Double.parseDouble(number2);
 				}
@@ -186,6 +192,15 @@ public class CalculateString {
 				list.set(idx -1, Double.toString(d));
 				Identity.set(idx -1, 1);
 			}
+		}
+		if(Double.isNaN(d) || Double.isInfinite(d)){
+			d = Double.NaN;
+			int f = list.size();
+			list.clear();
+			Identity.clear();
+			list.add(Double.toString(d));
+			Identity.add(1);
+			return list.size()-1;
 		}
 		return s;
 	}

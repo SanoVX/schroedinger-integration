@@ -216,19 +216,18 @@ public class CoordinateSystem {
 						funktions2.get(i).refresh(this);
 						if(funktions2.get(i).plot != null){
 							for(int j = 0; j+1 < funktions2.get(i).plot.size(); j++){
-								
 								double d1 = funktions2.get(i).plot.get(j).get(1);
 								double d2 = funktions2.get(i).plot.get(j+1).get(1);
-								double xx1 = funktions2.get(i).plot.get(j).get(0);
-								double xx2 = funktions2.get(i).plot.get(j+1).get(0);
-								if(d1 != d2){
-								System.out.println(xx1 + "  " + funktions2.get(i).plot.get(j).get(1));
+								if(!Double.isNaN(d1) && !Double.isNaN(d2)){
+									double xx1 = funktions2.get(i).plot.get(j).get(0);
+									double xx2 = funktions2.get(i).plot.get(j+1).get(0);
+	
+									int x1= (int)(xpos  + xx1*px + (-xmin)*px);
+									int y1 = (int)(ypos + ysize +((ymin)*py) -(d1*py));
+									int x2 = (int)(xpos  + xx2*px + (-xmin)*px);
+									int y2 = (int)(ypos + ysize +((ymin)*py) -(d2*py));
+									g.drawLine(x1,y1,x2,y2);
 								}
-								int x1= (int)(xpos  + xx1*px + (-xmin)*px);
-								int y1 = (int)(ypos + ysize +((ymin)*py) -(d1*py));//fix +2 stuff
-								int x2 = (int)(xpos  + xx2*px + (-xmin)*px);
-								int y2 = (int)(ypos + ysize +((ymin)*py) -(d2*py));
-								g.drawLine(x1,y1,x2,y2);
 							}
 						}
 					}
