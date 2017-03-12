@@ -39,13 +39,11 @@ public class Funktion {
 		this.ymin = g.ymin;
 		this.ymax = g.ymax;
 		this.xPixel = (int)(g.xsize/(xmax - xmin));
-		double x = xmin;
-		for(int i = 0; x < xmax; i++){
-			x = ((double)i)/(xPixel) + xmin;
+		for(int i = 0; i < g.xsize; i++){
+			double x = ((double)i)/(xPixel) + xmin;
 			double y = CalculateString.returnY(this, x, p.SyntaxList); ///////////////////
 			ArrayList<Double> xy = new ArrayList<>();
 			xy.add(x);
-			//System.out.println(g + "x "+ x +"Energy"+ y);
 			if(showallYs || (y >= ymin && y<ymax)){
 				xy.add(y);
 			}
@@ -54,6 +52,9 @@ public class Funktion {
 			}
 			if(y > ymax){
 				xy.add(ymax);
+			}
+			if(Double.isNaN(y)){
+				xy.add(y);
 			}
 			plot.add(xy);
 		}
