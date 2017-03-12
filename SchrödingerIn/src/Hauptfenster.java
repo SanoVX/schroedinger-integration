@@ -1,6 +1,9 @@
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.PointerInfo;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,6 +39,8 @@ public class Hauptfenster extends JFrame {
 	private SchroedingerIntegration simulation;
 	private ArrayList<Double>energies;
 	private Game g;
+	private int[] prevMousePosition = {0,0};
+	private boolean init = false;
 
 	/**
 	 * Launch the application.
@@ -136,6 +141,63 @@ public class Hauptfenster extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		contentPane.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent arg0) {
+
+			}
+
+			public void mouseExited(MouseEvent arg0) {
+
+			}
+
+			public void mouseEntered(MouseEvent arg0) {
+
+			}
+
+			public void mousePressed(MouseEvent arg0) {
+				
+				if(g.ks.size() > 0){
+					PointerInfo a = MouseInfo.getPointerInfo();
+					Point b = a.getLocation();
+					int x = (int) b.getX();
+					int y = (int) b.getY();
+					CoordinateSystem s = g.ks.get(1);
+					int xpos  = s.xpos;
+					int ypos  = s.ypos;
+					int xsize = s.xsize;
+					int ysize = s.ysize;
+					if(MouseAction.inKs(xpos, ypos, xsize, ysize, x, y)){
+
+						init = true;
+						prevMousePosition[0] = x;
+						prevMousePosition[1] = y;
+						
+					}
+					
+				}
+			}
+
+			public void mouseReleased(MouseEvent arg0) {
+				if(g.ks.size() > 0){
+					PointerInfo a = MouseInfo.getPointerInfo();
+					Point b = a.getLocation();
+					int x = (int) b.getX();
+					int y = (int) b.getY();
+					CoordinateSystem s = g.ks.get(1);
+
+					if(init){
+						double[] vect = {prevMousePosition[0] - x, prevMousePosition[1] - y};
+						s.xmin = s.xmin - (Math.abs(s.xmax-s.xmin)/((double)s.xsize))*vect[0];
+						s.xmax = s.xmax - (Math.abs(s.xmax-s.xmin)/((double)s.xsize))*vect[0];
+						s.ymin = s.ymin - (Math.abs(s.ymax-s.ymin)/((double)s.ysize))*vect[1];
+						s.ymax = s.ymax - (Math.abs(s.ymax-s.ymin)/((double)s.ysize))*vect[1];
+						prevMousePosition[0] = x;
+						prevMousePosition[1] = y;
+					}
+					init = false;
+				}
+			}
+		});
 		
 
 		g.setBounds(5, 5, width-200, height);
