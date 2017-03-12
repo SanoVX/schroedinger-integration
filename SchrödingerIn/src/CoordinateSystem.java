@@ -43,6 +43,7 @@ public class CoordinateSystem {
 	boolean drawpoints = true;
 	boolean growingrange = false;
 	boolean drawable = false;
+	boolean changedrange = false;
 	
 	Color[] colorList = {Color.RED, Color.BLUE, Color.GREEN, Color.ORANGE, Color.PINK};
 
@@ -151,7 +152,9 @@ public class CoordinateSystem {
 			for(int s = 0; s < measure.size(); s++){
 				if(measure.get(s) != null){
 				double[][] mea = measure.get(s);
+				if(!changedrange){
 				MaxandMin(mea);
+				}
 				drawable = true;
 				double px =(xsize/Math.abs(xmax - xmin));
 				double py =(ysize/Math.abs(ymax - ymin));
@@ -191,7 +194,9 @@ public class CoordinateSystem {
 									xl += (int)(xcomp*j);
 									int yl = (int)(ypos + ysize -mea[i-1][1]*py+(ymin)*py);
 									yl += (int)(ycomp*j);
+									if(mea[i][0] > xmin && mea[i][1] > ymin && mea[i][0] < xmax && mea[i][1] < ymax){
 									g.drawLine(xl,yl,xr,yr);
+									}
 								}
 		
 							}

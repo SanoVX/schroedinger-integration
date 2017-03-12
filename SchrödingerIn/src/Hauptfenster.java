@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -141,6 +143,58 @@ public class Hauptfenster extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		contentPane.addMouseWheelListener(new MouseWheelListener(){
+
+			@Override
+			public void mouseWheelMoved(MouseWheelEvent e) {
+				if(g.ks.size() > 0){
+					PointerInfo a = MouseInfo.getPointerInfo();
+					Point b = a.getLocation();
+					int x = (int) b.getX();
+					int y = (int) b.getY();
+					CoordinateSystem s = g.ks.get(0);
+					if(g.ks.size() > 1){
+						s = g.ks.get(1);
+					}
+					int xpos  = s.xpos;
+					int ypos  = s.ypos;
+					int xsize = s.xsize;
+					int ysize = s.ysize;
+					if(MouseAction.inKs(xpos, ypos, xsize, ysize, x, y)){
+						int steps = e.getWheelRotation();
+						System.out.println(steps);
+						double zoom = 1+steps*0.1;
+						if(zoom < 0.5){
+							zoom = 0.5;
+						}
+						if(zoom > 1.5){
+							zoom = 1.5;
+						}
+						double xmin = s.xmin;
+						double xmax = s.xmax;
+						double ymin = s.ymin;
+						double ymax = s.ymax;
+						double xm = (x-xpos)*(Math.abs(s.xmin - s.xmax))/(s.xsize) + xmin;
+						double ym = (-y+ypos+ysize)*(Math.abs(s.ymin - s.ymax))/(s.ysize) + ymin;
+						double xdistance1 = (xm - s.xmin);
+						double xdistance2 = s.xmax - xm;
+						double xdmin = Math.min(Math.abs(xdistance1), Math.abs(xdistance2));
+						double ydistance1 = ym - s.ymin;
+						double ydistance2 = s.ymax - ym;
+						double ydmin = Math.min(Math.abs(ydistance1), Math.abs(ydistance2));
+						s.xmin = xm - xdmin*(zoom);
+
+						s.ymin = ym - ydmin*(zoom);
+
+						s.xmax = xm + xdmin*(zoom);
+
+						s.ymax = ym + ydmin*(zoom);
+						
+					}
+					
+				}
+				
+			}});
 		contentPane.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent arg0) {
 
@@ -161,13 +215,16 @@ public class Hauptfenster extends JFrame {
 					Point b = a.getLocation();
 					int x = (int) b.getX();
 					int y = (int) b.getY();
-					CoordinateSystem s = g.ks.get(1);
+					CoordinateSystem s = g.ks.get(0);
+					if(g.ks.size() > 1){
+						s = g.ks.get(1);
+					}
 					int xpos  = s.xpos;
 					int ypos  = s.ypos;
 					int xsize = s.xsize;
 					int ysize = s.ysize;
 					if(MouseAction.inKs(xpos, ypos, xsize, ysize, x, y)){
-
+						s.changedrange = true;
 						init = true;
 						prevMousePosition[0] = x;
 						prevMousePosition[1] = y;
@@ -272,7 +329,7 @@ public class Hauptfenster extends JFrame {
 								}
 								btnStart.setText("Start");
 								btnclear.setEnabled(false);
-								simulation.clear();
+								//simulation.clear();
 							}
 						}.start();
 					}else{

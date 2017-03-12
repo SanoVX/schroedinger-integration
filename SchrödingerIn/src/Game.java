@@ -48,13 +48,16 @@ public class Game extends JPanel{
 	}
 	
 	public void simulate(Graphics2D g2d){
-		if(currRange == 0){
-			funktNr += 1;
-		}		
+		System.out.println(ks.size());
+		
 		if(ks.size()==0){
 			return;
 		}
-		if(ks.get(0).simulation.get(s).size() < funktNr){
+
+		if(currRange == 0){
+			funktNr += 1;
+		}	
+		if(ks.get(0).simulation.get(s).size() < funktNr+1){
 			ks.get(1).addMeasures(ks.get(1).solution.get(s));
 			if(s < ks.get(1).solution.size() -1){
 				s += 1;
@@ -66,7 +69,7 @@ public class Game extends JPanel{
 			ks.get(0).resetRange();
 		}
 		currRange += calcTime;
-		for(int j = 0; j < ks.get(0).simulation.get(s).size() && j < funktNr; j++){
+		for(int j = 0; j < ks.get(0).simulation.get(s).size() && j <= funktNr; j++){
 			ArrayList<ArrayList<Double>> add = copyList(ks.get(0).simulation.get(s).get(funktNr -1), currRange);
 			if(ks.get(0).simulation.get(s).get(funktNr -1).size() < currRange){
 				currRange = 0;
@@ -94,19 +97,19 @@ public class Game extends JPanel{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} // sleeping time
-		
+
+		if(simulated){
+			ks.remove(0);
+			ks.get(0).changePos(width/20,height/20);
+			ks.get(0).changeSize((int)(width*2.5/3.0), height*2/3);
+			
+		}
 		if(ks != null){
 			for(int i = 0; i < ks.size(); i++){
-				if((i == 1 || !simulated)){
-					ks.get(i).drawFunktions(ks.get(i).funktions, g2d);
-					ks.get(i).drawMeasure(false,g2d);
-					ks.get(i).drawKs(g2d);
-				}
+				ks.get(i).drawFunktions(ks.get(i).funktions, g2d);
+				ks.get(i).drawMeasure(false,g2d);
+				ks.get(i).drawKs(g2d);
 			}
-		}
-		if(simulated){
-			ks.get(1).changePos(width/20,height/20);
-			ks.get(1).changeSize((int)(width*2.5/3.0), height*2/3);
 		}
 
 		
@@ -114,11 +117,4 @@ public class Game extends JPanel{
 	
 
 
-	/*public void plot() throws InterruptedException{
-
-		while(true){
-			this.repaint();
-			Thread.sleep(100); // sleeping time
-		}
-	}*/
 }
