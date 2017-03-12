@@ -169,7 +169,7 @@ public class Hauptfenster extends JFrame {
 						new Thread(){
 							public void run(){
 								try {
-									energies = simulation.run(progressBar);
+									energies = simulation.run();
 								} catch (Exception e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
