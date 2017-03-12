@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 
+import javax.swing.JProgressBar;
+
 public class SchroedingerIntegration {
 	
 	private double e = Einstellungen.e;
@@ -15,6 +17,7 @@ public class SchroedingerIntegration {
 	
 	
 	public ArrayList<Double> run() throws InterruptedException{
+		Einstellungen.berechneteNiveaus = 0;
 		ArrayList<Double> energies = new ArrayList<>();
 		int xsize = g.width*3/8;
 		int ysize = g.height*3/8;
@@ -70,11 +73,11 @@ public class SchroedingerIntegration {
 
 			
 			count ++;
+			Einstellungen.berechneteNiveaus++;
 		}while(E.step()&&count<Einstellungen.maxNiveaus);
 			
 			t1 = new Thread(){
 			public void run(){
-
 				long initsleeptime = 100;
 				long sleeptime = 100;
 				int i = 0;
@@ -104,6 +107,8 @@ public class SchroedingerIntegration {
 						Thread.currentThread().interrupt();
 					}
 				}
+				Einstellungen.allesGezeichnet = true;
+				g.repaint();
 			}
 		};
 		t1.start();
