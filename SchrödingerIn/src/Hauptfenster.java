@@ -248,7 +248,10 @@ public class Hauptfenster extends JFrame {
 					Point b = a.getLocation();
 					int x = (int) b.getX();
 					int y = (int) b.getY();
-					CoordinateSystem s = g.ks.get(1);
+					CoordinateSystem s = g.ks.get(0);
+					if(g.ks.size() > 1){
+						s = g.ks.get(1);
+					}
 
 					if(init){
 						double[] vect = {prevMousePosition[0] - x, prevMousePosition[1] - y};

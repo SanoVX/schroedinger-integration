@@ -55,7 +55,7 @@ public class Parser {
 	
 	public void setVariables(){
 		String[] var = {"x", "e", "pi", "e0", "q"};
-		double[] val = {0.0, Math.E, Math.PI, 8.854*Math.pow(10, -12), Einstellungen.e};
+		double[] val = {0.0, Math.E, Math.PI, Einstellungen.e0, Einstellungen.e};
 		for(int i = 0; i < var.length; i++){
 			variable.add(var[i]);
 			values.add(val[i]);

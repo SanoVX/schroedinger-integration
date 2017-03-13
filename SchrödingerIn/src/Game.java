@@ -24,6 +24,7 @@ public class Game extends JPanel{
 	boolean init = false;
 	boolean firstPaint = true;
 	boolean simulated = false;
+	boolean end = false;
 	
 	int funktNr = 1;
 	int currRange = 0;
@@ -62,6 +63,7 @@ public class Game extends JPanel{
 				s += 1;
 			}else{
 				simulated = true;
+				end = true;
 			}
 			funktNr = 1;
 			ks.get(0).measure.clear();
@@ -96,13 +98,16 @@ public class Game extends JPanel{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} // sleeping time
-
 		if(simulated){
-			ks.remove(0);
+			if(end){
+				ks.remove(0);
+				end = false;
+			}
 			ks.get(0).changePos(width/20,height/20);
 			ks.get(0).changeSize((int)(width*2.5/3.0), height*2/3);
 			
 		}
+		System.out.println("still painting");
 		if(ks != null){
 			for(int i = 0; i < ks.size(); i++){
 				ks.get(i).drawFunktions(ks.get(i).funktions, g2d);
