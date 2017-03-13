@@ -43,6 +43,7 @@ public class Hauptfenster extends JFrame {
 	private Game g;
 	private int[] prevMousePosition = {0,0};
 	private boolean init = false;
+	private double[] zoomVect = new double[2];
 
 	/**
 	 * Launch the application.
@@ -161,14 +162,15 @@ public class Hauptfenster extends JFrame {
 					int xsize = s.xsize;
 					int ysize = s.ysize;
 					if(MouseAction.inKs(xpos, ypos, xsize, ysize, x, y)){
+						s.changedrange = true;
 						int steps = e.getWheelRotation();
 						System.out.println(steps);
 						double zoom = 1+steps*0.1;
-						if(zoom < 0.5){
-							zoom = 0.5;
+						if(zoom < 0.8){
+							zoom = 0.8;
 						}
-						if(zoom > 1.5){
-							zoom = 1.5;
+						if(zoom > 1.2){
+							zoom = 1.2;
 						}
 						double xmin = s.xmin;
 						double xmax = s.xmax;
@@ -182,13 +184,14 @@ public class Hauptfenster extends JFrame {
 						double ydistance1 = ym - s.ymin;
 						double ydistance2 = s.ymax - ym;
 						double ydmin = Math.min(Math.abs(ydistance1), Math.abs(ydistance2));
-						s.xmin = xm - xdmin*(zoom);
+						System.out.println(zoom);
+						s.xmin = xm - xdistance1*(zoom);
 
-						s.ymin = ym - ydmin*(zoom);
+						s.ymin = ym - ydistance1*(zoom);
 
-						s.xmax = xm + xdmin*(zoom);
+						s.xmax = xm + xdistance2*(zoom);
 
-						s.ymax = ym + ydmin*(zoom);
+						s.ymax = ym + ydistance2*(zoom);
 						
 					}
 					
@@ -209,7 +212,9 @@ public class Hauptfenster extends JFrame {
 			}
 
 			public void mousePressed(MouseEvent arg0) {
+			
 				
+				if(arg0.getButton() == 1){
 				if(g.ks.size() > 0){
 					PointerInfo a = MouseInfo.getPointerInfo();
 					Point b = a.getLocation();
@@ -232,9 +237,12 @@ public class Hauptfenster extends JFrame {
 					}
 					
 				}
+				}
 			}
 
 			public void mouseReleased(MouseEvent arg0) {
+				
+				if(arg0.getButton() == 1){
 				if(g.ks.size() > 0){
 					PointerInfo a = MouseInfo.getPointerInfo();
 					Point b = a.getLocation();
@@ -255,6 +263,7 @@ public class Hauptfenster extends JFrame {
 					}
 					init = false;
 				}
+			}
 			}
 		});
 		

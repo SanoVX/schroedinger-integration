@@ -156,12 +156,19 @@ public class CoordinateSystem {
 				MaxandMin(mea);
 				}
 				drawable = true;
+				double calcxmin = xmin;
+				double calcxmax = xmax;
+				double calcymin = ymin;
+				double calcymax = ymax;
 				double px =(xsize/Math.abs(xmax - xmin));
 				double py =(ysize/Math.abs(ymax - ymin));
 				g.setColor(colorList[s%colorList.length]);
 
 				for(int i = 0; i < mea.length; i++){
 					//wertebereich anpassen
+					if(!noChange(calcxmin, calcxmax, calcymin, calcymax)){
+						i = mea.length;
+					}
 					if(mea[i][1]==mea[i][1]){//Nan.check
 						if(drawpoints){
 							int xr = (int)(xpos + mea[i][0]*px-recsize/2 + (-xmin)*px);
@@ -194,7 +201,7 @@ public class CoordinateSystem {
 									xl += (int)(xcomp*j);
 									int yl = (int)(ypos + ysize -mea[i-1][1]*py+(ymin)*py);
 									yl += (int)(ycomp*j);
-									if(mea[i][0] > xmin && mea[i][1] > ymin && mea[i][0] < xmax && mea[i][1] < ymax){
+									if(inKs(xr,yr,xl,yl)){
 									g.drawLine(xl,yl,xr,yr);
 									}
 								}
@@ -213,14 +220,23 @@ public class CoordinateSystem {
 	public void drawFunktions(ArrayList<Funktion> funktions2,Graphics2D g){
 		if(funktions2 != null){
 			if(drawable){
+				double calcxmin = xmin;
+				double calcxmax = xmax;
+				double calcymin = ymin;
+				double calcymax = ymax;
 				double px =(xsize/Math.abs(xmax - xmin));
 				double py =(ysize/Math.abs(ymax - ymin));
+				
 				for(int i = 0; i < funktions2.size(); i++){
 					g.setColor(Color.RED);
 					if(funktions2.get(i) != null){
 						funktions2.get(i).refresh(this);
 						if(funktions2.get(i).plot != null){
 							for(int j = 0; j+1 < funktions2.get(i).plot.size(); j++){
+								if(!noChange(calcxmin, calcxmax, calcymin, calcymax)){
+									i = funktions2.size();
+									j = funktions2.get(i).plot.size();
+								}
 								double d1 = funktions2.get(i).plot.get(j).get(1);
 								double d2 = funktions2.get(i).plot.get(j+1).get(1);
 								if(!Double.isNaN(d1) && !Double.isNaN(d2)){
@@ -231,8 +247,11 @@ public class CoordinateSystem {
 									int y1 = (int)(ypos + ysize +((ymin)*py) -(d1*py));
 									int x2 = (int)(xpos  + xx2*px + (-xmin)*px);
 									int y2 = (int)(ypos + ysize +((ymin)*py) -(d2*py));
+									if(inKs(x1,y1,x2,y2)){
 									g.drawLine(x1,y1,x2,y2);
+									}
 								}
+								
 							}
 						}
 					}
@@ -240,6 +259,23 @@ public class CoordinateSystem {
 			}
 		}
 	}
+	
+	public boolean noChange(double cxmin, double cxmax, double cymin, double cymax){
+		if(xmin == cxmin && ymin == cymin && xmax == cxmax && ymax == cymax){
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean inKs(int x1, int y1, int x2, int y2){
+		if(x1 > xpos && x1 < xpos + xsize && y1 > ypos && y1 < ypos + ysize){
+			if(x2 > xpos && x2 < xpos + xsize && y2 > ypos && y2 < ypos + ysize){	
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	// Hilfsmethode
 	public ArrayList<String> separateString(String str, int x){
 		str += " "; 
