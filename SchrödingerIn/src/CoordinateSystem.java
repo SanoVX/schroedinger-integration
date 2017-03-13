@@ -27,7 +27,7 @@ public class CoordinateSystem {
 	int recsize = 6; // size of rectangle representing the data point
 	
 	//legend
-	public int numberTextSize = 10;
+	public int numberTextSize = 10;//
 	public String xlabel = " ";
 	public int xlabelFontSize = 20;
 	public String ylabel = " ";

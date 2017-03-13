@@ -47,7 +47,7 @@ public class Game extends JPanel{
 		}
 	}
 	
-	public void simulate(Graphics2D g2d){
+	public void simulate(Graphics2D g2d){//
 		
 		if(ks.size()==0){
 			return;

@@ -63,7 +63,7 @@ public class Hauptfenster extends JFrame {
 	
 	/**
 	 * Create the frame.
-	 */
+	 *///
 	public Hauptfenster() {
 		setTitle("Schroedingerintegration");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
