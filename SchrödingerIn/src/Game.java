@@ -16,14 +16,16 @@ public class Game extends JPanel{
 	int width = (int) screenSize.getWidth();
 	int height = (int) screenSize.getHeight();
 	int rest = 0;
-	//time
+	
 	int calcTime = 10;
 	ArrayList<CoordinateSystem> ks = new ArrayList<>();
-	//while loop
+	
 	boolean finished = false;
 	boolean init = false;
 	boolean firstPaint = true;
 	boolean simulated = false;
+	boolean end = false;
+	boolean prepSimulationList = false;
 	
 	int funktNr = 1;
 	int currRange = 0;
@@ -47,26 +49,37 @@ public class Game extends JPanel{
 		}
 	}
 	
-	public void simulate(Graphics2D g2d){
-		if(currRange == 0){
-			funktNr += 1;
-		}		
+	public void simulate(Graphics2D g2d){//
+		
 		if(ks.size()==0){
 			return;
 		}
-		if(ks.get(0).simulation.get(s).size() < funktNr){
+
+		if(currRange == 0){
+			funktNr += 1;
+		}	
+		if(ks.get(0).simulation.get(s).size() < funktNr+1){
 			ks.get(1).addMeasures(ks.get(1).solution.get(s));
+			ks.get(1).addEnergy(ks.get(1).solEnergy.get(s));
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} // sleeping time
 			if(s < ks.get(1).solution.size() -1){
 				s += 1;
 			}else{
 				simulated = true;
+				end = true;
 			}
 			funktNr = 1;
 			ks.get(0).measure.clear();
 			ks.get(0).resetRange();
 		}
 		currRange += calcTime;
-		for(int j = 0; j < ks.get(0).simulation.get(s).size() && j < funktNr; j++){
+		for(int j = 0; j < ks.get(0).simulation.get(s).size() && j <= funktNr; j++){
+			System.out.println(s + " " + funktNr);
 			ArrayList<ArrayList<Double>> add = copyList(ks.get(0).simulation.get(s).get(funktNr -1), currRange);
 			if(ks.get(0).simulation.get(s).get(funktNr -1).size() < currRange){
 				currRange = 0;
@@ -75,6 +88,13 @@ public class Game extends JPanel{
 				ks.get(0).measure.remove(ks.get(0).measure.size()-1);
 			}
 			ks.get(0).addMeasures(add);
+			System.out.println();
+			if((j+1 < ks.get(0).simulation.get(s).size() && j+1 <= funktNr)){
+
+				ks.get(0).text = "Solution found at " + ks.get(1).solEnergy.get(s) + "eV";
+			}else{
+				ks.get(0).text = "Searching for solution...";
+			}
 		}
 		
 	}
@@ -84,6 +104,17 @@ public class Game extends JPanel{
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		if(!prepSimulationList){
+			if(ks.size() > 0){
+			prepSimulationList = true;
+			for(int i = 1; i < ks.get(0).simulation.size(); i++){
+				ArrayList<ArrayList<Double>> k = ks.get(0).simulation.get(i).get(0);
+				ks.get(0).simulation.get(i).remove(0);
+				ks.get(0).simulation.get(i-1).add(ks.get(1).solution.get(i-1));
+				
+			}
+			}
+		}
 		if(!simulated){
 			simulate(g2d);
 		}
@@ -94,19 +125,21 @@ public class Game extends JPanel{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} // sleeping time
-		
+		if(simulated){
+			if(end){
+				ks.remove(0);
+				end = false;
+			}
+			ks.get(0).changePos(width/20,height/20);
+			ks.get(0).changeSize((int)(width*2.5/3.0), height*2/3);
+			
+		}
 		if(ks != null){
 			for(int i = 0; i < ks.size(); i++){
-				if((i == 1 || !simulated)){
-					ks.get(i).drawFunktions(ks.get(i).funktions, g2d);
-					ks.get(i).drawMeasure(false,g2d);
-					ks.get(i).drawKs(g2d);
-				}
+				ks.get(i).drawFunktions(ks.get(i).funktions, g2d);
+				ks.get(i).drawMeasure(false,g2d);
+				ks.get(i).drawKs(g2d);
 			}
-		}
-		if(simulated){
-			ks.get(1).changePos(width/20,height/20);
-			ks.get(1).changeSize((int)(width*2.5/3.0), height*2/3);
 		}
 
 		
@@ -114,11 +147,4 @@ public class Game extends JPanel{
 	
 
 
-	/*public void plot() throws InterruptedException{
-
-		while(true){
-			this.repaint();
-			Thread.sleep(100); // sleeping time
-		}
-	}*/
 }

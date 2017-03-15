@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 
+import javax.swing.JProgressBar;
+
 public class SchroedingerIntegration {
 	
 	private double e = Einstellungen.e;
@@ -15,10 +17,11 @@ public class SchroedingerIntegration {
 	
 	
 	public ArrayList<Double> run() throws InterruptedException{
+		Einstellungen.berechneteNiveaus = 0;
 		ArrayList<Double> energies = new ArrayList<>();
 		int xsize = g.width*3/8;
 		int ysize = g.height*3/8;
-		//erstellen der koordinatensysteme
+		
 		int anzahlks = 2;
 		for(int i = 0; i < anzahlks; i++ ){
 			CoordinateSystem k = new CoordinateSystem(g,g.width/2*i + g.width*1/16, g.height/2 - ysize/2, xsize, ysize);
@@ -36,8 +39,8 @@ public class SchroedingerIntegration {
 			}
 			k.xlabel = "Abstand des Kerns in m";
 			k.ylabel = "Energie in eV";
-			Funktion f = new Funktion(k, "-q/(4*pi*e0)*1/abs(x)", false);
-			k.funktions.add(f);
+			//Funktion f = new Funktion(k, "-q/(4*pi*e0*abs(x))", false);
+			//k.funktions.add(f);
 		}
 
 		//numerische integration
@@ -46,35 +49,40 @@ public class SchroedingerIntegration {
 		int count = 0;
 		do{			
 			ArrayList<ArrayList<ArrayList<Double>>> l = E.gibloesungsschritte().get(0);
+
 			if(l.size() > 1){
+				//Beschraenkung der Loesungsschritte
 				int size = l.size();
-				for(int j=size-15; j>=0; j-- ){
+				for(int j=size-2; j>=0; j-- ){
+					if(j%(int)(size/15.0+1) != 0){
 						l.remove(j);
+					}
 				}
 			}
-			//for(int s = 0; s < l.size(); s++){
+	
+			if(l.size() == 0){
+				System.exit(0);
+			}
+			
+			g.ks.get(0).simulation.add(l);
 
-					//g.ks.get(0).addEnergy(E.getEnergy()/e);	
-					g.ks.get(0).simulation.add(l);
-					
-			//}
 			System.out.println(E.getEnergy()/e);
-			g.ks.get(1).addEnergy(E.getEnergy()/e);	
+			g.ks.get(1).solEnergy.add(E.getEnergy()/e);	
 			g.ks.get(1).solution.add(E.getSolution());
 			energies.add(E.getEnergy()/e);
 
 			
 			count ++;
+			Einstellungen.berechneteNiveaus++;
 		}while(E.step()&&count<Einstellungen.maxNiveaus);
 			
 			t1 = new Thread(){
 			public void run(){
-
 				long initsleeptime = 100;
 				long sleeptime = 100;
 				int i = 0;
 				long calctime = 0;
-				while(!g.simulated&&!isInterrupted()){
+				while(/*!g.simulated&&*/!isInterrupted()){
 					if(i == 0){
 					long startTime = System.currentTimeMillis();
 					g.repaint();
@@ -99,6 +107,8 @@ public class SchroedingerIntegration {
 						Thread.currentThread().interrupt();
 					}
 				}
+				Einstellungen.allesGezeichnet = true;
+				g.repaint();
 			}
 		};
 		t1.start();
@@ -109,6 +119,16 @@ public class SchroedingerIntegration {
 
 	public void stop() {
 		t1.interrupt();
+	}
+	
+	public void clear(){
+		if(t1.isAlive()){
+			t1.interrupt();
+		}
+		g.ks.clear();
+		g.currRange = 0;
+		g.s = 0;
+		g.funktNr = 1;
 	}
 
 }

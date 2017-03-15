@@ -1,11 +1,16 @@
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.PointerInfo;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -25,14 +30,20 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.JProgressBar;
 
 public class Hauptfenster extends JFrame {
 
 	private JPanel contentPane;
 	private JLabel lblEnergies;
+	private JButton btnclear, btnStart;
+	private JProgressBar progressBar;
 	private SchroedingerIntegration simulation;
 	private ArrayList<Double>energies;
 	private Game g;
+	private int[] prevMousePosition = {0,0};
+	private boolean init = false;
+	private double[] zoomVect = new double[2];
 
 	/**
 	 * Launch the application.
@@ -52,10 +63,9 @@ public class Hauptfenster extends JFrame {
 	
 	/**
 	 * Create the frame.
-	 */
+	 *///
 	public Hauptfenster() {
 		setTitle("Schroedingerintegration");
-		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = (int) screenSize.getWidth();
@@ -134,6 +144,131 @@ public class Hauptfenster extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		contentPane.addMouseWheelListener(new MouseWheelListener(){
+
+			@Override
+			public void mouseWheelMoved(MouseWheelEvent e) {
+				if(g.ks.size() > 0){
+					PointerInfo a = MouseInfo.getPointerInfo();
+					Point b = a.getLocation();
+					int x = (int) b.getX();
+					int y = (int) b.getY();
+					CoordinateSystem s = g.ks.get(0);
+					if(g.ks.size() > 1){
+						s = g.ks.get(1);
+					}
+					int xpos  = s.xpos;
+					int ypos  = s.ypos;
+					int xsize = s.xsize;
+					int ysize = s.ysize;
+					if(MouseAction.inKs(xpos, ypos, xsize, ysize, x, y)){
+						s.changedrange = true;
+						int steps = e.getWheelRotation();
+						System.out.println(steps);
+						double zoom = 1+steps*0.1;
+						if(zoom < 0.8){
+							zoom = 0.8;
+						}
+						if(zoom > 1.2){
+							zoom = 1.2;
+						}
+						double xmin = s.xmin;
+						double xmax = s.xmax;
+						double ymin = s.ymin;
+						double ymax = s.ymax;
+						double xm = (x-xpos)*(Math.abs(s.xmin - s.xmax))/(s.xsize) + xmin;
+						double ym = (-y+ypos+ysize)*(Math.abs(s.ymin - s.ymax))/(s.ysize) + ymin;
+						double xdistance1 = (xm - s.xmin);
+						double xdistance2 = s.xmax - xm;
+						double xdmin = Math.min(Math.abs(xdistance1), Math.abs(xdistance2));
+						double ydistance1 = ym - s.ymin;
+						double ydistance2 = s.ymax - ym;
+						double ydmin = Math.min(Math.abs(ydistance1), Math.abs(ydistance2));
+						System.out.println(zoom);
+						s.xmin = xm - xdistance1*(zoom);
+
+						s.ymin = ym - ydistance1*(zoom);
+
+						s.xmax = xm + xdistance2*(zoom);
+
+						s.ymax = ym + ydistance2*(zoom);
+						
+					}
+					
+				}
+				
+			}});
+		contentPane.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent arg0) {
+
+			}
+
+			public void mouseExited(MouseEvent arg0) {
+
+			}
+
+			public void mouseEntered(MouseEvent arg0) {
+
+			}
+
+			public void mousePressed(MouseEvent arg0) {
+			
+				
+				if(arg0.getButton() == 1){
+				if(g.ks.size() > 0){
+					PointerInfo a = MouseInfo.getPointerInfo();
+					Point b = a.getLocation();
+					int x = (int) b.getX();
+					int y = (int) b.getY();
+					CoordinateSystem s = g.ks.get(0);
+					if(g.ks.size() > 1){
+						s = g.ks.get(1);
+					}
+					int xpos  = s.xpos;
+					int ypos  = s.ypos;
+					int xsize = s.xsize;
+					int ysize = s.ysize;
+					if(MouseAction.inKs(xpos, ypos, xsize, ysize, x, y)){
+						s.changedrange = true;
+						init = true;
+						prevMousePosition[0] = x;
+						prevMousePosition[1] = y;
+						
+					}
+					
+				}
+				}
+			}
+
+			public void mouseReleased(MouseEvent arg0) {
+				
+				if(arg0.getButton() == 1){
+				if(g.ks.size() > 0){
+					PointerInfo a = MouseInfo.getPointerInfo();
+					Point b = a.getLocation();
+					int x = (int) b.getX();
+					int y = (int) b.getY();
+					CoordinateSystem s = g.ks.get(0);
+					if(g.ks.size() > 1){
+						s = g.ks.get(1);
+					}
+
+					if(init){
+						double[] vect = {prevMousePosition[0] - x, prevMousePosition[1] - y};
+						double d = s.xmax-s.xmin;
+						double d2 = s.ymax-s.ymin;
+						s.xmin = s.xmin + (Math.abs(d)/((double)s.xsize))*vect[0];
+						s.xmax = s.xmax + (Math.abs(d)/((double)s.xsize))*vect[0];
+						s.ymin = s.ymin - (Math.abs(d2)/((double)s.ysize))*vect[1];
+						s.ymax = s.ymax - (Math.abs(d2)/((double)s.ysize))*vect[1];
+						prevMousePosition[0] = x;
+						prevMousePosition[1] = y;
+					}
+					init = false;
+				}
+			}
+			}
+		});
 		
 
 		g.setBounds(5, 5, width-200, height);
@@ -142,7 +277,74 @@ public class Hauptfenster extends JFrame {
 		simulation = new SchroedingerIntegration(g);
 		g.setLayout(new GridLayout(1, 0, 0, 0));
 		
-		final JButton btnStart = new JButton("Start");
+		final JButton btnFaster = new JButton("schneller");
+		final JButton btnSlower = new JButton("langsamer");
+		
+		btnFaster.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				g.calcTime += 10;
+				if(g.calcTime>100){
+					btnFaster.setEnabled(false);
+				}
+				btnSlower.setEnabled(true);
+			}
+		});
+		btnFaster.setBounds(width-150, height-390, 110, 20);
+		btnFaster.setEnabled(false);
+		contentPane.add(btnFaster);
+		
+		btnSlower.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				g.calcTime -= 10;
+				if(g.calcTime<20){
+					btnSlower.setEnabled(false);
+				}
+				btnFaster.setEnabled(true);
+			}
+		});
+		
+		final JButton buttonPause = new JButton("Pause");
+		buttonPause.addMouseListener(new MouseAdapter() {
+			int calcOld;
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if(buttonPause.getText().equals("Pause")){
+					calcOld = g.calcTime;
+					g.calcTime = 0;
+					btnFaster.setEnabled(false);
+					btnSlower.setEnabled(false);
+					buttonPause.setText("Weiter");
+				}else{
+					g.calcTime = calcOld;
+					btnFaster.setEnabled(true);
+					btnSlower.setEnabled(true);
+					buttonPause.setText("Pause");
+				}
+			}
+		});
+		buttonPause.setEnabled(false);
+		buttonPause.setBounds(width-150, height -360, 110, 20);
+		contentPane.add(buttonPause);
+		
+		
+		btnSlower.setBounds(width-150, height-330, 110, 20);
+		btnSlower.setEnabled(false);
+		contentPane.add(btnSlower);
+		
+		btnclear = new JButton("Clear");
+		btnclear.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				btnStart.setText("Start");
+				simulation.clear();
+			}
+		});
+		btnclear.setEnabled(false);
+		btnclear.setBounds(width-150, height-270, 100, 50);
+		
+		btnStart = new JButton("Start");
 		btnStart.setBounds(width-150, height-200, 100, 50);
 		btnStart.addMouseListener(new MouseAdapter() {
 			@Override
@@ -150,6 +352,9 @@ public class Hauptfenster extends JFrame {
 				try{
 					if(btnStart.getText().equals("Start")){
 						menuBar.getMenu(1).getItem(0).setEnabled(false);
+						progressBar.setVisible(true);
+						progressBar.setMaximum(Einstellungen.maxNiveaus);
+						progressBar.setValue(0);
 						new Thread(){
 							public void run(){
 								try {
@@ -170,12 +375,41 @@ public class Hauptfenster extends JFrame {
 								
 								menuBar.getMenu(1).getItem(0).setEnabled(true);;
 								btnStart.setEnabled(true);
+								btnclear.setEnabled(true);
+								progressBar.setVisible(false);
+								btnFaster.setEnabled(true);
+								btnSlower.setEnabled(true);
+								buttonPause.setEnabled(true);
 							}		
 						}.start();
 						btnStart.setText("Stopp");
 						btnStart.setEnabled(false);
+						btnclear.setEnabled(false);
+						
+						Einstellungen.allesGezeichnet = false;
+						new Thread(){
+							public void run(){
+								while(!Einstellungen.allesGezeichnet){
+									progressBar.setValue(Einstellungen.berechneteNiveaus);
+									try {
+										Thread.sleep(100);
+									} catch (InterruptedException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}
+								btnStart.setText("Start");
+								btnclear.setEnabled(false);
+								btnFaster.setEnabled(false);
+								btnSlower.setEnabled(false);
+								buttonPause.setEnabled(false);
+								//simulation.clear();
+							}
+						}.start();
 					}else{
 						simulation.stop();
+						buttonPause.setEnabled(false);
+						buttonPause.setText("Pause");
 						btnStart.setText("Start");
 					}
 				}catch(Exception e){
@@ -184,13 +418,7 @@ public class Hauptfenster extends JFrame {
 			}
 		});
 		
-		JButton btnclear = new JButton("Clear");
-		btnclear.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-			}
-		});
-		btnclear.setBounds(width-150, height-270, 100, 50);
+
 		contentPane.add(btnclear);
 		contentPane.add(btnStart);
 		
@@ -199,7 +427,9 @@ public class Hauptfenster extends JFrame {
 		lblEnergies.setBounds(width-170, 10, 150, height-200);
 		contentPane.add(lblEnergies);
 		
+		progressBar = new JProgressBar();
+		progressBar.setBounds(width-170, height - 130, 150, 20);
+		progressBar.setVisible(false);
+		contentPane.add(progressBar);
 	}
-
-
 }

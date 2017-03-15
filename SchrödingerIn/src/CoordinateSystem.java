@@ -16,6 +16,7 @@ public class CoordinateSystem {
 	ArrayList<Funktion> funktions = new ArrayList<>();
 	ArrayList<double[][]> measure = new ArrayList<>();
 	ArrayList<Double> energy = new ArrayList<>();
+	ArrayList<Double> solEnergy = new ArrayList<>();
 
 	ArrayList<ArrayList<ArrayList<ArrayList<Double>>>> simulation = new ArrayList<>();
 	ArrayList<ArrayList<ArrayList<Double>>> solution = new ArrayList<>();
@@ -27,7 +28,7 @@ public class CoordinateSystem {
 	int recsize = 6; // size of rectangle representing the data point
 	
 	//legend
-	public int numberTextSize = 10;
+	public int numberTextSize = 10;//
 	public String xlabel = " ";
 	public int xlabelFontSize = 20;
 	public String ylabel = " ";
@@ -43,6 +44,7 @@ public class CoordinateSystem {
 	boolean drawpoints = true;
 	boolean growingrange = false;
 	boolean drawable = false;
+	boolean changedrange = false;
 	
 	Color[] colorList = {Color.RED, Color.BLUE, Color.GREEN, Color.ORANGE, Color.PINK};
 
@@ -151,14 +153,23 @@ public class CoordinateSystem {
 			for(int s = 0; s < measure.size(); s++){
 				if(measure.get(s) != null){
 				double[][] mea = measure.get(s);
+				if(!changedrange){
 				MaxandMin(mea);
+				}
 				drawable = true;
+				double calcxmin = xmin;
+				double calcxmax = xmax;
+				double calcymin = ymin;
+				double calcymax = ymax;
 				double px =(xsize/Math.abs(xmax - xmin));
 				double py =(ysize/Math.abs(ymax - ymin));
 				g.setColor(colorList[s%colorList.length]);
 
 				for(int i = 0; i < mea.length; i++){
 					//wertebereich anpassen
+					if(!noChange(calcxmin, calcxmax, calcymin, calcymax)){
+						i = mea.length;
+					}
 					if(mea[i][1]==mea[i][1]){//Nan.check
 						if(drawpoints){
 							int xr = (int)(xpos + mea[i][0]*px-recsize/2 + (-xmin)*px);
@@ -191,7 +202,8 @@ public class CoordinateSystem {
 									xl += (int)(xcomp*j);
 									int yl = (int)(ypos + ysize -mea[i-1][1]*py+(ymin)*py);
 									yl += (int)(ycomp*j);
-									g.drawLine(xl,yl,xr,yr);
+									drawLogic(g, xl, yl, xr,yr);
+									
 								}
 		
 							}
@@ -208,27 +220,38 @@ public class CoordinateSystem {
 	public void drawFunktions(ArrayList<Funktion> funktions2,Graphics2D g){
 		if(funktions2 != null){
 			if(drawable){
+				double calcxmin = xmin;
+				double calcxmax = xmax;
+				double calcymin = ymin;
+				double calcymax = ymax;
 				double px =(xsize/Math.abs(xmax - xmin));
 				double py =(ysize/Math.abs(ymax - ymin));
+				
 				for(int i = 0; i < funktions2.size(); i++){
-					g.setColor(Color.RED);
+					g.setColor(Color.GRAY);
 					if(funktions2.get(i) != null){
 						funktions2.get(i).refresh(this);
 						if(funktions2.get(i).plot != null){
 							for(int j = 0; j+1 < funktions2.get(i).plot.size(); j++){
-								
+								if(!noChange(calcxmin, calcxmax, calcymin, calcymax)){
+									i = funktions2.size();
+									j = funktions2.get(i).plot.size();
+								}
 								double d1 = funktions2.get(i).plot.get(j).get(1);
 								double d2 = funktions2.get(i).plot.get(j+1).get(1);
-								double xx1 = funktions2.get(i).plot.get(j).get(0);
-								double xx2 = funktions2.get(i).plot.get(j+1).get(0);
-								if(d1 != d2){
-								//System.out.println(xx1 + "  " + funktions2.get(i).plot.get(j).get(1));
+								if(!Double.isNaN(d1) && !Double.isNaN(d2)){
+									double xx1 = funktions2.get(i).plot.get(j).get(0);
+									double xx2 = funktions2.get(i).plot.get(j+1).get(0);
+	
+									int x1= (int)(xpos  + xx1*px + (-xmin)*px);
+									int y1 = (int)(ypos + ysize +((ymin)*py) -(d1*py));
+									int x2 = (int)(xpos  + xx2*px + (-xmin)*px);
+									int y2 = (int)(ypos + ysize +((ymin)*py) -(d2*py));
+									if(inKs(x1,y1,x2,y2)){
+									g.drawLine(x1,y1,x2,y2);
+									}
 								}
-								int x1= (int)(xpos  + xx1*px + (-xmin)*px);
-								int y1 = (int)(ypos + ysize +((ymin)*py) -(d1*py));//fix +2 stuff
-								int x2 = (int)(xpos  + xx2*px + (-xmin)*px);
-								int y2 = (int)(ypos + ysize +((ymin)*py) -(d2*py));
-								g.drawLine(x1,y1,x2,y2);
+								
 							}
 						}
 					}
@@ -236,6 +259,23 @@ public class CoordinateSystem {
 			}
 		}
 	}
+	
+	public boolean noChange(double cxmin, double cxmax, double cymin, double cymax){
+		if(xmin == cxmin && ymin == cymin && xmax == cxmax && ymax == cymax){
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean inKs(int x1, int y1, int x2, int y2){
+		if(x1 >= xpos && x1 <= xpos + xsize && y1 >= ypos && y1 <= ypos + ysize){
+			if(x2 >= xpos && x2 <= xpos + xsize && y2 >= ypos && y2 <= ypos + ysize){	
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	// Hilfsmethode
 	public ArrayList<String> separateString(String str, int x){
 		str += " "; 
@@ -281,12 +321,15 @@ public class CoordinateSystem {
 					String str = KsDigit(energy.get(i), 2);
 					int x = xpos - g.getFontMetrics().stringWidth(str) - 5;
 					int y = (int)(ypos + ysize-k+g.getFontMetrics().getHeight()/4.0+ymin*py);
-					g.drawString(str, x, y);
+					
 					int x1 = xpos + 5;
 					int y1 = (int)(ypos + ysize-k+ymin*py);
 					int x2 = xpos - 5;
 					int y2 = (int)(ypos + ysize-k+ymin*py);
-					g.drawLine(x1, y1, x2, y2);
+					if(y1 <= ypos + xsize && y1 >= ypos){
+						g.drawString(str, x, y);
+						g.drawLine(x1, y1, x2, y2);
+					}
 				}
 			}
 	
@@ -319,24 +362,29 @@ public class CoordinateSystem {
 			// y Achse
 			str = ylabel;
 			g.setFont(new Font("TimesRoman", Font.PLAIN, ylabelFontSize));
-			x = xpos - 100;
-			y = ypos + ysize/2 - g.getFontMetrics().getHeight()/2;
-			//g.rotate(-Math.PI/2);
-			g.drawString(str, x, y);
-			//g.rotate(Math.PI/2);
+			x = xpos - g.getFontMetrics().getHeight();
+			y = ypos + ysize/2 + g.getFontMetrics().stringWidth(str)/2;
+		    
+		    g.translate((float)x,(float)y);
+		    g.rotate(Math.toRadians(-90));
+		    g.drawString(str, 0, 0);
+		    g.rotate(-Math.toRadians(-90));
+		    g.translate(-(float)x,-(float)y);
+
 			//text
 			str = text;
+			System.out.println(text);
 			g.setFont(new Font("TimesRoman", Font.PLAIN, textFontSize));
 			x = xpos + 10;
 			ArrayList<String> s = separateString(str, x);
-			int zeile = 0;
+			int zeile = 1;
 			int zabs = 5; // zeilenabstand
 			for(int i = 0; i < s.size(); i++){
 				if(x + g.getFontMetrics().stringWidth(s.get(i) + " ") >= game.width){
 					zeile += 1;
 					x = xpos + 10;
 				}
-				y = ypos + ysize +  zeile *(g.getFontMetrics().getHeight()+zabs);
+				y = ypos + ysize + 10 +  zeile *(g.getFontMetrics().getHeight()+zabs);
 				g.drawString(s.get(i), x, y);
 	
 				x += g.getFontMetrics().stringWidth(s.get(i));
@@ -410,6 +458,69 @@ public class CoordinateSystem {
 			}
 		}
 		return p;
+	}
+	
+	public void drawLogic(Graphics2D g, int xl, int yl, int xr, int yr){
+		if(inKs(xr,yr,xl,yl)){
+			g.drawLine(xl,yl,xr,yr);
+		}if(inKs(xr,yr,xpos,ypos) && !inKs(xr,yr,xl,yl)){
+			double[] vect = {xl-xr, yl-yr};
+			double a = Math.pow(vect[0],2)+Math.pow(vect[1],2);
+			double length = Math.pow(a, 0.5);
+			vect[0] = vect[0]/length;
+			vect[1] = vect[1]/length;
+			double xe = xr;
+			double ye = yr; 
+			while(inKs((int)xe, (int)ye, xpos, ypos)){
+				xe +=vect[0];
+				ye +=vect[1];
+			}
+			g.drawLine(xr,yr,(int)xe,(int)ye);
+		}
+		if(inKs(xl,yl,xpos,ypos)&& !inKs(xr,yr,xl,yl)){
+			double[] vect = {xr-xl, yr-yl};
+			double a = Math.pow(vect[0],2)+Math.pow(vect[1],2);
+			double length = Math.pow(a, 0.5);
+			vect[0] = vect[0]/length;
+			vect[1] = vect[1]/length;
+			double xe = xl;
+			double ye = yl; 
+			while(inKs((int)xe, (int)ye, xpos, ypos)){
+				xe += vect[0];
+				ye += vect[1];
+			}
+			g.drawLine(xl,yl,(int)xe,(int)ye);
+		}
+		if(!inKs(xr,yr,xl,yl)){
+			double[] vect = {xr-xl, yr-yl};
+			double a = Math.pow(vect[0],2)+Math.pow(vect[1],2);
+			double length = Math.pow(a, 0.5);
+			vect[0] = vect[0]/length;
+			vect[1] = vect[1]/length;
+			double xe = xl;
+			double ye = yl; 
+			double bx = 0;
+			double by = 0;
+			double ex = 0;
+			double ey = 0;
+			boolean hit = false;
+			for(double i = 0; i < length; i ++){
+				xe += vect[0];
+				ye += vect[1];
+				if(inKs(xpos,ypos,(int)xe, (int)ye)){
+					hit = true;
+					bx = xe;
+					by = ye;
+				}
+				if(!inKs(xpos,ypos,(int)xe, (int)ye) && hit){
+					ex = xe;
+					ey = ye;
+					g.drawLine((int)bx,(int)by,(int)ex,(int)ey);
+					i = length;
+				}
+				
+			}
+		}
 	}
 	
 }

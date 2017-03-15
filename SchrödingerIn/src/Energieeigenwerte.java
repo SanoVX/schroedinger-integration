@@ -5,7 +5,6 @@ public class Energieeigenwerte {
 	//Variablendefinition
 	private Potential potential;
 	private double E_current,E_max,E_min;
-	private int accuracy = 15;
 	private double xrange = Math.pow(10,-6);
 	private boolean searched;
 	private boolean ungerade;
@@ -45,16 +44,18 @@ public class Energieeigenwerte {
 		loesungsschritte.clear();
 		ArrayList<ArrayList<ArrayList<Double>>> loesungsblock = new ArrayList<>();
 		
-		for(int i = 1; i< accuracy; i++){
+		for(int i = 1; i< Einstellungen.accuracy; i++){
 			int change_sign = (-1)*recursion();
 			while(recursion()!=change_sign){
 				E_current += Math.pow(10,-i)*e;
 				if(E_current>E_max){
-					break;
+					solution = null;
+					loesungsschritte = null;
+					return false;
 				}
 				int size = solution.size();
 				
-				for(int j=size-1;j>size-700 && j>1;j--){
+				for(int j=size-1;j>size-400 && j>1;j--){
 					solution.remove(j);
 				}
 				
@@ -113,19 +114,19 @@ public class Energieeigenwerte {
 	private int recursion(){
 		ArrayList<ArrayList<Double>> temp = new ArrayList<>();
 		//xrange = -e/(4*pi*e0*E);
-		double step = xrange/1000000;
+		double step = xrange/Einstellungen.steps;
 		//Anfangsbedingungen
 		ArrayList<Double> Sx = new ArrayList<>(); // Liste mit x,y koordinaten der punkte 
 		
 		if(ungerade){
 			Sx.add(0.); Sx.add(0.); // initialisiere ersten Punkt auf 0/0
-			temp.add(Sx);				// fï¿½gt punkt in liste f hinzu
+			temp.add(Sx);				// fÃ¯Â¿Â½gt punkt in liste f hinzu
 			Sx = new ArrayList<>();
 			Sx.add(step); Sx.add(1.0); // initialisiere zweiten punkt auf step/step
 			temp.add(Sx);
 		}else{
 			Sx.add(0.); Sx.add(1.); // initialisiere ersten Punkt auf 0/0
-			temp.add(Sx);				// fï¿½gt punkt in liste f hinzu
+			temp.add(Sx);				// fÃ¯Â¿Â½gt punkt in liste f hinzu
 			Sx = new ArrayList<>();
 			Sx.add(step); Sx.add(1.2); // initialisiere zweiten punkt auf step/step
 			temp.add(Sx);
@@ -133,7 +134,7 @@ public class Energieeigenwerte {
 		
 		for(int i = 1; i < (int)(xrange/step)+1; i++){
 
-			double x = temp.get(i).get(0) + step*i; // berechnet x koordinate des nï¿½chsten punktes
+			double x = temp.get(i).get(0) + step*i; // berechnet x koordinate des nÃ¯Â¿Â½chsten punktes
 			Sx = new ArrayList<>();
 			double y = Qi(step*i,step)*temp.get(i).get(1)-temp.get(i-1).get(1);
 
@@ -227,20 +228,6 @@ public class Energieeigenwerte {
 			return solution;
 		}else{
 			return null;
-		}
-	}
-	
-	/*
-	 * Einstellen des Genauigkeitswertes
-	 * @return: true, umgestellt
-	 * 			falls, Fehler beim Umstellen
-	 */
-	public boolean setAccuracy(int accuracy){
-		if(searched){
-			this.accuracy = accuracy;
-			return true;
-		}else{
-			return false;
 		}
 	}
 	

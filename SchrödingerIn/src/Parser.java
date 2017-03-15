@@ -24,10 +24,11 @@ public class Parser {
 	static String[] validNumbers = {"0","1","2","3","4","5","6","7","8","9","."};
 	static ArrayList<String> variable = new ArrayList<>();
 	static ArrayList<Double> values = new ArrayList<>();
-	static ArrayList<String> funktions = new ArrayList<>();
+	static ArrayList<String> funktions = new ArrayList<>();//
 	
 	public Parser(String syntax, Funktion f){
 		this.f = f;
+		syntax = change(syntax);
 		setVariables();
 		setfunktions();
 		syntax = deleteSpaces(syntax);
@@ -47,14 +48,14 @@ public class Parser {
 		for(int i = 0; i < SyntaxList.size(); i++){
 			System.out.println("Printing Syntax list " + SyntaxList.get(i));
 		}
-		for(int i = 0; i < Identity.size(); i++){
+		/*for(int i = 0; i < Identity.size(); i++){
 			System.out.println("Printing id list " + Identity.get(i));
-		}
+		}*/
 	}
 	
 	public void setVariables(){
 		String[] var = {"x", "e", "pi", "e0", "q"};
-		double[] val = {0.0, Math.E, Math.PI, 8.854*Math.pow(10, -12), Einstellungen.e};
+		double[] val = {0.0, Math.E, Math.PI, Einstellungen.e0, Einstellungen.e};
 		for(int i = 0; i < var.length; i++){
 			variable.add(var[i]);
 			values.add(val[i]);
@@ -299,7 +300,20 @@ public class Parser {
 		}
 		return true;
 	}
-	
+	public static String change(String str){
+		String s = "";
+		for(int i = 0; i < str.length(); i++){
+			char c = str.charAt(i);
+			String letter = Character.toString(c);
+			if(letter.equals("E")){
+				s += "*10^";
+			}else{
+				s += letter;
+			}
+		}
+		
+		return s;
+	}
 	
 	
 }
