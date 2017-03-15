@@ -24,7 +24,7 @@ public class SchroedingerIntegration {
 		
 		int anzahlks = 2;
 		for(int i = 0; i < anzahlks; i++ ){
-			CoordinateSystem k = new CoordinateSystem(g,g.width/2*i + g.width*1/16, g.height/2 - ysize/2, xsize, ysize);
+			CoordinateSystem k = new CoordinateSystem(g,g.width/2*i + g.width*1/36 - 50*i, g.height/2 - ysize/2, xsize, ysize);
 			g.ks.add(k);
 			k.drawpoints = false;
 			if(true){// growing range only in left coordinate system
