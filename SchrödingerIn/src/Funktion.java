@@ -32,6 +32,14 @@ public class Funktion {
 			refresh(g);
 		}
 	}
+	
+	public Funktion(String str, boolean showallYs){
+		this.showallYs = showallYs;
+		Parser p = new Parser(str, this);
+		this.message = p.message;
+		this.p = p;
+
+	}
 	public void refresh(CoordinateSystem g){
 		plot = new ArrayList<>();
 		this.xmin = g.xmin;
@@ -59,6 +67,13 @@ public class Funktion {
 			plot.add(xy);
 		}
 		
+	}
+	
+	public double getY(double x){
+		if(p.valid){
+		return CalculateString.returnY(this, x, p.SyntaxList); 
+		}
+		return Double.NaN;
 	}
 
 	

@@ -79,7 +79,6 @@ public class Game extends JPanel{
 		}
 		currRange += calcTime;
 		for(int j = 0; j < ks.get(0).simulation.get(s).size() && j <= funktNr; j++){
-			System.out.println(s + " " + funktNr);
 			ArrayList<ArrayList<Double>> add = copyList(ks.get(0).simulation.get(s).get(funktNr -1), currRange);
 			if(ks.get(0).simulation.get(s).get(funktNr -1).size() < currRange){
 				currRange = 0;
@@ -88,13 +87,7 @@ public class Game extends JPanel{
 				ks.get(0).measure.remove(ks.get(0).measure.size()-1);
 			}
 			ks.get(0).addMeasures(add);
-			System.out.println();
-			if((j+1 < ks.get(0).simulation.get(s).size() && j+1 <= funktNr)){
-
-				ks.get(0).text = "Solution found at " + ks.get(1).solEnergy.get(s) + "eV";
-			}else{
-				ks.get(0).text = "Searching for solution...";
-			}
+			
 		}
 		
 	}
