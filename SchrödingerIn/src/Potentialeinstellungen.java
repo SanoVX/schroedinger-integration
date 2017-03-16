@@ -209,9 +209,10 @@ public class Potentialeinstellungen extends JFrame {
 			potential = new Parabel(Double.parseDouble(parabelTiefe.getText())*e, Double.parseDouble(parabelBreite.getText()));
 			break;
 		case benutzerdefiniert:
-			//benutzerdefiniertes potential
-			//potential = new UserFunction(f);
-			potential = null;
+			// TODO Potential erstellen
+
+			Funktion f = new Funktion(benutzerdefiniert.getText(), true);
+			potential = new UserFunction(f);
 			break;
 		default:
 			potential = null;
@@ -375,14 +376,18 @@ public class Potentialeinstellungen extends JFrame {
 			Vx.setBounds(5, 105, 20, 20);
 			settings.add(Vx);
 			
-			benutzerdefiniert = new JTextField("e*e/(x*1E-12)");
+			benutzerdefiniert = new JTextField("-q*q/(4*pi*e0*x)");
 			benutzerdefiniert.setBounds(25,105,50,20);
 			settings.add(benutzerdefiniert);
 			benutzerdefiniert.setColumns(20);
 			benutzerdefiniert.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					//Check syntax
+					Funktion f = new Funktion(benutzerdefiniert.getText(), true);
+					if(!f.p.valid){
+						benutzerdefiniert.setText("-q*q/(4*pi*e0*x)");
+					}
+					// TODO Syntax Check
 				}
 			});
 			break;
