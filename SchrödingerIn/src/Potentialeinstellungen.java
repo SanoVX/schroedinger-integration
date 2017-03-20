@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JCheckBox;
 
 public class Potentialeinstellungen extends JFrame {
 
@@ -27,10 +28,13 @@ public class Potentialeinstellungen extends JFrame {
 	private JTextField coulomb1, kastenBoden, kastenBreite, kastenHoehe, benutzerdefiniert,
 			parabelTiefe, parabelBreite;
 	private Potential potential;
+	private JCheckBox chckbxPeriodischesPotential;
 	
 	private double e = Einstellungen.e;
 	private JTextField E_min_Eingabe;
 	private JTextField E_max_Eingabe;
+	private JTextField TextPeriodAnz;
+	private JTextField TextPeriodDist;
 
 
 	/**
@@ -41,7 +45,7 @@ public class Potentialeinstellungen extends JFrame {
 		this.potential = SchroedingerIntegration.potential;
 		
 		setTitle("Einstellungen zum Potential");
-		setBounds(100, 100, 550, 350);
+		setBounds(0, -23, 650, 400);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -58,7 +62,7 @@ public class Potentialeinstellungen extends JFrame {
 		ButtonGroup bg = new ButtonGroup();
 		
 		final JPanel settings = new JPanel();
-		settings.setBounds(202, 70, 322, 231);
+		settings.setBounds(202, 70, 422, 281);
 		settings.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		contentPane.add(settings);
 		
@@ -130,7 +134,7 @@ public class Potentialeinstellungen extends JFrame {
 				finish();			
 			}
 		});
-		btnNewButton.setBounds(10, 278, 77, 23);
+		btnNewButton.setBounds(10, 328, 77, 23);
 		contentPane.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("Abbrechen");
@@ -140,24 +144,24 @@ public class Potentialeinstellungen extends JFrame {
 				dispose();
 			}
 		});
-		btnNewButton_1.setBounds(97, 278, 101, 23);
+		btnNewButton_1.setBounds(97, 328, 101, 23);
 		contentPane.add(btnNewButton_1);
 		
 		JLabel lblEnergienFuerDie = new JLabel("Energien fuer die Suche in eV:");
-		lblEnergienFuerDie.setBounds(10, 147, 182, 14);
+		lblEnergienFuerDie.setBounds(10, 244, 182, 14);
 		contentPane.add(lblEnergienFuerDie);
 		
 		JLabel lblMinimum = new JLabel("Minimum");
-		lblMinimum.setBounds(10, 172, 64, 20);
+		lblMinimum.setBounds(10, 269, 64, 20);
 		contentPane.add(lblMinimum);
 		
 		JLabel lblMaximum = new JLabel("Maximum");
-		lblMaximum.setBounds(10, 203, 64, 17);
+		lblMaximum.setBounds(10, 300, 64, 17);
 		contentPane.add(lblMaximum);
 		
 		E_min_Eingabe = new JTextField();
 		E_min_Eingabe.setText("-20");
-		E_min_Eingabe.setBounds(84, 172, 86, 20);
+		E_min_Eingabe.setBounds(97, 269, 86, 20);
 		contentPane.add(E_min_Eingabe);
 		E_min_Eingabe.addActionListener(new ActionListener() {
 			@Override
@@ -177,7 +181,7 @@ public class Potentialeinstellungen extends JFrame {
 		E_max_Eingabe = new JTextField();
 		E_max_Eingabe.setText("0");
 		E_max_Eingabe.setColumns(10);
-		E_max_Eingabe.setBounds(84, 200, 86, 20);
+		E_max_Eingabe.setBounds(97, 297, 86, 20);
 		E_max_Eingabe.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
@@ -192,6 +196,64 @@ public class Potentialeinstellungen extends JFrame {
 			}
 		});
 		contentPane.add(E_max_Eingabe);
+		
+		chckbxPeriodischesPotential = new JCheckBox("periodisches Potential");
+		chckbxPeriodischesPotential.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				if(arg0.getStateChange() == ItemEvent.DESELECTED){
+					TextPeriodAnz.setEnabled(false);
+					TextPeriodDist.setEnabled(false);
+				}else if(arg0.getStateChange()==ItemEvent.SELECTED){
+					TextPeriodAnz.setEnabled(true);
+					TextPeriodDist.setEnabled(true);
+				}
+			}
+		});
+		chckbxPeriodischesPotential.setBounds(10, 155, 177, 23);
+		contentPane.add(chckbxPeriodischesPotential);
+		
+		
+		JLabel lblAnzahl = new JLabel("Anzahl:");
+		lblAnzahl.setBounds(10, 185, 77, 14);
+		contentPane.add(lblAnzahl);
+		
+		JLabel lblAbstandInNm = new JLabel("Abstand in nm:");
+		lblAbstandInNm.setBounds(10, 210, 86, 14);
+		contentPane.add(lblAbstandInNm);
+		
+		TextPeriodAnz = new JTextField();
+		TextPeriodAnz.setEnabled(false);
+		TextPeriodAnz.setText("5");
+		TextPeriodAnz.setBounds(97, 185, 86, 20);
+		contentPane.add(TextPeriodAnz);
+		TextPeriodAnz.setColumns(10);
+		TextPeriodAnz.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				try{
+					Double.parseDouble(TextPeriodAnz.getText());
+				}catch(Exception exception){
+					TextPeriodAnz.setText("5");
+				}
+			}
+		});
+		
+		TextPeriodDist = new JTextField();
+		TextPeriodDist.setEnabled(false);
+		TextPeriodDist.setText("10");
+		TextPeriodDist.setColumns(10);
+		TextPeriodDist.setBounds(97, 213, 86, 20);
+		contentPane.add(TextPeriodDist);
+		TextPeriodDist.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				try{
+					Double.parseDouble(TextPeriodDist.getText());
+				}catch(Exception exception){
+					TextPeriodDist.setText("20");
+				}
+			}
+		});
 		
 	}
 
@@ -220,6 +282,9 @@ public class Potentialeinstellungen extends JFrame {
 		}
 		Einstellungen.E_max = Double.parseDouble(E_max_Eingabe.getText())*e;
 		Einstellungen.E_min = Double.parseDouble(E_min_Eingabe.getText())*e;
+		if(chckbxPeriodischesPotential.isSelected()){
+			potential = new PeriodicPotential(Integer.parseInt(TextPeriodAnz.getText()), 1E-9*Double.parseDouble(TextPeriodDist.getText()), potential);
+		}
 		SchroedingerIntegration.potential = potential;
 	}
 
@@ -365,15 +430,15 @@ public class Potentialeinstellungen extends JFrame {
 			JLabel lblben = new JLabel("<html>Hier kann ein benutzerdefiniertes Potential eingegeben werden."
 					+ "<br>Die Variable x symbolisiert den Abstand vom Zentrum x=0<br>"
 					+ "Als Konstanten koennen folgende Werte verwendet werden:"
-					+ "<ul><li>e: Elementarladung</li>"
+					+ "<ul><li>q: Elementarladung</li>"
 					+ "<li>u: Masse des Elektrons</li>"
 					+ "<li>h: Plancksches Wirkungsquantum</li></ul><br>"
 					+ "Mehr Informationen unter Hilfe im Hauptmenue</html>");
-			lblben.setBounds(5,5,300,100);
+			lblben.setBounds(5,5,350,100);
 			settings.add(lblben);
 			
 			JLabel Vx = new JLabel("V(x)=");
-			Vx.setBounds(5, 105, 20, 20);
+			Vx.setBounds(5, 505, 200, 20);
 			settings.add(Vx);
 			
 			benutzerdefiniert = new JTextField("-q*q/(4*pi*e0*x)");

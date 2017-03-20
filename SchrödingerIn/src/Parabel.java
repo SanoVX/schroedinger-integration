@@ -13,13 +13,20 @@ public class Parabel extends Potential {
 	
 	@Override
 	public double getPotential(double x) {
-		return breite*x*x+tiefe;
+		return breite*x*x+tiefe/e;
 	}
 
 	@Override
 	public ArrayList<ArrayList<Double>> getPlot(double xRange) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+
+	@Override
+	public String gibFunktion() {
+		return breite+"*x^2+"+tiefe;
 	}
 
 }

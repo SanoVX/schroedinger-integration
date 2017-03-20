@@ -41,6 +41,9 @@ public class Energieeigenwerte {
 		E_current += 0.00001*e;
 		double E_start = E_current;
 		
+		if(loesungsschritte == null){
+			loesungsschritte = new ArrayList<>();
+		}
 		loesungsschritte.clear();
 		ArrayList<ArrayList<ArrayList<Double>>> loesungsblock = new ArrayList<>();
 		
@@ -132,9 +135,9 @@ public class Energieeigenwerte {
 			temp.add(Sx);
 		}
 		
-		for(int i = 1; i < (int)(xrange/step)+1; i++){
+		for(int i = 1; i < Einstellungen.steps+1; i++){
 
-			double x = temp.get(i).get(0) + step*i; // berechnet x koordinate des nÃ¯Â¿Â½chsten punktes
+			double x = step*i; // berechnet x koordinate des nÃ¯Â¿Â½chsten punktes
 			Sx = new ArrayList<>();
 			double y = Qi(step*i,step)*temp.get(i).get(1)-temp.get(i-1).get(1);
 

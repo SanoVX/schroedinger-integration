@@ -21,4 +21,11 @@ public class UserFunction extends Potential {
 		return null;
 	}
 
+
+
+	@Override
+	public String gibFunktion() {
+		return function.funktion;
+	}
+
 }

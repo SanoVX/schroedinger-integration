@@ -16,6 +16,7 @@ public abstract class Potential {
 	public abstract double getPotential(double x);
 	
 	public abstract ArrayList<ArrayList<Double>> getPlot(double xRange);
-	
+
+	public abstract String gibFunktion();
 	
 }
