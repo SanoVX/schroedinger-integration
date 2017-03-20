@@ -5,7 +5,7 @@ public class Energieeigenwerte {
 	//Variablendefinition
 	private Potential potential;
 	private double E_current,E_max,E_min;
-	private double xrange = Math.pow(10,-6);
+	private double xrange = Math.pow(10,-7);
 	private boolean searched;
 	private boolean ungerade;
 	

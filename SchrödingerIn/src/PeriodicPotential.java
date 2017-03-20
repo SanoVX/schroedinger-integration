@@ -28,7 +28,12 @@ public class PeriodicPotential extends Potential {
 
 	@Override
 	public String gibFunktion() {
-		return potential.gibFunktion();
+		String ret="";
+		ret += potential.gibFunktion()+"*theta(x-"+distance/2+")";
+		for(int i = 1; i<Anzahl; i++){
+			ret += "+"+potential.gibFunktion().replaceAll("x", "(x-"+distance*i+")")+"*theta(x-"+(2*i-1)*distance/2+")*theta(-x+"+(2*i+1)*distance/2+")";
+		}
+		return ret;
 	}
 
 }
