@@ -71,7 +71,9 @@ public class Funktion {
 	
 	public double getY(double x){
 		if(p.valid){
-		return CalculateString.returnY(this, x, p.SyntaxList); 
+			if(p.SyntaxList != null){
+				return CalculateString.returnY(this, x, p.SyntaxList); 
+			}
 		}
 		return Double.NaN;
 	}
