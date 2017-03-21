@@ -48,14 +48,18 @@ public class Parser {
 		for(int i = 0; i < SyntaxList.size(); i++){
 			System.out.println("Printing Syntax list " + SyntaxList.get(i));
 		}
-		if(SyntaxList.size() > 1){
-		SyntaxList = SimplifyList.simplify(f,SyntaxList);
-		String str = "";
-		for(int i = 0; i < SyntaxList.size(); i++){
-			str += SyntaxList.get(i);
+		if(f.p != null){
+			if(SyntaxList.size() > 1){
+			
+			SyntaxList = SimplifyList.simplify(this.f,SyntaxList);
+			
+			String str = "";
+			for(int i = 0; i < SyntaxList.size(); i++){
+				str += SyntaxList.get(i);
+			}
+			
+			ConvertToList(str);
 		}
-		
-		ConvertToList(str);
 		}
 		/*for(int i = 0; i < Identity.size(); i++){
 			System.out.println("Printing id list " + Identity.get(i));

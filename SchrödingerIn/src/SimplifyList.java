@@ -10,6 +10,7 @@ public class SimplifyList {
 	static ArrayList<String> xContent = new ArrayList<>();
 	public static ArrayList<String> simplify(Funktion f, ArrayList<String> List){
 		
+		System.out.println(f);
 		Identity = new ArrayList<>();
 		
 		for(int i = 0; i < f.p.Identity.size(); i++){
@@ -34,6 +35,7 @@ public class SimplifyList {
 		stringList = calculate(stringList ,-1,stringList.size(), f);
 		InsertXcontent(stringList);
 		return stringList;
+		
 	}
 	
 	public static void InsertXcontent(ArrayList<String> stringList){

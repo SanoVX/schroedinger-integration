@@ -326,7 +326,7 @@ public class CoordinateSystem {
 					int y1 = (int)(ypos + ysize-k+ymin*py);
 					int x2 = xpos - 5;
 					int y2 = (int)(ypos + ysize-k+ymin*py);
-					if(y1 <= ypos + xsize && y1 >= ypos){
+					if(y1 <= ypos + ysize && y1 >= ypos){
 						g.drawString(str, x, y);
 						g.drawLine(x1, y1, x2, y2);
 					}
