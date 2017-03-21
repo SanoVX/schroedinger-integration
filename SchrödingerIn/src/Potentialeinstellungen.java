@@ -45,7 +45,7 @@ public class Potentialeinstellungen extends JFrame {
 		this.potential = SchroedingerIntegration.potential;
 		
 		setTitle("Einstellungen zum Potential");
-		setBounds(0, -23, 650, 400);
+		setBounds(50, 50, 650, 400);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);

@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 
 public class SchroedingerIntegration {
@@ -52,7 +53,11 @@ public class SchroedingerIntegration {
 
 		//numerische integration
 		Energieeigenwerte E = new Energieeigenwerte(potential, Einstellungen.E_min, Einstellungen.E_max);
-		E.step();
+		if(!E.step()){
+			JOptionPane.showMessageDialog(null, "Keine Eigenwerte gefunden!", "Error", JOptionPane.ERROR_MESSAGE);
+			Einstellungen.allesGezeichnet = true;
+			return null;
+		}
 		int count = 0;
 		do{			
 			if(E.gibloesungsschritte()!= null){
@@ -131,7 +136,7 @@ public class SchroedingerIntegration {
 	}
 	
 	public void clear(){
-		if(t1.isAlive()){
+		if(t1!=null&t1.isAlive()){
 			t1.interrupt();
 		}
 		g.ks.clear();

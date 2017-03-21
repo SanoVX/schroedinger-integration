@@ -13,7 +13,7 @@ public class Einstellungen {
 	public static double E_max = 0.0;
 	public static double E_min = -20*e;
 	public static int maxNiveaus = 5;
-	public static double Amplitudengrenze = 1E4;
+	public static double Amplitudengrenze = 1E3;
 	public static int accuracy = 10;
 	public static double steps = 1E5;
 

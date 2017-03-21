@@ -58,7 +58,7 @@ public class Energieeigenwerte {
 				}
 				int size = solution.size();
 				
-				for(int j=size-1;j>size-400 && j>1;j--){
+				for(int j=size-1;j>size-20 && j>1;j--){
 					solution.remove(j);
 				}
 				
@@ -148,9 +148,11 @@ public class Energieeigenwerte {
 				
 			if(y>Einstellungen.Amplitudengrenze){
 				solution = temp;
+				//System.out.println(E_current+": "+y);
 				return 1;
 			}else if (y<-Einstellungen.Amplitudengrenze){
 				solution = temp;
+				//System.out.println(E_current+": "+y);
 				return -1;
 			}
 		}
