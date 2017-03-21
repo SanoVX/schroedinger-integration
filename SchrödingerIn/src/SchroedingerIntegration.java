@@ -40,45 +40,34 @@ public class SchroedingerIntegration {
 			}
 			k.xlabel = "Abstand des Kerns in m";
 			k.ylabel = "Energie in eV";
-			
-			//Funktion f = new Funktion(k, "-q/(4*pi*e0*abs(x))", false);
-			//k.funktions.add(f);
-			
-			Funktion f = new Funktion(k, potential.gibFunktion(), false);
+			Funktion f = new Funktion(k, "-q/(4*pi*e0*abs(x))", false);
 			k.funktions.add(f);
-			
 		}
 		
 		
 
 		//numerische integration
 		Energieeigenwerte E = new Energieeigenwerte(potential, Einstellungen.E_min, Einstellungen.E_max);
-		if(!E.step()){
-			JOptionPane.showMessageDialog(null, "Keine Eigenwerte gefunden!", "Error", JOptionPane.ERROR_MESSAGE);
-			Einstellungen.allesGezeichnet = true;
-			return null;
-		}
+		E.step();
 		int count = 0;
 		do{			
-			if(E.gibloesungsschritte()!= null){
-				ArrayList<ArrayList<ArrayList<Double>>> l = E.gibloesungsschritte().get(0);
+			ArrayList<ArrayList<ArrayList<Double>>> l = E.gibloesungsschritte().get(0);
 
-				if(l.size() > 1){
-					//Beschraenkung der Loesungsschritte
-					int size = l.size();
-					for(int j=size-2; j>=0; j-- ){
-						if(j%(int)(size/15.0+1) != 0){
-							l.remove(j);
-						}
+			if(l.size() > 1){
+				//Beschraenkung der Loesungsschritte
+				int size = l.size();
+				for(int j=size-2; j>=0; j-- ){
+					if(j%(int)(size/15.0+1) != 0){
+						l.remove(j);
 					}
 				}
-	
-				if(l.size() == 0){
-					System.exit(0);
-				}
-			
-				g.ks.get(0).simulation.add(l);
 			}
+	
+			if(l.size() == 0){
+				System.exit(0);
+			}
+			
+			g.ks.get(0).simulation.add(l);
 
 			System.out.println(E.getEnergy()/e);
 			g.ks.get(1).solEnergy.add(E.getEnergy()/e);	
