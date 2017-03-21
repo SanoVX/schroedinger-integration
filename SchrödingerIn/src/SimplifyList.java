@@ -11,6 +11,7 @@ public class SimplifyList {
 	public static ArrayList<String> simplify(Funktion f, ArrayList<String> List){
 		
 		Identity = new ArrayList<>();
+		
 		for(int i = 0; i < f.p.Identity.size(); i++){
 			Identity.add(f.p.Identity.get(i));
 
