@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Funktion {
-	int xPixel;
+	double xPixel;
 	int yPixel; //pixel for one step
 	double xmin;//
 	double xmax; ///
@@ -46,9 +46,9 @@ public class Funktion {
 		this.xmax = g.xmax;
 		this.ymin = g.ymin;
 		this.ymax = g.ymax;
-		this.xPixel = (int)(g.xsize/(xmax - xmin));
-		for(int i = 0; i < g.xsize; i++){
-			double x = ((double)i)/(xPixel) + xmin;
+		this.xPixel = (g.xsize/(xmax - xmin));
+		for(int i = 0; i <= g.xsize; i++){
+			double x = ((double)i)/((xPixel)) + xmin;
 			double y = CalculateString.returnY(this, x, p.SyntaxList); ///////////////////
 			ArrayList<Double> xy = new ArrayList<>();
 			xy.add(x);
