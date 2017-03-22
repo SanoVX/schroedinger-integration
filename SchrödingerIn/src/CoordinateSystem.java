@@ -332,7 +332,7 @@ public class CoordinateSystem {
 					}
 				}
 			}
-			
+			//
 			if(ymin <= 0 && ymax >= 0){
 				int lines = xsize/10;
 				for(int i = 1; i < lines; i+= 2){
