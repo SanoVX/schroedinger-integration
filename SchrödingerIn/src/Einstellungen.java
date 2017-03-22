@@ -6,14 +6,14 @@ public class Einstellungen {
 	public static double e0 = 8.85418781762*Math.pow(10,-12);
 	
 	//Einstellungen zur Anzeige
-	public static boolean showCalculation = false;
+	public static boolean showCalculation = true;
 	public static boolean normalizeIntegral = false;
 	
 	//Einstellung fuer Berechnung
 	public static double E_max = 0.0;
 	public static double E_min = -20*e;
-	public static int maxNiveaus = 1;
-	public static double Amplitudengrenze = 1E9;
+	public static int maxNiveaus = 5;
+	public static double Amplitudengrenze = 1E6;
 	public static int accuracy = 10;
 	public static double steps = 1E6;
 	public static boolean ungerade = true;
