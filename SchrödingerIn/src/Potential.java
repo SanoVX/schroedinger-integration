@@ -18,5 +18,7 @@ public abstract class Potential {
 	public abstract ArrayList<ArrayList<Double>> getPlot(double xRange);
 
 	public abstract String gibFunktion();
+
+	public abstract double getBorder(double E);
 	
 }

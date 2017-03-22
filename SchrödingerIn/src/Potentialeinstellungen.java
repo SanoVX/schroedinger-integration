@@ -240,7 +240,7 @@ public class Potentialeinstellungen extends JFrame {
 		
 		TextPeriodDist = new JTextField();
 		TextPeriodDist.setEnabled(false);
-		TextPeriodDist.setText("10");
+		TextPeriodDist.setText("0.5");
 		TextPeriodDist.setColumns(10);
 		TextPeriodDist.setBounds(97, 213, 86, 20);
 		contentPane.add(TextPeriodDist);

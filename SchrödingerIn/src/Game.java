@@ -55,7 +55,7 @@ public class Game extends JPanel{
 			return;
 		}
 
-		if(currRange == 0){
+		if(!Einstellungen.showCalculation || currRange == 0){
 			funktNr += 1;
 		}	
 		if(ks.get(0).simulation.get(s).size() < funktNr+1){

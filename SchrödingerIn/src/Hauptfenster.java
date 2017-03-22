@@ -284,7 +284,7 @@ public class Hauptfenster extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				g.calcTime += 10;
-				if(g.calcTime>100){
+				if(g.calcTime>500){
 					btnFaster.setEnabled(false);
 				}
 				btnSlower.setEnabled(true);
@@ -339,6 +339,11 @@ public class Hauptfenster extends JFrame {
 			public void mouseClicked(MouseEvent arg0) {
 				btnStart.setText("Start");
 				simulation.clear();
+				btnclear.setEnabled(false);
+				btnFaster.setEnabled(false);
+				btnSlower.setEnabled(false);
+				buttonPause.setEnabled(false);
+				progressBar.setEnabled(false);
 			}
 		});
 		btnclear.setEnabled(false);

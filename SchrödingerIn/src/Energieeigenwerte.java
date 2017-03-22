@@ -5,9 +5,8 @@ public class Energieeigenwerte {
 	//Variablendefinition
 	private Potential potential;
 	private double E_current,E_max,E_min;
-	private double xrange = Math.pow(10,-7);
+	private double xrange = Math.pow(10,-6);
 	private boolean searched;
-	private boolean ungerade;
 	
 	//Variable fuer die Loesungskurve
 	private ArrayList<ArrayList<Double>> solution = new ArrayList<>();
@@ -29,7 +28,6 @@ public class Energieeigenwerte {
 		this.E_min = E_min;
 		this.E_current = E_min;
 		
-		ungerade = true;
 		searched = false;
 	}
 	
@@ -47,7 +45,7 @@ public class Energieeigenwerte {
 		loesungsschritte.clear();
 		ArrayList<ArrayList<ArrayList<Double>>> loesungsblock = new ArrayList<>();
 		
-		for(int i = 1; i< Einstellungen.accuracy; i++){
+		for(int i = 2; i< Einstellungen.accuracy; i++){
 			int change_sign = (-1)*recursion();
 			while(recursion()!=change_sign){
 				E_current += Math.pow(10,-i)*e;
@@ -61,7 +59,7 @@ public class Energieeigenwerte {
 				for(int j=size-1;j>size-20 && j>1;j--){
 					solution.remove(j);
 				}
-				
+								
 				cutoff(solution);
 				
 				for(int j = 0; j< solution.size(); j++){
@@ -111,17 +109,19 @@ public class Energieeigenwerte {
 		}
 	}
 	
+
 	/*
 	 * Integration fuer einen Energiewert
 	 */
 	private int recursion(){
+		double border = potential.getBorder(E_current);
 		ArrayList<ArrayList<Double>> temp = new ArrayList<>();
 		//xrange = -e/(4*pi*e0*E);
 		double step = xrange/Einstellungen.steps;
 		//Anfangsbedingungen
 		ArrayList<Double> Sx = new ArrayList<>(); // Liste mit x,y koordinaten der punkte 
 		
-		if(ungerade){
+		if(Einstellungen.ungerade){
 			Sx.add(0.); Sx.add(0.); // initialisiere ersten Punkt auf 0/0
 			temp.add(Sx);				// fÃ¯Â¿Â½gt punkt in liste f hinzu
 			Sx = new ArrayList<>();
@@ -131,7 +131,7 @@ public class Energieeigenwerte {
 			Sx.add(0.); Sx.add(1.); // initialisiere ersten Punkt auf 0/0
 			temp.add(Sx);				// fÃ¯Â¿Â½gt punkt in liste f hinzu
 			Sx = new ArrayList<>();
-			Sx.add(step); Sx.add(1.2); // initialisiere zweiten punkt auf step/step
+			Sx.add(step); Sx.add(1.); // initialisiere zweiten punkt auf step/step
 			temp.add(Sx);
 		}
 		
@@ -145,15 +145,18 @@ public class Energieeigenwerte {
 			Sx.add(y);
 			temp.add(Sx);
 
-				
-			if(y>Einstellungen.Amplitudengrenze){
-				solution = temp;
-				//System.out.println(E_current+": "+y);
-				return 1;
-			}else if (y<-Einstellungen.Amplitudengrenze){
-				solution = temp;
-				//System.out.println(E_current+": "+y);
-				return -1;
+			if(x>border){
+				if(y>Einstellungen.Amplitudengrenze){
+					solution = temp;
+					return 1;
+				}else if (y<-Einstellungen.Amplitudengrenze){
+					solution = temp;
+					return -1;
+				}
+			}else if(x>border-3*step){
+				if(y>Einstellungen.Amplitudengrenze*1E-4){
+					Einstellungen.Amplitudengrenze = 1E10*y;
+				}
 			}
 		}
 		return 0;
@@ -189,7 +192,7 @@ public class Energieeigenwerte {
 		int counter = 0;
 		
 		for(int i = 0; i < solution.size(); i++){
-			if(counter >10){
+			if(counter >50){
 				for(int j = solution.size()-1; j > i; j--){
 					solution.remove(j);
 				}
@@ -236,12 +239,6 @@ public class Energieeigenwerte {
 		}
 	}
 	
-	/*
-	 * Wenn true uebergeben wird nach ungeraden funktionen gesucht ansonsten nach geraden
-	 */
-	public void setUngerade(boolean ungerade){
-		this.ungerade = ungerade;
-	}
 	
 	/*
 	 * Setzt die Energiewerte auf den Anfang zurueck, z.B. vor Beginn einer neuen suche

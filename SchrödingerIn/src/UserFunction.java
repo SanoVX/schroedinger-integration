@@ -28,4 +28,11 @@ public class UserFunction extends Potential {
 		return function.funktion;
 	}
 
+
+
+	@Override
+	public double getBorder(double E) {
+		return 1E-9;
+	}
+
 }

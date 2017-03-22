@@ -33,7 +33,12 @@ public class Coulomb extends Potential {
 
 	@Override
 	public String gibFunktion() {
-		return	"-q/(4*pi*e0*abs(x))";
+		return	"-"+q_c + "/(4*pi*e0*abs(x))";
+	}
+
+	@Override
+	public double getBorder(double E) {
+		return -E*q_c*e/(4*pi*e0);
 	}
 	
 	

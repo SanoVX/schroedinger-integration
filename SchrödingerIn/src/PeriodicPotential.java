@@ -16,7 +16,8 @@ public class PeriodicPotential extends Potential {
 		if(x>distance*Anzahl){
 			return potential.getPotential(x-distance*Anzahl);
 		}
-		x = x%distance-distance/2;
+		x = x%distance;
+
 		return potential.getPotential(x);
 	}
 
@@ -31,9 +32,14 @@ public class PeriodicPotential extends Potential {
 		String ret="";
 		ret += potential.gibFunktion()+"*theta(x-"+distance/2+")";
 		for(int i = 1; i<Anzahl; i++){
-			ret += "+"+potential.gibFunktion().replaceAll("x", "(x-"+distance*i+")")+"*theta(x-"+(2*i-1)*distance/2+")*theta(-x+"+(2*i+1)*distance/2+")";
+			ret += "+"+potential.gibFunktion().replaceAll("(x)", "x-"+distance*i)+"*theta(x-"+(2*i-1)*distance/2+")*theta(-x+"+(2*i+1)*distance/2+")";
 		}
-		return "-x";//return ret;
+		return "-x";//ret;
+	}
+
+	@Override
+	public double getBorder(double E) {
+		return potential.getBorder(E)+distance*(Anzahl+0.2);
 	}
 
 }

@@ -98,7 +98,7 @@ public class SchroedingerIntegration {
 				long sleeptime = 100;
 				int i = 0;
 				long calctime = 0;
-				while(/*!g.simulated&&*/!isInterrupted()){
+				while(!isInterrupted()){
 					if(i == 0){
 					long startTime = System.currentTimeMillis();
 					g.repaint();
@@ -116,6 +116,10 @@ public class SchroedingerIntegration {
 						}
 					}
 					
+					if(g.simulated){
+						Einstellungen.allesGezeichnet = true;
+					}
+					
 					try {
 						//System.out.println(sleeptime);
 						Thread.sleep(sleeptime); // sleeping time
@@ -123,8 +127,6 @@ public class SchroedingerIntegration {
 						Thread.currentThread().interrupt();
 					}
 				}
-				Einstellungen.allesGezeichnet = true;
-				g.repaint();
 			}
 		};
 		t1.start();
@@ -138,7 +140,7 @@ public class SchroedingerIntegration {
 	}
 	
 	public void clear(){
-		if(t1!=null&t1.isAlive()){
+		if(t1!=null&&t1.isAlive()){
 			t1.interrupt();
 		}
 		g.ks.clear();

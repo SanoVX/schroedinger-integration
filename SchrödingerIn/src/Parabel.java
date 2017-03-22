@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 public class Parabel extends Potential {
 
 	double tiefe, breite;
@@ -13,7 +15,7 @@ public class Parabel extends Potential {
 	
 	@Override
 	public double getPotential(double x) {
-		return breite*x*x+tiefe/e;
+		return breite*x*x+tiefe;
 	}
 
 	@Override
@@ -26,7 +28,14 @@ public class Parabel extends Potential {
 
 	@Override
 	public String gibFunktion() {
-		return breite+"*x^2+"+tiefe;
+		return breite+"*x^2+"+tiefe/e;
+	}
+
+
+
+	@Override
+	public double getBorder(double E) {
+		return Math.sqrt((E-tiefe)/breite);
 	}
 
 }
