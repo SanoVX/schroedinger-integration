@@ -332,6 +332,19 @@ public class CoordinateSystem {
 					}
 				}
 			}
+			
+			if(ymin <= 0 && ymax >= 0){
+				int lines = xsize/10;
+				for(int i = 1; i < lines; i+= 2){
+					g.drawLine((int)(xpos + (i-1)/((double)lines)*xsize), ypos + (int)(Math.abs(ymax) * py), (int)(xpos + i/((double)lines)*xsize),(int)( ypos + Math.abs(ymax) * py));
+				}
+			}
+			if(xmin <= 0 && xmax >= 0){
+				int lines = ysize/10;
+				for(int i = 1; i < lines; i+= 2){
+					g.drawLine((int)(xpos + Math.abs(xmin) * px),(int)( ypos+ (i-1)/((double)lines)*ysize), (int)(xpos + Math.abs(xmin) * px), (int)( ypos+ i/((double)lines)*ysize));
+				}
+			}
 	
 			//legend
 			if(legend != null){

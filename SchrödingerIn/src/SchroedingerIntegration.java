@@ -38,7 +38,7 @@ public class SchroedingerIntegration {
 			}else{
 				k.headline = "Suche nach Energieniveaus";
 			}
-			k.xlabel = "Abstand des Kerns in m";
+			k.xlabel = "x Position in m";
 			k.ylabel = "Energie in eV";
 
 			
