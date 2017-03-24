@@ -44,6 +44,7 @@ public class SchroedingerIntegration {
 			
 			//Funktion f = new Funktion(k, "-q/(4*pi*e0*abs(x))", false);
 			//k.funktions.add(f);
+			System.out.println(potential.gibFunktion());
 			if(potential.gibFunktion() != null){
 			Funktion f = new Funktion(k, potential.gibFunktion(), false);
 			k.funktions.add(f);

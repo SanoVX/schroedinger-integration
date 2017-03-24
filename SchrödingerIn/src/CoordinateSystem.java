@@ -247,9 +247,7 @@ public class CoordinateSystem {
 									int y1 = (int)(ypos + ysize +((ymin)*py) -(d1*py));
 									int x2 = (int)(xpos  + xx2*px + (-xmin)*px);
 									int y2 = (int)(ypos + ysize +((ymin)*py) -(d2*py));
-									if(inKs(x1,y1,x2,y2)){
-									g.drawLine(x1,y1,x2,y2);
-									}
+									drawLogic(g, x1, y1, x2,y2);
 								}
 								
 							}
