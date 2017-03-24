@@ -56,8 +56,11 @@ public class Energieeigenwerte {
 				}
 				int size = solution.size();
 				
-				for(int j=size-1;j>size-20 && j>1;j--){
-					solution.remove(j);
+				
+				for(int j=0;j<solution.size();j++){
+					if(solution.get(j).get(1)>1E-7){
+						solution.remove(j);
+					}
 				}
 								
 				cutoff(solution);
@@ -234,6 +237,17 @@ public class Energieeigenwerte {
 	 */
 	public ArrayList<ArrayList<Double>> getSolution(){
 		if(searched){
+			int size = solution.size();
+			for(int i = 1; i<solution.size();i+=2){
+				ArrayList<Double>  S = new ArrayList<>();
+				S.add(-solution.get(i).get(0));
+				if(Einstellungen.ungerade){
+					S.add(2*E_current/e-solution.get(i).get(1));
+				}else{
+					S.add(solution.get(i).get(1));
+				}
+				solution.add(0,S);
+			}
 			return solution;
 		}else{
 			return null;

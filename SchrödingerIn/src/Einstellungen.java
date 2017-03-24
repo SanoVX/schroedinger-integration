@@ -12,11 +12,11 @@ public class Einstellungen {
 	//Einstellung fuer Berechnung
 	public static double E_max = 0.0;
 	public static double E_min = -20*e;
-	public static int maxNiveaus = 15;
+	public static int maxNiveaus = 7;
 	public static double Amplitudengrenze = 1E4;
 	public static int accuracy = 10;
 	public static double steps = 1E6;
-	public static boolean ungerade = false;
+	public static boolean ungerade = true;
 
 	
 	//Steuerung des Hauptfensters
