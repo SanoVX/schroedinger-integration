@@ -59,8 +59,11 @@ public class BraceHandler {
 		}
 		for(int i = 0; i < idx2.size(); i++){
 			
-			for(int j = 0; j < idx2.get(i).size(); j++){
-				if(!checkBraceSyntax(syntax, idx2.get(idx2.size()-1 - i).get(idx2.get(i).size()-1-j), idx3.get(idx2.size() - 1 -i).get(j))){ // problem here
+			for(int j = 0; j < idx2.get(idx2.size()-1 - i).size(); j++){
+				System.out.println( " " + j + " " + i);
+				System.out.println(idx2.get(idx2.size()-1 - i).get(idx2.get(idx2.size() - 1 -i).size()-1-j));
+				System.out.println(idx3.get(idx2.size() - 1 -i).get(j));
+				if(!checkBraceSyntax(syntax, idx2.get(idx2.size()-1 - i).get(idx2.get(idx2.size() - 1 -i).size()-1-j), idx3.get(idx2.size() - 1 -i).get(j))){ // problem here
 					return false;
 				}
 			}
