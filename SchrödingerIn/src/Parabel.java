@@ -28,7 +28,7 @@ public class Parabel extends Potential {
 
 	@Override
 	public String gibFunktion() {
-		return breite+"*x^2+"+tiefe/e;
+		return breite/e+"*x*x+"+tiefe/e;
 	}
 
 

@@ -34,7 +34,7 @@ public class PeriodicPotential extends Potential {
 		for(int i = 1; i<Anzahl; i++){
 			ret += "+"+potential.gibFunktion().replaceAll("(x)", "x-"+distance*i)+"*theta(x-"+(2*i-1)*distance/2+")*theta(-x+"+(2*i+1)*distance/2+")";
 		}
-		return "-x";//ret;
+		return ret;
 	}
 
 	@Override
