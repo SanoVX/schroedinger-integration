@@ -38,7 +38,7 @@ public class Kasten extends Potential {
 
 	@Override
 	public String gibFunktion() {
-		return "theta(-abs(x)+"+width+")*(-"+height/e+")";
+		return "theta(-abs(x)+"+width/2+")*(-"+height/e+")-"+ ground/e+"*theta(abs(x)-"+width/2+")";
 	}
 
 	@Override
