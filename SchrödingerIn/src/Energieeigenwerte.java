@@ -190,6 +190,7 @@ public class Energieeigenwerte {
 	public void cutoff(ArrayList<ArrayList<Double>> solution){
 		double epsilon = 0.1;
 		int counter = 0;
+		double border = potential.getBorder(E_current);
 		
 		for(int i = 0; i < solution.size(); i++){
 			if(counter >50){
@@ -198,7 +199,7 @@ public class Energieeigenwerte {
 				}
 				break;
 			}
-			if(Math.abs(solution.get(i).get(1))<epsilon){
+			if(solution.get(i).get(0)>border && Math.abs(solution.get(i).get(1))<epsilon){
 				counter++;
 			}else{
 				counter = 0;
