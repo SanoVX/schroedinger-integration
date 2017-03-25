@@ -45,6 +45,8 @@ public class CoordinateSystem {
 	boolean growingrange = false;
 	boolean drawable = false;
 	boolean changedrange = false;
+	boolean yaxis = false;
+	
 	
 	Color[] colorList = {Color.RED, Color.BLUE, Color.GREEN, Color.ORANGE, Color.PINK};
 
@@ -313,28 +315,62 @@ public class CoordinateSystem {
 				
 			}
 			//y axis numbers
-			if(energy.size()>0){
-				for(int i = 0; i< energy.size() ; i+=1){
-					double k = ((double)py)*(energy.get(i));
-					String str = KsDigit(energy.get(i), 2);
-					int x = xpos - g.getFontMetrics().stringWidth(str) - 5;
-					int y = (int)(ypos + ysize-k+g.getFontMetrics().getHeight()/4.0+ymin*py);
-					
-					int x1 = xpos + 5;
-					int y1 = (int)(ypos + ysize-k+ymin*py);
-					int x2 = xpos - 5;
-					int y2 = (int)(ypos + ysize-k+ymin*py);
-					if(y1 <= ypos + ysize && y1 >= ypos){
-						g.drawString(str, x, y);
-						g.drawLine(x1, y1, x2, y2);
+			if(!yaxis){
+				if(energy.size()>0){
+					for(int i = 0; i< energy.size() ; i+=1){
+						double k = ((double)py)*(energy.get(i));
+						String str = KsDigit(energy.get(i), 2);
+						int x = xpos - g.getFontMetrics().stringWidth(str) - 5;
+						int y = (int)(ypos + ysize-k+g.getFontMetrics().getHeight()/4.0+ymin*py);
+						
+						int x1 = xpos + 5;
+						int y1 = (int)(ypos + ysize-k+ymin*py);
+						int x2 = xpos - 5;
+						int y2 = (int)(ypos + ysize-k+ymin*py);
+						if(y1 <= ypos + ysize && y1 >= ypos){
+							g.drawString(str, x, y);
+							g.drawLine(x1, y1, x2, y2);
+						}
 					}
+				
 				}
 			}
+			if(yaxis){
+				for(double i = ymin; i <= ymax ; i+=(Math.abs((ymax-ymin)))/((double)10)){
+					
+					int lineWidth = 5;
+					String str = KsDigit(i, 3); 
+					double k = ((double)py)*i;
+					int y = (int)(ypos + ysize -k+g.getFontMetrics().getHeight()/2+ymin*py);
+					int x = xpos-g.getFontMetrics().stringWidth(str)-lineWidth;
+					g.drawString(str, x, y);
+					int x1 = xpos-lineWidth/2;
+					int y1 = (int)(ypos + ysize -k + ymin*py);
+					int x2 = xpos+lineWidth/2;
+					int y2 = (int)(ypos + ysize -k + ymin*py);
+					g.drawLine(x1, y1, x2, y2);
+					
+				}
+			}
+			
 			//
 			if(ymin <= 0 && ymax >= 0){
 				int lines = xsize/10;
 				for(int i = 1; i < lines; i+= 2){
 					g.drawLine((int)(xpos + (i-1)/((double)lines)*xsize), ypos + (int)(Math.abs(ymax) * py), (int)(xpos + i/((double)lines)*xsize),(int)( ypos + Math.abs(ymax) * py));
+				}
+				
+				String str = "0.0";
+				int x = xpos - g.getFontMetrics().stringWidth(str) - 5;
+				int y = (int)(ypos + ysize+g.getFontMetrics().getHeight()/4.0+ymin*py);
+				
+				int x1 = xpos + 5;
+				int y1 = ypos + (int)(Math.abs(ymax) * py);
+				int x2 = xpos - 5;
+				int y2 = ypos + (int)(Math.abs(ymax) * py);
+				if(y1 <= ypos + ysize && y1 >= ypos){
+					g.drawString(str, x, y);
+					g.drawLine(x1, y1, x2, y2);
 				}
 			}
 			if(xmin <= 0 && xmax >= 0){
@@ -342,6 +378,15 @@ public class CoordinateSystem {
 				for(int i = 1; i < lines; i+= 2){
 					g.drawLine((int)(xpos + Math.abs(xmin) * px),(int)( ypos+ (i-1)/((double)lines)*ysize), (int)(xpos + Math.abs(xmin) * px), (int)( ypos+ i/((double)lines)*ysize));
 				}
+				String str = "0.0"; 
+				int x = (int)(xpos -xmin*px-g.getFontMetrics().stringWidth(str)/2);
+				int y = ypos + ysize+g.getFontMetrics().getHeight();
+				g.drawString(str, x, y);
+				int x1 = (int)(xpos + Math.abs(xmin) * px);
+				int y1 = ypos + ysize - 5;
+				int x2 = (int)(xpos + Math.abs(xmin) * px);
+				int y2 = ypos + ysize + 5;
+				g.drawLine(x1, y1, x2, y2);
 			}
 	
 			//legend
@@ -350,10 +395,10 @@ public class CoordinateSystem {
 				g.setFont(new Font("TimesRoman", Font.PLAIN, legendFontSize));
 				String str = legend[i];
 				int x = xpos + xsize/2 - g.getFontMetrics().stringWidth(str)/2;
-				int y = ypos + ysize - (i+1) * (g.getFontMetrics().getHeight()+10);
+				int y = ypos + ysize + (i+3) * (g.getFontMetrics().getHeight()+10);
 				g.drawString(str, x, y);
 				g.setColor(colorList[i]);
-				g.fill3DRect(x - recsize -5 ,y - g.getFontMetrics().getHeight()/2,recsize,recsize,true);
+				g.fill3DRect(x - recsize -5 ,y - g.getFontMetrics().getHeight()/2 + recsize/2,recsize,recsize,true);
 	
 				g.setColor(Color.BLACK);
 			}
@@ -373,7 +418,7 @@ public class CoordinateSystem {
 			// y Achse
 			str = ylabel;
 			g.setFont(new Font("TimesRoman", Font.PLAIN, ylabelFontSize));
-			x = xpos - g.getFontMetrics().getHeight();
+			x = xpos - g.getFontMetrics().getHeight()*2;
 			y = ypos + ysize/2 + g.getFontMetrics().stringWidth(str)/2;
 		    
 		    g.translate((float)x,(float)y);
