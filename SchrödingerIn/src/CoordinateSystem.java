@@ -302,7 +302,7 @@ public class CoordinateSystem {
 	
 			g.setFont(new Font("TimesRoman", Font.PLAIN, numberTextSize));
 			for(double i = xmin; i <= xmax ; i+=(Math.abs((xmax-xmin)))/((double)10)){
-				String str = KsDigit(i, 5); 
+				String str = KsDigit(i, 2); 
 				double k = ((double)px)*i;
 				int x = (int)(xpos -xmin*px +k-g.getFontMetrics().stringWidth(str)/2);
 				int y = ypos + ysize+g.getFontMetrics().getHeight();
