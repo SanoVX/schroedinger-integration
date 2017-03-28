@@ -32,7 +32,7 @@ public class UserFunction extends Potential {
 
 	@Override
 	public double getBorder(double E) {
-		return 1E-9;
+		return 0;
 	}
 
 }
