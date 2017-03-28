@@ -25,7 +25,8 @@ public class SchroedingerIntegration {
 		
 		int anzahlks = 2;
 		for(int i = 0; i < anzahlks; i++ ){
-			CoordinateSystem k = new CoordinateSystem(g,(g.width-150)/2*i + (g.width-150)*1/36, (g.height-200)/2 - ysize/2, xsize, ysize);
+			int x = (g.width-300)/2*(i+1) - xsize;
+			CoordinateSystem k = new CoordinateSystem(g,x, (g.height-200)/2 - ysize/2, xsize, ysize);
 			g.ks.add(k);
 			k.drawpoints = false;
 			if(true){// growing range only in left coordinate system
@@ -44,7 +45,7 @@ public class SchroedingerIntegration {
 			
 			//Funktion f = new Funktion(k, "-q/(4*pi*e0*abs(x))", false);
 			//k.funktions.add(f);
-			System.out.println(potential.gibFunktion());
+			System.out.println("potential" + potential.gibFunktion());
 			if(potential.gibFunktion() != null){
 			Funktion f = new Funktion(k, potential.gibFunktion(), false);
 			k.funktions.add(f);
