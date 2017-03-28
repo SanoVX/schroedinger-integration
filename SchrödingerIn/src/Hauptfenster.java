@@ -50,7 +50,7 @@ public class Hauptfenster extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		try {
+		/*try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e){
             try {
@@ -58,7 +58,7 @@ public class Hauptfenster extends JFrame {
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
-        }
+        }*/
 	
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
