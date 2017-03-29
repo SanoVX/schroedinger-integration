@@ -12,6 +12,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -309,7 +310,14 @@ public class Potentialeinstellungen extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					try{
-						Double.parseDouble(coulomb1.getText());
+						double charge = Double.parseDouble(coulomb1.getText());
+						if(charge <0 && (Einstellungen.E_max <0 || Einstellungen.E_min < 0)){
+							JOptionPane.showMessageDialog(null, "Warnung: Suche im Bereich mit ungebunden Zustaenden","Warnung", JOptionPane.WARNING_MESSAGE);
+						}else if (charge > 0 && (Einstellungen.E_max >0 || Einstellungen.E_min > 0)){
+							JOptionPane.showMessageDialog(null, "Warnung: Suche im Bereich mit ungebunden Zustaenden","Warnung", JOptionPane.WARNING_MESSAGE);
+						}else if (charge == 0){
+							JOptionPane.showMessageDialog(null, "Warnung: Kern traegt keine Ladung","Warnung", JOptionPane.WARNING_MESSAGE);
+						}
 					}catch(Exception exception){
 						coulomb1.setText("1");
 					}
@@ -350,6 +358,7 @@ public class Potentialeinstellungen extends JFrame {
 					try{
 						double value = Double.parseDouble(kastenHoehe.getText());
 						if(value<=0){
+							JOptionPane.showMessageDialog(null, "Error: Hoehe muss positiv sein","Error", JOptionPane.WARNING_MESSAGE);
 							kastenHoehe.setText("30");
 						}
 					}catch(Exception exception){
@@ -372,6 +381,7 @@ public class Potentialeinstellungen extends JFrame {
 					try{
 						double value = Double.parseDouble(kastenBreite.getText());
 						if(value<=0){
+							JOptionPane.showMessageDialog(null, "Error: Breite muss positiv sein","Error", JOptionPane.WARNING_MESSAGE);
 							kastenBreite.setText("1");
 						}
 					}catch(Exception exception){
@@ -395,6 +405,7 @@ public class Potentialeinstellungen extends JFrame {
 					try{
 						double value = Double.parseDouble(kastenHoehe.getText());
 						if(value<=0){
+							JOptionPane.showMessageDialog(null, "Error: Tiefe muss positiv sein","Error", JOptionPane.WARNING_MESSAGE);
 							parabelTiefe.setText("-20");
 						}
 					}catch(Exception exception){
@@ -417,6 +428,7 @@ public class Potentialeinstellungen extends JFrame {
 					try{
 						double value = Double.parseDouble(parabelBreite.getText());
 						if(value<=0){
+							JOptionPane.showMessageDialog(null, "Error: Parabelbreite muss positiv sein","Error", JOptionPane.WARNING_MESSAGE);
 							parabelBreite.setText("1");
 						}
 					}catch(Exception exception){
@@ -438,11 +450,11 @@ public class Potentialeinstellungen extends JFrame {
 			settings.add(lblben);
 			
 			JLabel Vx = new JLabel("V(x)=");
-			Vx.setBounds(5, 505, 200, 20);
+			Vx.setBounds(5, 105, 30, 20);
 			settings.add(Vx);
 			
 			benutzerdefiniert = new JTextField("-q*q/(4*pi*e0*x)");
-			benutzerdefiniert.setBounds(25,105,50,20);
+			benutzerdefiniert.setBounds(35,105,150,20);
 			settings.add(benutzerdefiniert);
 			benutzerdefiniert.setColumns(20);
 			benutzerdefiniert.addActionListener(new ActionListener() {
@@ -450,6 +462,7 @@ public class Potentialeinstellungen extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					Funktion f = new Funktion(benutzerdefiniert.getText(), true);
 					if(!f.p.valid){
+						JOptionPane.showMessageDialog(null, "Error: Syntaxfehler","Error", JOptionPane.WARNING_MESSAGE);
 						benutzerdefiniert.setText("-q*q/(4*pi*e0*x)");
 					}
 					// TODO Syntax Check

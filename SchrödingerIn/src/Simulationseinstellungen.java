@@ -5,6 +5,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JCheckBox;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
@@ -13,9 +14,12 @@ import java.awt.event.InputMethodListener;
 import java.awt.event.InputMethodEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JRadioButton;
 
 public class Simulationseinstellungen extends JFrame {
 
@@ -24,6 +28,7 @@ public class Simulationseinstellungen extends JFrame {
 	private JCheckBox chckbxBerechnungAnzeigen, chckboxNorInt;
 	private JTextField textMaxAmpl;
 	private JLabel lblAmplitudengrenzeBeiEigenwertberechnung;
+	private JRadioButton rdbtnUngeradeNiveaus;
 
 
 	/**
@@ -57,6 +62,7 @@ public class Simulationseinstellungen extends JFrame {
 				try{
 					double value = Integer.parseUnsignedInt(textAnzSuchEW.getText());
 					if(value<=0){
+						JOptionPane.showMessageDialog(null, "Error: Anzahl der Energieniveaus muss positiv sein","Error",JOptionPane.ERROR_MESSAGE);
 						textAnzSuchEW.setText(Integer.toUnsignedString(Einstellungen.maxNiveaus));
 					}
 				}catch(Exception exception){
@@ -64,7 +70,7 @@ public class Simulationseinstellungen extends JFrame {
 				}
 			}
 		});
-		textAnzSuchEW.setText("5");
+		textAnzSuchEW.setText(Integer.toString(Einstellungen.maxNiveaus));
 		textAnzSuchEW.setBounds(257, 30, 53, 20);
 		contentPane.add(textAnzSuchEW);
 		textAnzSuchEW.setColumns(10);
@@ -106,7 +112,7 @@ public class Simulationseinstellungen extends JFrame {
 				}
 			}
 		});
-		textMaxAmpl.setText("1000");
+		textMaxAmpl.setText(Double.toString(Einstellungen.Amplitudengrenze));
 		textMaxAmpl.setBounds(257, 57, 53, 20);
 		contentPane.add(textMaxAmpl);
 		textMaxAmpl.setColumns(10);
@@ -114,15 +120,29 @@ public class Simulationseinstellungen extends JFrame {
 		lblAmplitudengrenzeBeiEigenwertberechnung = new JLabel("Amplitudengrenze bei Eigenwertberechnung:");
 		lblAmplitudengrenzeBeiEigenwertberechnung.setBounds(5, 57, 238, 20);
 		contentPane.add(lblAmplitudengrenzeBeiEigenwertberechnung);
+		
+		rdbtnUngeradeNiveaus = new JRadioButton("Ungerade Niveaus");
+		rdbtnUngeradeNiveaus.setBounds(230, 120, 128, 23);
+		contentPane.add(rdbtnUngeradeNiveaus);
+		rdbtnUngeradeNiveaus.setSelected(true);
+		
+		JRadioButton rdbtnGeradeNiveaus = new JRadioButton("Gerade Niveaus");
+		rdbtnGeradeNiveaus.setBounds(230, 146, 128, 23);
+		contentPane.add(rdbtnGeradeNiveaus);
+		
+		ButtonGroup btngroup = new ButtonGroup();
+		btngroup.add(rdbtnUngeradeNiveaus);
+		btngroup.add(rdbtnGeradeNiveaus);
 	}
 
 
 	private void fertig() {
 		Einstellungen.maxNiveaus = Integer.parseUnsignedInt(textAnzSuchEW.getText());
-		Einstellungen.Amplitudengrenze = Integer.parseUnsignedInt(textMaxAmpl.getText());
+		Einstellungen.Amplitudengrenze = Double.parseDouble(textMaxAmpl.getText());
 		Einstellungen.normalizeIntegral = chckboxNorInt.isSelected();
 		Einstellungen.showCalculation = chckbxBerechnungAnzeigen.isSelected();
+		Einstellungen.ungerade = rdbtnUngeradeNiveaus.isSelected();
 		
-		dispose();
+		this.dispose();
 	}
 }

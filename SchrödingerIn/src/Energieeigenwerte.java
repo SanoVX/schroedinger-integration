@@ -45,7 +45,7 @@ public class Energieeigenwerte {
 		loesungsschritte.clear();
 		ArrayList<ArrayList<ArrayList<Double>>> loesungsblock = new ArrayList<>();
 		
-		for(int i = 2; i< Einstellungen.accuracy; i++){
+		for(int i = 1; i< Einstellungen.accuracy; i++){
 			int change_sign = (-1)*recursion();
 			while(recursion()!=change_sign){
 				E_current += Math.pow(10,-i)*e;
@@ -196,7 +196,7 @@ public class Energieeigenwerte {
 		double border = potential.getBorder(E_current);
 		
 		for(int i = 0; i < solution.size(); i++){
-			if(counter >50){
+			if(counter >50||solution.get(i).get(1)>1E4){
 				for(int j = solution.size()-1; j > i; j--){
 					solution.remove(j);
 				}

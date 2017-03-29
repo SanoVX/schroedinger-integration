@@ -291,9 +291,9 @@ public class Hauptfenster extends JFrame {
 		final JButton btnFaster = new JButton("schneller");
 		final JButton btnSlower = new JButton("langsamer");
 		
-		btnFaster.addMouseListener(new MouseAdapter() {
+		btnFaster.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				g.calcTime += 10;
 				if(g.calcTime>500){
 					btnFaster.setEnabled(false);
@@ -305,9 +305,9 @@ public class Hauptfenster extends JFrame {
 		btnFaster.setEnabled(false);
 		contentPane.add(btnFaster);
 		
-		btnSlower.addMouseListener(new MouseAdapter() {
+		btnSlower.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent e){
 				g.calcTime -= 10;
 				if(g.calcTime<20){
 					btnSlower.setEnabled(false);
@@ -317,10 +317,10 @@ public class Hauptfenster extends JFrame {
 		});
 		
 		final JButton buttonPause = new JButton("Pause");
-		buttonPause.addMouseListener(new MouseAdapter() {
+		buttonPause.addActionListener(new ActionListener() {
 			int calcOld;
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent e){
 				if(buttonPause.getText().equals("Pause")){
 					calcOld = g.calcTime;
 					g.calcTime = 0;
@@ -345,9 +345,9 @@ public class Hauptfenster extends JFrame {
 		contentPane.add(btnSlower);
 		
 		btnclear = new JButton("Clear");
-		btnclear.addMouseListener(new MouseAdapter() {
+		btnclear.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent e){
 				btnStart.setText("Start");
 				simulation.clear();
 				btnclear.setEnabled(false);
@@ -362,9 +362,9 @@ public class Hauptfenster extends JFrame {
 		
 		btnStart = new JButton("Start");
 		btnStart.setBounds(width-150, height-200, 100, 50);
-		btnStart.addMouseListener(new MouseAdapter() {
+		btnStart.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent e){
 				try{
 					if(btnStart.getText().equals("Start")){
 						menuBar.getMenu(1).getItem(0).setEnabled(false);
@@ -428,8 +428,8 @@ public class Hauptfenster extends JFrame {
 						buttonPause.setText("Pause");
 						btnStart.setText("Start");
 					}
-				}catch(Exception e){
-					e.printStackTrace();
+				}catch(Exception ex){
+					ex.printStackTrace();
 				}
 			}
 		});
