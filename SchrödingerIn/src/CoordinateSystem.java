@@ -11,6 +11,10 @@ public class CoordinateSystem {
 	Game game;
 	int xpos;
 	int ypos;
+	int xend;
+	int yend;
+	double[] xbounds = new double[4];
+	double[] ybounds = new double[4];
 	int xsize;
 	int ysize;
 	ArrayList<Funktion> funktions = new ArrayList<>();
@@ -55,12 +59,24 @@ public class CoordinateSystem {
 	//
 	
 	
-	public CoordinateSystem(Game game, int xpos, int ypos, int xsize, int ysize){
+	public CoordinateSystem(Game game, int xmin, int xmax, int ymin, int ymax, double arg0x, double arg1x, double arg0y, double arg1y){
 		this.game = game;
-		this.xpos = xpos;
-		this.ypos = ypos;
-		this.xsize = xsize;
-		this.ysize = ysize;
+		this.xpos = (int)(xmin + arg0x/arg1x*(xmax-xmin));
+		this.ypos = (int)(ymin + arg0y/arg1y*(ymax - ymin));
+		this.xend = (int)(xmin + (arg1x-arg0x)/arg1x*(xmax-xmin));
+		this.yend = (int)(ymin + (arg1y-arg0y)/arg1y*(ymax-ymin));
+		System.out.println(xpos + " " + ypos + " " + xend + ""+yend);
+		this.xsize = xend-xpos;
+		this.ysize = yend-ypos;
+		System.out.println(xpos + " " + ypos + " " + xend + " "+yend + " " + xsize + " "+ ysize + " " + (yend - ypos)) ;
+		this.xbounds[0] = xmin;
+		this.xbounds[1] = xmax;
+		this.xbounds[2] = arg0x;
+		this.xbounds[3] = arg1x;
+		this.ybounds[0] = ymin;
+		this.ybounds[1] = ymax;
+		this.ybounds[2] = arg0y;
+		this.ybounds[3] = arg1y;
 	}
 	
 	public void addEnergy(double e){
@@ -293,162 +309,173 @@ public class CoordinateSystem {
 	
 	public void drawKs(Graphics2D g){
 		if(drawable){
-			g.setColor(Color.BLACK);
-			double px =(xsize/Math.abs(xmax - xmin));
-			double py =(ysize/Math.abs(ymax - ymin));
-	
-			g.draw3DRect(xpos, ypos, xsize, ysize, false);
-			// xaxis numbers
-	
-			g.setFont(new Font("TimesRoman", Font.PLAIN, numberTextSize));
-			for(double i = xmin; i <= xmax ; i+=(Math.abs((xmax-xmin)))/((double)10)){
-				String str = KsDigit(i, 2); 
-				double k = ((double)px)*i;
-				int x = (int)(xpos -xmin*px +k-g.getFontMetrics().stringWidth(str)/2);
-				int y = ypos + ysize+g.getFontMetrics().getHeight();
-				g.drawString(str, x, y);
-				int x1 = (int)(xpos -xmin*px +k);
-				int y1 = ypos + ysize - 5;
-				int x2 = (int)(xpos -xmin*px +k);
-				int y2 = ypos + ysize + 5;
-				g.drawLine(x1, y1, x2, y2);
-				
-			}
-			//y axis numbers
-			if(!yaxis){
-				if(energy.size()>0){
-					for(int i = 0; i< energy.size() ; i+=1){
-						double k = ((double)py)*(energy.get(i));
-						String str = KsDigit(energy.get(i), 2);
-						int x = xpos - g.getFontMetrics().stringWidth(str) - 5;
-						int y = (int)(ypos + ysize-k+g.getFontMetrics().getHeight()/4.0+ymin*py);
-						
-						int x1 = xpos + 5;
-						int y1 = (int)(ypos + ysize-k+ymin*py);
-						int x2 = xpos - 5;
-						int y2 = (int)(ypos + ysize-k+ymin*py);
-						if(y1 <= ypos + ysize && y1 >= ypos){
-							g.drawString(str, x, y);
-							g.drawLine(x1, y1, x2, y2);
-						}
-					}
-				
-				}
-			}
-			if(yaxis){
-				for(double i = ymin; i <= ymax ; i+=(Math.abs((ymax-ymin)))/((double)10)){
-					
-					int lineWidth = 5;
-					String str = KsDigit(i, 3); 
-					double k = ((double)py)*i;
-					int y = (int)(ypos + ysize -k+g.getFontMetrics().getHeight()/2+ymin*py);
-					int x = xpos-g.getFontMetrics().stringWidth(str)-lineWidth;
-					g.drawString(str, x, y);
-					int x1 = xpos-lineWidth/2;
-					int y1 = (int)(ypos + ysize -k + ymin*py);
-					int x2 = xpos+lineWidth/2;
-					int y2 = (int)(ypos + ysize -k + ymin*py);
-					g.drawLine(x1, y1, x2, y2);
-					
-				}
-			}
-			
-			//
-			if(ymin <= 0 && ymax >= 0){
-				int lines = xsize/10;
-				for(int i = 1; i < lines; i+= 2){
-					g.drawLine((int)(xpos + (i-1)/((double)lines)*xsize), ypos + (int)(Math.abs(ymax) * py), (int)(xpos + i/((double)lines)*xsize),(int)( ypos + Math.abs(ymax) * py));
-				}
-				
-				String str = "0.0";
-				int x = xpos - g.getFontMetrics().stringWidth(str) - 5;
-				int y = (int)(ypos + ysize+g.getFontMetrics().getHeight()/4.0+ymin*py);
-				
-				int x1 = xpos + 5;
-				int y1 = ypos + (int)(Math.abs(ymax) * py);
-				int x2 = xpos - 5;
-				int y2 = ypos + (int)(Math.abs(ymax) * py);
-				if(y1 <= ypos + ysize && y1 >= ypos){
-					g.drawString(str, x, y);
-					g.drawLine(x1, y1, x2, y2);
-				}
-			}
-			if(xmin <= 0 && xmax >= 0){
-				int lines = ysize/10;
-				for(int i = 1; i < lines; i+= 2){
-					g.drawLine((int)(xpos + Math.abs(xmin) * px),(int)( ypos+ (i-1)/((double)lines)*ysize), (int)(xpos + Math.abs(xmin) * px), (int)( ypos+ i/((double)lines)*ysize));
-				}
-				String str = "0.0"; 
-				int x = (int)(xpos -xmin*px-g.getFontMetrics().stringWidth(str)/2);
-				int y = ypos + ysize+g.getFontMetrics().getHeight();
-				g.drawString(str, x, y);
-				int x1 = (int)(xpos + Math.abs(xmin) * px);
-				int y1 = ypos + ysize - 5;
-				int x2 = (int)(xpos + Math.abs(xmin) * px);
-				int y2 = ypos + ysize + 5;
-				g.drawLine(x1, y1, x2, y2);
-			}
-	
-			//legend
-			if(legend != null){
-			for(int i = 0; i < legend.length; i++){
-				g.setFont(new Font("TimesRoman", Font.PLAIN, legendFontSize));
-				String str = legend[i];
-				int x = xpos + xsize/2 - g.getFontMetrics().stringWidth(str)/2;
-				int y = ypos + ysize + (i+3) * (g.getFontMetrics().getHeight()+10);
-				g.drawString(str, x, y);
-				g.setColor(colorList[i]);
-				g.fill3DRect(x - recsize -5 ,y - g.getFontMetrics().getHeight()/2 + recsize/2,recsize,recsize,true);
-	
-				g.setColor(Color.BLACK);
-			}
-			}
-			// headline
-			String str = headline;
-			g.setFont(new Font("TimesRoman", Font.PLAIN, headlineFontSize));
-			int x = xpos + xsize/2 - g.getFontMetrics().stringWidth(str)/2;
-			int y = ypos - 5 - g.getFontMetrics().getHeight();
-			g.drawString(str, x, y);
-			// x-achse
-			str = xlabel;
-			g.setFont(new Font("TimesRoman", Font.PLAIN, xlabelFontSize));
-			x = xpos + xsize/2 - g.getFontMetrics().stringWidth(str)/2;
-			y = ypos + ysize + 5 + 2*g.getFontMetrics().getHeight();
-			g.drawString(str, x, y);
-			// y Achse
-			str = ylabel;
-			g.setFont(new Font("TimesRoman", Font.PLAIN, ylabelFontSize));
-			x = xpos - g.getFontMetrics().getHeight()*2;
-			y = ypos + ysize/2 + g.getFontMetrics().stringWidth(str)/2;
-		    
-		    g.translate((float)x,(float)y);
-		    g.rotate(Math.toRadians(-90));
-		    g.drawString(str, 0, 0);
-		    g.rotate(-Math.toRadians(-90));
-		    g.translate(-(float)x,-(float)y);
-
-			//text
-			str = text;
-			System.out.println(text);
-			g.setFont(new Font("TimesRoman", Font.PLAIN, textFontSize));
-			x = xpos + 10;
-			ArrayList<String> s = separateString(str, x);
-			int zeile = 1;
-			int zabs = 5; // zeilenabstand
-			for(int i = 0; i < s.size(); i++){
-				if(x + g.getFontMetrics().stringWidth(s.get(i) + " ") >= game.width){
-					zeile += 1;
-					x = xpos + 10;
-				}
-				y = ypos + ysize + 10 +  zeile *(g.getFontMetrics().getHeight()+zabs);
-				g.drawString(s.get(i), x, y);
-	
-				x += g.getFontMetrics().stringWidth(s.get(i));
+			drawKSy(g,xmin,xmax,ymin,ymax);
 							
 			}
+		else{
+			drawKSy(g,-10,10,-10,10);
+			
 		}
 		
 	}
+
+	public void drawKSy(Graphics2D g, double xmin, double xmax, double ymin, double ymax){
+		g.setColor(Color.BLACK);
+		double px =(xsize/Math.abs(xmax - xmin));
+		double py =(ysize/Math.abs(ymax - ymin));
+
+		g.draw3DRect(xpos, ypos, xsize, ysize, false);
+		// xaxis numbers
+
+		g.setFont(new Font("TimesRoman", Font.PLAIN, numberTextSize));
+		for(double i = xmin; i <= xmax ; i+=(Math.abs((xmax-xmin)))/((double)10)){
+			String str = KsDigit(i, 2); 
+			double k = ((double)px)*i;
+			int x = (int)(xpos -xmin*px +k-g.getFontMetrics().stringWidth(str)/2);
+			int y = ypos + ysize+g.getFontMetrics().getHeight();
+			g.drawString(str, x, y);
+			int x1 = (int)(xpos -xmin*px +k);
+			int y1 = ypos + ysize - 5;
+			int x2 = (int)(xpos -xmin*px +k);
+			int y2 = ypos + ysize + 5;
+			g.drawLine(x1, y1, x2, y2);
+			
+		}
+		//y axis numbers
+		if(!yaxis){
+			if(energy.size()>0){
+				for(int i = 0; i< energy.size() ; i+=1){
+					double k = ((double)py)*(energy.get(i));
+					String str = KsDigit(energy.get(i), 2);
+					int x = xpos - g.getFontMetrics().stringWidth(str) - 5;
+					int y = (int)(ypos + ysize-k+g.getFontMetrics().getHeight()/4.0+ymin*py);
+					
+					int x1 = xpos + 5;
+					int y1 = (int)(ypos + ysize-k+ymin*py);
+					int x2 = xpos - 5;
+					int y2 = (int)(ypos + ysize-k+ymin*py);
+					if(y1 <= ypos + ysize && y1 >= ypos){
+						g.drawString(str, x, y);
+						g.drawLine(x1, y1, x2, y2);
+					}
+				}
+			
+			}
+		}
+		if(yaxis){
+			for(double i = ymin; i <= ymax ; i+=(Math.abs((ymax-ymin)))/((double)10)){
+				
+				int lineWidth = 5;
+				String str = KsDigit(i, 3); 
+				double k = ((double)py)*i;
+				int y = (int)(ypos + ysize -k+g.getFontMetrics().getHeight()/2+ymin*py);
+				int x = xpos-g.getFontMetrics().stringWidth(str)-lineWidth;
+				g.drawString(str, x, y);
+				int x1 = xpos-lineWidth/2;
+				int y1 = (int)(ypos + ysize -k + ymin*py);
+				int x2 = xpos+lineWidth/2;
+				int y2 = (int)(ypos + ysize -k + ymin*py);
+				g.drawLine(x1, y1, x2, y2);
+				
+			}
+		}
+		
+		//
+		if(ymin <= 0 && ymax >= 0){
+			int lines = xsize/10;
+			for(int i = 1; i < lines; i+= 2){
+				g.drawLine((int)(xpos + (i-1)/((double)lines)*xsize), ypos + (int)(Math.abs(ymax) * py), (int)(xpos + i/((double)lines)*xsize),(int)( ypos + Math.abs(ymax) * py));
+			}
+			
+			String str = "0.0";
+			int x = xpos - g.getFontMetrics().stringWidth(str) - 5;
+			int y = (int)(ypos + ysize+g.getFontMetrics().getHeight()/4.0+ymin*py);
+			
+			int x1 = xpos + 5;
+			int y1 = ypos + (int)(Math.abs(ymax) * py);
+			int x2 = xpos - 5;
+			int y2 = ypos + (int)(Math.abs(ymax) * py);
+			if(y1 <= ypos + ysize && y1 >= ypos){
+				g.drawString(str, x, y);
+				g.drawLine(x1, y1, x2, y2);
+			}
+		}
+		if(xmin <= 0 && xmax >= 0){
+			int lines = ysize/10;
+			for(int i = 1; i < lines; i+= 2){
+				g.drawLine((int)(xpos + Math.abs(xmin) * px),(int)( ypos+ (i-1)/((double)lines)*ysize), (int)(xpos + Math.abs(xmin) * px), (int)( ypos+ i/((double)lines)*ysize));
+			}
+			String str = "0.0"; 
+			int x = (int)(xpos -xmin*px-g.getFontMetrics().stringWidth(str)/2);
+			int y = ypos + ysize+g.getFontMetrics().getHeight();
+			g.drawString(str, x, y);
+			int x1 = (int)(xpos + Math.abs(xmin) * px);
+			int y1 = ypos + ysize - 5;
+			int x2 = (int)(xpos + Math.abs(xmin) * px);
+			int y2 = ypos + ysize + 5;
+			g.drawLine(x1, y1, x2, y2);
+		}
+
+		//legend
+		if(legend != null){
+		for(int i = 0; i < legend.length; i++){
+			g.setFont(new Font("TimesRoman", Font.PLAIN, legendFontSize));
+			String str = legend[i];
+			int x = xpos + xsize/2 - g.getFontMetrics().stringWidth(str)/2;
+			int y = ypos + ysize + (i+3) * (g.getFontMetrics().getHeight()+10);
+			g.drawString(str, x, y);
+			g.setColor(colorList[i]);
+			g.fill3DRect(x - recsize -5 ,y - g.getFontMetrics().getHeight()/2 + recsize/2,recsize,recsize,true);
+
+			g.setColor(Color.BLACK);
+		}
+		}
+		// headline
+		String str = headline;
+		g.setFont(new Font("TimesRoman", Font.PLAIN, headlineFontSize));
+		int x = xpos + xsize/2 - g.getFontMetrics().stringWidth(str)/2;
+		int y = ypos - 5 - g.getFontMetrics().getHeight();
+		g.drawString(str, x, y);
+		// x-achse
+		str = xlabel;
+		g.setFont(new Font("TimesRoman", Font.PLAIN, xlabelFontSize));
+		x = xpos + xsize/2 - g.getFontMetrics().stringWidth(str)/2;
+		y = ypos + ysize + 5 + 2*g.getFontMetrics().getHeight();
+		g.drawString(str, x, y);
+		// y Achse
+		str = ylabel;
+		g.setFont(new Font("TimesRoman", Font.PLAIN, ylabelFontSize));
+		x = xpos - g.getFontMetrics().getHeight()*2;
+		y = ypos + ysize/2 + g.getFontMetrics().stringWidth(str)/2;
+	    
+	    g.translate((float)x,(float)y);
+	    g.rotate(Math.toRadians(-90));
+	    g.drawString(str, 0, 0);
+	    g.rotate(-Math.toRadians(-90));
+	    g.translate(-(float)x,-(float)y);
+
+		//text
+		str = text;
+		g.setFont(new Font("TimesRoman", Font.PLAIN, textFontSize));
+		x = xpos + 10;
+		ArrayList<String> s = separateString(str, x);
+		int zeile = 1;
+		int zabs = 5; // zeilenabstand
+		for(int i = 0; i < s.size(); i++){
+			if(x + g.getFontMetrics().stringWidth(s.get(i) + " ") >= game.width){
+				zeile += 1;
+				x = xpos + 10;
+			}
+			y = ypos + ysize + 10 +  zeile *(g.getFontMetrics().getHeight()+zabs);
+			g.drawString(s.get(i), x, y);
+
+			x += g.getFontMetrics().stringWidth(s.get(i));
+		}
+	}
+
+	
+
+
 	
 	// method which returns senseful numbers for the koordinate system
 	public String KsDigit(double number, int nst){

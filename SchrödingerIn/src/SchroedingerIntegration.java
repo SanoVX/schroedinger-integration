@@ -21,13 +21,11 @@ public class SchroedingerIntegration {
 		clear();
 		Einstellungen.berechneteNiveaus = 0;
 		ArrayList<Double> energies = new ArrayList<>();
-		int xsize = g.width*3/8;
-		int ysize = g.height*3/8;
-		
+
+		int dis = 300;
 		int anzahlks = 2;
 		for(int i = 0; i < anzahlks; i++ ){
-			int x = (g.width-300)/2*(i+1) - xsize;
-			CoordinateSystem k = new CoordinateSystem(g,x, (g.height-200)/2 - ysize/2, xsize, ysize);
+			CoordinateSystem k = new CoordinateSystem(g, (g.width-dis)/2*i,(g.width-dis)/2*(i+1),0,g.height, 1,7,1,3);
 			g.ks.add(k);
 			k.drawpoints = false;
 			if(true){// growing range only in left coordinate system
