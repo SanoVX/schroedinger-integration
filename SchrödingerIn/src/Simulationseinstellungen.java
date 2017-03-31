@@ -129,6 +129,11 @@ public class Simulationseinstellungen extends JFrame {
 		JRadioButton rdbtnGeradeNiveaus = new JRadioButton("Gerade Niveaus");
 		rdbtnGeradeNiveaus.setBounds(230, 146, 128, 23);
 		contentPane.add(rdbtnGeradeNiveaus);
+		if(Einstellungen.ungerade){
+			rdbtnUngeradeNiveaus.setSelected(true);
+		}else{
+			rdbtnGeradeNiveaus.setSelected(true);
+		}
 		
 		ButtonGroup btngroup = new ButtonGroup();
 		btngroup.add(rdbtnUngeradeNiveaus);

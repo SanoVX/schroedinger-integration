@@ -16,7 +16,7 @@ public class Einstellungen {
 	public static double Amplitudengrenze = 1E4;
 	public static int accuracy = 10;
 	public static double steps = 1E6;
-	public static boolean ungerade = true;
+	public static boolean ungerade = false;
 
 	
 	//Steuerung des Hauptfensters

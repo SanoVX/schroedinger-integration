@@ -18,6 +18,7 @@ public class SchroedingerIntegration {
 	
 	
 	public ArrayList<Double> run() throws InterruptedException{
+		clear();
 		Einstellungen.berechneteNiveaus = 0;
 		ArrayList<Double> energies = new ArrayList<>();
 		int xsize = g.width*3/8;
@@ -133,6 +134,7 @@ public class SchroedingerIntegration {
 		};
 		t1.start();
 
+		
 		return energies;
 	}
 
@@ -149,6 +151,7 @@ public class SchroedingerIntegration {
 		g.currRange = 0;
 		g.s = 0;
 		g.funktNr = 1;
+		g.simulated = false;
 	}
 
 }

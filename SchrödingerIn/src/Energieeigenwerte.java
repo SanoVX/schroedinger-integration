@@ -131,18 +131,18 @@ public class Energieeigenwerte {
 			Sx.add(step); Sx.add(1.0); // initialisiere zweiten punkt auf step/step
 			temp.add(Sx);
 		}else{
-			Sx.add(0.); Sx.add(1.); // initialisiere ersten Punkt auf 0/0
+			Sx.add(-step/2); Sx.add(1.); // initialisiere ersten Punkt auf 0/0
 			temp.add(Sx);				// fÃ¯Â¿Â½gt punkt in liste f hinzu
 			Sx = new ArrayList<>();
-			Sx.add(step); Sx.add(1.); // initialisiere zweiten punkt auf step/step
+			Sx.add(step/2); Sx.add(1.); // initialisiere zweiten punkt auf step/step
 			temp.add(Sx);
 		}
 		
 		for(int i = 1; i < Einstellungen.steps+1; i++){
 
-			double x = step*i; // berechnet x koordinate des nÃ¯Â¿Â½chsten punktes
+			double x = step*(i+1/2); // berechnet x koordinate des nÃ¯Â¿Â½chsten punktes
 			Sx = new ArrayList<>();
-			double y = Qi(step*i,step)*temp.get(i).get(1)-temp.get(i-1).get(1);
+			double y = Qi(x,step)*temp.get(i).get(1)-temp.get(i-1).get(1);
 
 			Sx.add(x);
 			Sx.add(y);
