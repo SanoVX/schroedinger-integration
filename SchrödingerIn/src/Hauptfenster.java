@@ -160,10 +160,8 @@ public class Hauptfenster extends JFrame {
 			@Override
 			public void mouseWheelMoved(MouseWheelEvent e) {
 				if(g.ks.size() > 0){
-					PointerInfo a = MouseInfo.getPointerInfo();
-					Point b = a.getLocation();
-					int x = (int) b.getX();
-					int y = (int) b.getY();
+					int x = (int) e.getX();
+					int y = (int) e.getY();
 					CoordinateSystem s = g.ks.get(0);
 					if(g.ks.size() > 1){
 						s = g.ks.get(1);
@@ -227,10 +225,8 @@ public class Hauptfenster extends JFrame {
 				
 				if(arg0.getButton() == 1){
 				if(g.ks.size() > 0){
-					PointerInfo a = MouseInfo.getPointerInfo();
-					Point b = a.getLocation();
-					int x = (int) b.getX();
-					int y = (int) b.getY();
+					int x = (int) arg0.getX();
+					int y = (int) arg0.getY();
 					CoordinateSystem s = g.ks.get(0);
 					if(g.ks.size() > 1){
 						s = g.ks.get(1);
@@ -255,10 +251,8 @@ public class Hauptfenster extends JFrame {
 				
 				if(arg0.getButton() == 1){
 				if(g.ks.size() > 0){
-					PointerInfo a = MouseInfo.getPointerInfo();
-					Point b = a.getLocation();
-					int x = (int) b.getX();
-					int y = (int) b.getY();
+					int x = (int) arg0.getX();
+					int y = (int) arg0.getY();
 					CoordinateSystem s = g.ks.get(0);
 					if(g.ks.size() > 1){
 						s = g.ks.get(1);
