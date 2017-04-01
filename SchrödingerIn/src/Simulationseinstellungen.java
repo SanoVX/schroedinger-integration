@@ -151,6 +151,8 @@ public class Simulationseinstellungen extends JFrame {
 		Einstellungen.showCalculation = chckbxBerechnungAnzeigen.isSelected();
 		if(rdbtnUngeradeNiveaus.isSelected() && rdbtnGeradeNiveaus.isSelected()){
 			Einstellungen.alleNiveaus = true;
+		}else{
+			Einstellungen.alleNiveaus = false;
 		}
 		Einstellungen.ungerade = rdbtnUngeradeNiveaus.isSelected();
 		
