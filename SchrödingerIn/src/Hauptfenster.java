@@ -4,6 +4,7 @@ import java.awt.GridLayout;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.PointerInfo;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -275,8 +276,14 @@ public class Hauptfenster extends JFrame {
 			}
 		});
 		
-
-		g.setBounds(5, 5, width-200, height);
+		height = height - height/8;
+		int buttonPlace = (int)(1/10.0*width);
+		int buttonWidth = (int)(5/7.0*buttonPlace);
+		int sbuttonHeight = (int)(1/40.0*height);
+		int bbuttonHeight = (int)(1/20.0*height);
+		int buttonDistance = (int)(1/100*height);
+		int progressBarHeight = (int)(1/30*height);
+		g.setBounds(0, 0, width-buttonPlace, height);
 		contentPane.add(g);
 
 		simulation = new SchroedingerIntegration(g);
@@ -295,7 +302,7 @@ public class Hauptfenster extends JFrame {
 				btnSlower.setEnabled(true);
 			}
 		});
-		btnFaster.setBounds(width-150, height-390, 110, 20);
+		btnFaster.setBounds(width-buttonPlace, height-buttonDistance*6  - progressBarHeight - 2*bbuttonHeight - 3*sbuttonHeight, buttonWidth, sbuttonHeight);
 		btnFaster.setEnabled(false);
 		contentPane.add(btnFaster);
 		
@@ -330,11 +337,11 @@ public class Hauptfenster extends JFrame {
 			}
 		});
 		buttonPause.setEnabled(false);
-		buttonPause.setBounds(width-150, height -360, 110, 20);
+		buttonPause.setBounds(width-buttonPlace, height-buttonDistance*5  - progressBarHeight - 2*bbuttonHeight - 2*sbuttonHeight, buttonWidth, sbuttonHeight);
 		contentPane.add(buttonPause);
 		
 		
-		btnSlower.setBounds(width-150, height-330, 110, 20);
+		btnSlower.setBounds(width-buttonPlace, height-buttonDistance*4  - progressBarHeight - 2*bbuttonHeight - 1*sbuttonHeight, buttonWidth, sbuttonHeight);
 		btnSlower.setEnabled(false);
 		contentPane.add(btnSlower);
 		
@@ -352,10 +359,10 @@ public class Hauptfenster extends JFrame {
 			}
 		});
 		btnclear.setEnabled(false);
-		btnclear.setBounds(width-150, height-270, 100, 50);
+		btnclear.setBounds(width-buttonPlace, height-buttonDistance*3  - progressBarHeight - 2*bbuttonHeight, buttonWidth, bbuttonHeight);
 		
 		btnStart = new JButton("Start");
-		btnStart.setBounds(width-150, height-200, 100, 50);
+		btnStart.setBounds(width-buttonPlace, height-buttonDistance*2  - progressBarHeight - bbuttonHeight, buttonWidth, bbuttonHeight);
 		btnStart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e){
@@ -432,14 +439,15 @@ public class Hauptfenster extends JFrame {
 		contentPane.add(btnclear);
 		contentPane.add(btnStart);
 		
-		lblEnergies = new JLabel("Energieniveaus:");
-		lblEnergies.setVerticalAlignment(SwingConstants.TOP);
-		lblEnergies.setBounds(width-170, 10, 150, height-200);
-		contentPane.add(lblEnergies);
-		
 		progressBar = new JProgressBar();
-		progressBar.setBounds(width-170, height - 130, 150, 20);
+		progressBar.setBounds(width-buttonPlace, height-buttonDistance  - progressBarHeight, buttonWidth, progressBarHeight);
 		progressBar.setVisible(false);
 		contentPane.add(progressBar);
+		
+		lblEnergies = new JLabel("Energieniveaus:");
+		lblEnergies.setVerticalAlignment(SwingConstants.TOP);
+		lblEnergies.setBounds(width-buttonPlace, buttonDistance, buttonWidth, height/2);
+		contentPane.add(lblEnergies);
+
 	}
 }
