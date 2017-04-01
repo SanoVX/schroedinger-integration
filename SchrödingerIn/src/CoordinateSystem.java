@@ -65,10 +65,8 @@ public class CoordinateSystem {
 		this.ypos = (int)(ymin + arg0y/arg1y*(ymax - ymin));
 		this.xend = (int)(xmin + (arg1x-arg0x)/arg1x*(xmax-xmin));
 		this.yend = (int)(ymin + (arg1y-arg0y)/arg1y*(ymax-ymin));
-		System.out.println(xpos + " " + ypos + " " + xend + ""+yend);
 		this.xsize = xend-xpos;
 		this.ysize = yend-ypos;
-		System.out.println(xpos + " " + ypos + " " + xend + " "+yend + " " + xsize + " "+ ysize + " " + (yend - ypos)) ;
 		this.xbounds[0] = xmin;
 		this.xbounds[1] = xmax;
 		this.xbounds[2] = arg0x;
@@ -162,7 +160,6 @@ public class CoordinateSystem {
 		return randomColor;
 	}
 	
-	// draws coordinate system including the labels, text next to the plot, a legend 
 
 	
 	// draws datapoints of the given list

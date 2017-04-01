@@ -38,6 +38,7 @@ public class Funktion {
 		Parser p = new Parser(str, this);
 		this.message = p.message;
 		this.p = p;
+		this.funktion = str;
 
 	}
 	public void refresh(CoordinateSystem g){

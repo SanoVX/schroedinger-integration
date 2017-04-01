@@ -25,11 +25,11 @@ public class SchroedingerIntegration {
 		int dis = 300;
 		int anzahlks = 2;
 		for(int i = 0; i < anzahlks; i++ ){
-			CoordinateSystem k = new CoordinateSystem(g, (g.width-dis)/2*i,(g.width-dis)/2*(i+1),0,g.height, 1,7,1,3);
+			CoordinateSystem k = new CoordinateSystem(g, (g.width-dis)/2*i,(g.width-dis)/2*(i+1),0,(int)(g.height*9/10.0), 1,7,1,3);
 			g.ks.add(k);
 			k.drawpoints = false;
 			if(true){// growing range only in left coordinate system
-				k.growingrange = true;
+				k.growingrange = false;
 			}
 			k.plotThickness = 0;
 			g.calcTime = 50;
@@ -42,9 +42,7 @@ public class SchroedingerIntegration {
 			k.ylabel = "Energie in eV";
 
 			
-			//Funktion f = new Funktion(k, "-q/(4*pi*e0*abs(x))", false);
-			//k.funktions.add(f);
-			System.out.println("potential" + potential.gibFunktion());
+			System.out.println("potential " + potential.gibFunktion());
 			if(potential.gibFunktion() != null){
 			Funktion f = new Funktion(k, potential.gibFunktion(), false);
 			k.funktions.add(f);
@@ -83,7 +81,7 @@ public class SchroedingerIntegration {
 			
 					g.ks.get(0).simulation.add(l);
 				}
-
+				
 				System.out.println(E.getEnergy()/e);
 				g.ks.get(1).solEnergy.add(E.getEnergy()/e);	
 				g.ks.get(1).solution.add(E.getSolution());
@@ -161,7 +159,6 @@ public class SchroedingerIntegration {
 					}
 					
 					try {
-						//System.out.println(sleeptime);
 						Thread.sleep(sleeptime); // sleeping time
 					} catch (InterruptedException e) {
 						Thread.currentThread().interrupt();

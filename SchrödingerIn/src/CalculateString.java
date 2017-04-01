@@ -12,7 +12,7 @@ public class CalculateString {
 	static ArrayList<ArrayList<Integer>> idx3 = new ArrayList<>();
 	
 	public static double returnY(Funktion f, double x, ArrayList<String> List){
-		
+		if(!Double.isNaN(x)){
 		f.p.values.set(0,x);
 		Identity = new ArrayList<>();
 		for(int i = 0; i < f.p.Identity.size(); i++){
@@ -36,6 +36,8 @@ public class CalculateString {
 
 		stringList = calculate(stringList ,x,-1,stringList.size(), f);
 		return Double.parseDouble(stringList.get(0));
+		}
+		return Double.NaN;
 	}
 
 	
