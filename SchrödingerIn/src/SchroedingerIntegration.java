@@ -53,8 +53,48 @@ public class SchroedingerIntegration {
 		}
 		
 		
+		if(Einstellungen.alleNiveaus){
+			Einstellungen.ungerade = false;
+			//numerische integration
+			Energieeigenwerte E = new Energieeigenwerte(potential, Einstellungen.E_min, Einstellungen.E_max);
+			if(!E.step()){
+				JOptionPane.showMessageDialog(null, "Keine Eigenwerte gefunden!", "Error", JOptionPane.ERROR_MESSAGE);
+				Einstellungen.allesGezeichnet = true;
+				return null;
+			}
+			int count = 0;
+			do{			
+				if(E.gibloesungsschritte()!= null){
+					ArrayList<ArrayList<ArrayList<Double>>> l = E.gibloesungsschritte().get(0);
 
-		//numerische integration
+					if(l.size() > 1){
+						//Beschraenkung der Loesungsschritte
+						int size = l.size();
+						for(int j=size-2; j>=0; j-- ){
+							if(j%(int)(size/15.0+1) != 0){
+								l.remove(j);
+							}
+						}
+					}
+	
+					if(l.size() == 0){
+						System.exit(0);
+					}
+			
+					g.ks.get(0).simulation.add(l);
+				}
+
+				System.out.println(E.getEnergy()/e);
+				g.ks.get(1).solEnergy.add(E.getEnergy()/e);	
+				g.ks.get(1).solution.add(E.getSolution());
+				energies.add(E.getEnergy()/e);
+
+			
+				count ++;
+				Einstellungen.berechneteNiveaus++;
+			}while(E.step()&&count<Einstellungen.maxNiveaus);
+			Einstellungen.ungerade  = true;
+		}
 		Energieeigenwerte E = new Energieeigenwerte(potential, Einstellungen.E_min, Einstellungen.E_max);
 		if(!E.step()){
 			JOptionPane.showMessageDialog(null, "Keine Eigenwerte gefunden!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -75,11 +115,11 @@ public class SchroedingerIntegration {
 						}
 					}
 				}
-	
+
 				if(l.size() == 0){
 					System.exit(0);
 				}
-			
+		
 				g.ks.get(0).simulation.add(l);
 			}
 
@@ -88,11 +128,10 @@ public class SchroedingerIntegration {
 			g.ks.get(1).solution.add(E.getSolution());
 			energies.add(E.getEnergy()/e);
 
-			
+		
 			count ++;
 			Einstellungen.berechneteNiveaus++;
 		}while(E.step()&&count<Einstellungen.maxNiveaus);
-			
 			t1 = new Thread(){
 			public void run(){
 				long initsleeptime = 100;

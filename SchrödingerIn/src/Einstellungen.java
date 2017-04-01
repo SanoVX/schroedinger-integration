@@ -17,6 +17,7 @@ public class Einstellungen {
 	public static int accuracy = 10;
 	public static double steps = 1E6;
 	public static boolean ungerade = false;
+	public static boolean alleNiveaus = false;
 
 	
 	//Steuerung des Hauptfensters

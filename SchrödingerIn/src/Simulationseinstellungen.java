@@ -28,7 +28,7 @@ public class Simulationseinstellungen extends JFrame {
 	private JCheckBox chckbxBerechnungAnzeigen, chckboxNorInt;
 	private JTextField textMaxAmpl;
 	private JLabel lblAmplitudengrenzeBeiEigenwertberechnung;
-	private JRadioButton rdbtnUngeradeNiveaus;
+	private JCheckBox rdbtnUngeradeNiveaus, rdbtnGeradeNiveaus;
 
 
 	/**
@@ -121,23 +121,26 @@ public class Simulationseinstellungen extends JFrame {
 		lblAmplitudengrenzeBeiEigenwertberechnung.setBounds(5, 57, 238, 20);
 		contentPane.add(lblAmplitudengrenzeBeiEigenwertberechnung);
 		
-		rdbtnUngeradeNiveaus = new JRadioButton("Ungerade Niveaus");
+		rdbtnUngeradeNiveaus = new JCheckBox("Ungerade Niveaus");
 		rdbtnUngeradeNiveaus.setBounds(230, 120, 128, 23);
 		contentPane.add(rdbtnUngeradeNiveaus);
 		rdbtnUngeradeNiveaus.setSelected(true);
 		
-		JRadioButton rdbtnGeradeNiveaus = new JRadioButton("Gerade Niveaus");
+		rdbtnGeradeNiveaus = new JCheckBox("Gerade Niveaus");
 		rdbtnGeradeNiveaus.setBounds(230, 146, 128, 23);
 		contentPane.add(rdbtnGeradeNiveaus);
 		if(Einstellungen.ungerade){
+			rdbtnGeradeNiveaus.setSelected(false);
 			rdbtnUngeradeNiveaus.setSelected(true);
 		}else{
+			rdbtnUngeradeNiveaus.setSelected(false);
 			rdbtnGeradeNiveaus.setSelected(true);
 		}
-		
-		ButtonGroup btngroup = new ButtonGroup();
-		btngroup.add(rdbtnUngeradeNiveaus);
-		btngroup.add(rdbtnGeradeNiveaus);
+		if(Einstellungen.alleNiveaus){
+			rdbtnUngeradeNiveaus.setSelected(true);
+			rdbtnGeradeNiveaus.setSelected(true);
+		}
+
 	}
 
 
@@ -146,6 +149,9 @@ public class Simulationseinstellungen extends JFrame {
 		Einstellungen.Amplitudengrenze = Double.parseDouble(textMaxAmpl.getText());
 		Einstellungen.normalizeIntegral = chckboxNorInt.isSelected();
 		Einstellungen.showCalculation = chckbxBerechnungAnzeigen.isSelected();
+		if(rdbtnUngeradeNiveaus.isSelected() && rdbtnGeradeNiveaus.isSelected()){
+			Einstellungen.alleNiveaus = true;
+		}
 		Einstellungen.ungerade = rdbtnUngeradeNiveaus.isSelected();
 		
 		this.dispose();
