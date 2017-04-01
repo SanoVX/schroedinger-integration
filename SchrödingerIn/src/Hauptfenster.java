@@ -276,13 +276,13 @@ public class Hauptfenster extends JFrame {
 			}
 		});
 		
-		height = height - height/8;
+		height = height - height/10;
 		int buttonPlace = (int)(1/10.0*width);
 		int buttonWidth = (int)(5/7.0*buttonPlace);
 		int sbuttonHeight = (int)(1/40.0*height);
 		int bbuttonHeight = (int)(1/20.0*height);
-		int buttonDistance = (int)(1/100*height);
-		int progressBarHeight = (int)(1/30*height);
+		int buttonDistance = (int)(1/100.0*height);
+		int progressBarHeight = (int)(1/40.0*height);
 		g.setBounds(0, 0, width-buttonPlace, height);
 		contentPane.add(g);
 
