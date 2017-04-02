@@ -50,7 +50,8 @@ public class SchroedingerIntegration {
 			
 		}
 		
-		
+		int count = 0;
+
 		if(Einstellungen.alleNiveaus){
 			Einstellungen.ungerade = false;
 			//numerische integration
@@ -60,7 +61,6 @@ public class SchroedingerIntegration {
 				Einstellungen.allesGezeichnet = true;
 				return null;
 			}
-			int count = 0;
 			do{			
 				if(E.gibloesungsschritte()!= null){
 					ArrayList<ArrayList<ArrayList<Double>>> l = E.gibloesungsschritte().get(0);
@@ -90,7 +90,7 @@ public class SchroedingerIntegration {
 			
 				count ++;
 				Einstellungen.berechneteNiveaus++;
-			}while(E.step()&&count<Einstellungen.maxNiveaus);
+			}while(E.step()&&count<Einstellungen.maxNiveaus/2);
 			Einstellungen.ungerade  = true;
 		}
 		Energieeigenwerte E = new Energieeigenwerte(potential, Einstellungen.E_min, Einstellungen.E_max);
@@ -99,7 +99,6 @@ public class SchroedingerIntegration {
 			Einstellungen.allesGezeichnet = true;
 			return null;
 		}
-		int count = 0;
 		do{			
 			if(E.gibloesungsschritte()!= null){
 				ArrayList<ArrayList<ArrayList<Double>>> l = E.gibloesungsschritte().get(0);
