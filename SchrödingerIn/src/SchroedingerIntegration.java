@@ -22,15 +22,12 @@ public class SchroedingerIntegration {
 		Einstellungen.berechneteNiveaus = 0;
 		ArrayList<Double> energies = new ArrayList<>();
 
-		int dis = 300;
+		int dis = (int)(1/10.0*g.width);
 		int anzahlks = 2;
 		for(int i = 0; i < anzahlks; i++ ){
-			CoordinateSystem k = new CoordinateSystem(g, (g.width-dis)/2*i,(g.width-dis)/2*(i+1),0,(int)(g.height*9/10.0), 1,7,1,3);
+			CoordinateSystem k = new CoordinateSystem(g, (g.width-dis)/2*i,(g.width-dis)/2*(i+1),0,(int)(g.height*9/10.0), 1,7,1,3.5);
 			g.ks.add(k);
 			k.drawpoints = false;
-			if(true){// growing range only in left coordinate system
-				k.growingrange = false;
-			}
 			k.plotThickness = 0;
 			g.calcTime = 50;
 			if(i == anzahlks -1){

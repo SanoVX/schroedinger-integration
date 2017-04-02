@@ -46,7 +46,7 @@ public class CoordinateSystem {
 	
 	boolean init = false;
 	boolean drawpoints = true;
-	boolean growingrange = false;
+	boolean growingrange = true;
 	boolean drawable = false;
 	boolean changedrange = false;
 	boolean yaxis = false;
@@ -63,7 +63,7 @@ public class CoordinateSystem {
 		this.game = game;
 		this.xpos = (int)(xmin + arg0x/arg1x*(xmax-xmin));
 		this.ypos = (int)(ymin + arg0y/arg1y*(ymax - ymin));
-		this.xend = (int)(xmin + (arg1x-arg0x)/arg1x*(xmax-xmin));
+		this.xend = (int)(xmax - (xmax-xpos)/20);
 		this.yend = (int)(ymin + (arg1y-arg0y)/arg1y*(ymax-ymin));
 		this.xsize = xend-xpos;
 		this.ysize = yend-ypos;
@@ -83,15 +83,23 @@ public class CoordinateSystem {
 		funktions.add(f);
 		
 	}
-	public void changeSize(int xsize, int ysize){
-		this.xsize = xsize;
-		this.ysize = ysize;
+	public void changeSize(int xmin, int xmax, int ymin, int ymax, double arg0x, double arg1x, double arg0y, double arg1y){
+		this.xpos = (int)(xmin + arg0x/arg1x*(xmax-xmin));
+		this.ypos = (int)(ymin + arg0y/arg1y*(ymax - ymin));
+		this.xend = (int)(xmin + (arg1x-arg0x)/arg1x*(xmax-xmin));
+		this.yend = (int)(ymin + (arg1y-arg0y)/arg1y*(ymax-ymin));
+		this.xsize = xend-xpos;
+		this.ysize = yend-ypos;
+		this.xbounds[0] = xmin;
+		this.xbounds[1] = xmax;
+		this.xbounds[2] = arg0x;
+		this.xbounds[3] = arg1x;
+		this.ybounds[0] = ymin;
+		this.ybounds[1] = ymax;
+		this.ybounds[2] = arg0y;
+		this.ybounds[3] = arg1y;
 	}
 	
-	public void changePos(int xpos, int ypos){
-		this.xpos = xpos;
-		this.ypos = ypos;
-	}
 	
 				
 	public void resetRange(){
@@ -114,6 +122,7 @@ public class CoordinateSystem {
 	
 	// sets the plot range so that all data points are in the plot
 	public void MaxandMin(double[][] mea){
+		if(growingrange){
 		int k = mea.length;
 		/*if(growingrange && searchRangeMax() < mea.length){
 			k = searchRangeMax();
@@ -146,6 +155,7 @@ public class CoordinateSystem {
 			xmax = xmax + recsize/px;
 			ymin = ymin - recsize/py;
 			ymax = ymax + recsize/py;
+		}
 		}
 	}
 	
@@ -246,23 +256,26 @@ public class CoordinateSystem {
 					g.setColor(Color.GRAY);
 					if(funktions2.get(i) != null){
 						funktions2.get(i).refresh(this);
-						if(funktions2.get(i).plot != null){
+						if(funktions2.get(i) != null && funktions2.get(i).plot != null){
 							for(int j = 0; j+1 < funktions2.get(i).plot.size(); j++){
-								if(!noChange(calcxmin, calcxmax, calcymin, calcymax)){
-									i = funktions2.size();
-									j = funktions2.get(i).plot.size();
-								}
-								double d1 = funktions2.get(i).plot.get(j).get(1);
-								double d2 = funktions2.get(i).plot.get(j+1).get(1);
-								if(!Double.isNaN(d1) && !Double.isNaN(d2)){
-									double xx1 = funktions2.get(i).plot.get(j).get(0);
-									double xx2 = funktions2.get(i).plot.get(j+1).get(0);
-	
-									int x1= (int)(xpos  + xx1*px + (-xmin)*px);
-									int y1 = (int)(ypos + ysize +((ymin)*py) -(d1*py));
-									int x2 = (int)(xpos  + xx2*px + (-xmin)*px);
-									int y2 = (int)(ypos + ysize +((ymin)*py) -(d2*py));
-									drawLogic(g, x1, y1, x2,y2);
+								if(funktions2.get(i).plot.get(j) != null && funktions2.get(i).plot.get(j+1) != null){
+									if(!noChange(calcxmin, calcxmax, calcymin, calcymax)){
+										i = funktions2.size();
+										j = funktions2.get(i).plot.size();
+										break;
+									}
+									double d1 = funktions2.get(i).plot.get(j).get(1);
+									double d2 = funktions2.get(i).plot.get(j+1).get(1);
+									if(!Double.isNaN(d1) && !Double.isNaN(d2)){
+										double xx1 = funktions2.get(i).plot.get(j).get(0);
+										double xx2 = funktions2.get(i).plot.get(j+1).get(0);
+		
+										int x1= (int)(xpos  + xx1*px + (-xmin)*px);
+										int y1 = (int)(ypos + ysize +((ymin)*py) -(d1*py));
+										int x2 = (int)(xpos  + xx2*px + (-xmin)*px);
+										int y2 = (int)(ypos + ysize +((ymin)*py) -(d2*py));
+										drawLogic(g, x1, y1, x2,y2);
+									}
 								}
 								
 							}
@@ -310,6 +323,7 @@ public class CoordinateSystem {
 							
 			}
 		else{
+			
 			drawKSy(g,-10,10,-10,10);
 			
 		}

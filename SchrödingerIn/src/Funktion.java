@@ -54,17 +54,16 @@ public class Funktion {
 			ArrayList<Double> xy = new ArrayList<>();
 			xy.add(x);
 			if(showallYs || (y >= ymin && y<ymax)){
-				xy.add(y);
+				y = y;
 			}
 			if(y < ymin){
-				xy.add(ymin);
+				y = ymin;
 			}
 			if(y > ymax){
-				xy.add(ymax);
+				y = ymax;
 			}
-			if(Double.isNaN(y)){
-				xy.add(y);
-			}
+			xy.add(y);
+			
 			plot.add(xy);
 		}
 		

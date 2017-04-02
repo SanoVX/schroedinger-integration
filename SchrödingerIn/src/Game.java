@@ -61,12 +61,6 @@ public class Game extends JPanel{
 		if(ks.get(0).simulation.get(s).size() < funktNr+1){
 			ks.get(1).addMeasures(ks.get(1).solution.get(s));
 			ks.get(1).addEnergy(ks.get(1).solEnergy.get(s));
-			try {
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} // sleeping time
 			if(s < ks.get(1).solution.size() -1){
 				s += 1;
 			}else{
@@ -79,6 +73,8 @@ public class Game extends JPanel{
 		}
 		currRange += calcTime;
 		for(int j = 0; j < ks.get(0).simulation.get(s).size() && j <= funktNr; j++){
+			//int pos = ks.get(0).simulation.get(s).get(ks.get(0).simulation.get(s).size() -1).size();
+			//ks.get(0).xmax = (ks.get(0).simulation.get(s).get(funktNr -1).get(ks.get(0).simulation.get(s).size()-1).get(0));
 			ArrayList<ArrayList<Double>> add = copyList(ks.get(0).simulation.get(s).get(funktNr -1), currRange);
 			if(ks.get(0).simulation.get(s).get(funktNr -1).size() < currRange){
 				currRange = 0;
@@ -94,11 +90,17 @@ public class Game extends JPanel{
 	
 	
 	public void paintComponent(Graphics g) {
+		System.out.println("runnign");
 		super.paintComponent(g);
+		if(ks.size() > 0){
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		if(!prepSimulationList){
+		if(!prepSimulationList){//prepare simulation
 			if(ks.size() > 0){
+			/*ks.get(0).growingrange = false;
+			ks.get(0).ymin = -20;
+			ks.get(0).ymax = 20;
+			ks.get(0).xmin = 0;*/
 			prepSimulationList = true;
 			for(int i = 1; i < ks.get(0).simulation.size(); i++){
 				ArrayList<ArrayList<Double>> k = ks.get(0).simulation.get(i).get(0);
@@ -118,19 +120,12 @@ public class Game extends JPanel{
 			}
 		}
 
-		try {
-			Thread.sleep(0);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} // sleeping time
 		if(simulated){
 			if(end){
 				ks.remove(0);
 				end = false;
 			}
-			ks.get(0).changePos(width/20,height/20);
-			ks.get(0).changeSize((int)(width*2.5/3.0), height*2/3);
+			ks.get(0).changeSize(0,width-(int)(1/10.0*width), 0, (int)(height*9/10.0), 1,8,1,6);
 			
 		}
 		if(ks != null){
@@ -139,11 +134,7 @@ public class Game extends JPanel{
 				ks.get(i).drawMeasure(false,g2d);
 				ks.get(i).drawKs(g2d);
 			}
-		}
-
-		
+		}	
 	}
-	
-
-
+	}
 }
