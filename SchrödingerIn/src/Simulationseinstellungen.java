@@ -143,7 +143,9 @@ public class Simulationseinstellungen extends JFrame {
 
 	}
 
-
+	/**
+	 * Finishing
+	 */
 	private void fertig() {
 		Einstellungen.maxNiveaus = Integer.parseUnsignedInt(textAnzSuchEW.getText());
 		Einstellungen.Amplitudengrenze = Double.parseDouble(textMaxAmpl.getText());

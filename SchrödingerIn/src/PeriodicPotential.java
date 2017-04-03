@@ -39,7 +39,7 @@ public class PeriodicPotential extends Potential {
 
 	@Override
 	public double getBorder(double E) {
-		return potential.getBorder(E)+distance*(Anzahl);
+		return potential.getBorder(E)+distance*(Anzahl+1);
 	}
 
 }

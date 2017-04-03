@@ -42,7 +42,6 @@ public class Potentialeinstellungen extends JFrame {
 	 * Create the frame.
 	 */
 	public Potentialeinstellungen() {
-		setAlwaysOnTop(true);
 		this.potential = SchroedingerIntegration.potential;
 		
 		setTitle("Einstellungen zum Potential");
@@ -77,7 +76,6 @@ public class Potentialeinstellungen extends JFrame {
 			}
 		});
 		potOpt1.setBounds(10, 63, 106, 17);
-		potOpt1.setSelected(true);
 		contentPane.add(potOpt1);
 		bg.add(potOpt1);
 		
@@ -125,8 +123,23 @@ public class Potentialeinstellungen extends JFrame {
 		lblDetails.setBounds(201, 38, 117, 22);
 		contentPane.add(lblDetails);
 		
-		potentialAuswahl = Potentialarten.Coulomb;
-		
+		if(potential.getClass().getName().equals("Coulomb")){
+			potentialAuswahl = Potentialarten.Coulomb;
+			potOpt1.setSelected(true);
+		}else if(potential.getClass().getName().equals("Parabel")){
+			potentialAuswahl = Potentialarten.Parabel;
+			potOpt3.setSelected(true);
+		}else if(potential.getClass().getName().equals("Kasten")){
+			potentialAuswahl = Potentialarten.Kasten;
+			potOpt2.setSelected(true);
+		}else if(potential.getClass().getName().equals("PeriodicPotential")){
+			potentialAuswahl = Potentialarten.benutzerdefiniert;
+			potOpt4.setSelected(true);
+		}else {
+			potentialAuswahl = Potentialarten.Coulomb;
+			potOpt1.setSelected(true);
+		}
+				
 		drawDetails(settings);
 		
 		JButton btnNewButton = new JButton("Fertig");
@@ -161,7 +174,7 @@ public class Potentialeinstellungen extends JFrame {
 		contentPane.add(lblMaximum);
 		
 		E_min_Eingabe = new JTextField();
-		E_min_Eingabe.setText("-20");
+		E_min_Eingabe.setText(Double.toString(Einstellungen.E_min/e));
 		E_min_Eingabe.setBounds(97, 269, 86, 20);
 		contentPane.add(E_min_Eingabe);
 		E_min_Eingabe.addActionListener(new ActionListener() {
@@ -173,14 +186,14 @@ public class Potentialeinstellungen extends JFrame {
 						E_min_Eingabe.setText(new DecimalFormat("#######.########").format(Einstellungen.E_min/e));
 					}
 				}catch(Exception exception){
-					E_min_Eingabe.setText("-20");
+					E_min_Eingabe.setText(Double.toString(Einstellungen.E_max/e));
 				}
 			}
 		});
 		E_min_Eingabe.setColumns(10);
 		
 		E_max_Eingabe = new JTextField();
-		E_max_Eingabe.setText("0");
+		E_max_Eingabe.setText(Double.toString(Einstellungen.E_max/e));
 		E_max_Eingabe.setColumns(10);
 		E_max_Eingabe.setBounds(97, 297, 86, 20);
 		E_max_Eingabe.addActionListener(new ActionListener() {
@@ -192,7 +205,7 @@ public class Potentialeinstellungen extends JFrame {
 						E_max_Eingabe.setText(new DecimalFormat("#######.########").format(Einstellungen.E_max/e));
 					}
 				}catch(Exception exception){
-					E_max_Eingabe.setText("0");
+					E_max_Eingabe.setText(Double.toString(Einstellungen.E_max/e));
 				}
 			}
 		});
@@ -319,6 +332,7 @@ public class Potentialeinstellungen extends JFrame {
 							JOptionPane.showMessageDialog(null, "Warnung: Kern traegt keine Ladung","Warnung", JOptionPane.WARNING_MESSAGE);
 						}
 					}catch(Exception exception){
+						JOptionPane.showMessageDialog(null, "Error: Geben Sie eine gueltige Zahl ein","Error", JOptionPane.ERROR_MESSAGE);
 						coulomb1.setText("1");
 					}
 				}
@@ -337,9 +351,13 @@ public class Potentialeinstellungen extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					try{
-						Double.parseDouble(kastenBoden.getText());
+						double value = Double.parseDouble(kastenBoden.getText());
+						if(value>Double.parseDouble(E_max_Eingabe.getText())){
+							JOptionPane.showMessageDialog(null, "Warning: Kastenboden muss kleiner als obere Suchgrenze sein","Warning", JOptionPane.WARNING_MESSAGE);
+						}
 					}catch(Exception exception){
-						kastenBoden.setText("1");
+						JOptionPane.showMessageDialog(null, "Error: Geben Sie eine gueltige Zahl ein","Error", JOptionPane.ERROR_MESSAGE);
+						kastenBoden.setText("-20");
 					}
 				}
 			});
@@ -362,6 +380,7 @@ public class Potentialeinstellungen extends JFrame {
 							kastenHoehe.setText("30");
 						}
 					}catch(Exception exception){
+						JOptionPane.showMessageDialog(null, "Error: Geben Sie eine gueltige Zahl ein","Error", JOptionPane.ERROR_MESSAGE);
 						kastenHoehe.setText("30");
 					}
 				}
@@ -385,6 +404,7 @@ public class Potentialeinstellungen extends JFrame {
 							kastenBreite.setText("1");
 						}
 					}catch(Exception exception){
+						JOptionPane.showMessageDialog(null, "Error: Geben Sie eine gueltige Zahl ein","Error", JOptionPane.ERROR_MESSAGE);
 						kastenBreite.setText("1");
 					}
 				}
@@ -409,6 +429,7 @@ public class Potentialeinstellungen extends JFrame {
 							parabelTiefe.setText("-20");
 						}
 					}catch(Exception exception){
+						JOptionPane.showMessageDialog(null, "Error: Geben Sie eine gueltige Zahl ein","Error", JOptionPane.ERROR_MESSAGE);
 						parabelTiefe.setText("-20");
 					}
 				}
@@ -428,10 +449,11 @@ public class Potentialeinstellungen extends JFrame {
 					try{
 						double value = Double.parseDouble(parabelBreite.getText());
 						if(value<=0){
-							JOptionPane.showMessageDialog(null, "Error: Parabelbreite muss positiv sein","Error", JOptionPane.WARNING_MESSAGE);
+							JOptionPane.showMessageDialog(null, "Error: Parabelbreite muss positiv sein","Error", JOptionPane.ERROR_MESSAGE);
 							parabelBreite.setText("1");
 						}
 					}catch(Exception exception){
+						JOptionPane.showMessageDialog(null, "Error: Geben Sie eine gueltige Zahl ein","Error", JOptionPane.ERROR_MESSAGE);
 						parabelBreite.setText("1");
 					}
 				}
@@ -465,7 +487,6 @@ public class Potentialeinstellungen extends JFrame {
 						JOptionPane.showMessageDialog(null, "Error: Syntaxfehler","Error", JOptionPane.WARNING_MESSAGE);
 						benutzerdefiniert.setText("-q*q/(4*pi*e0*x)");
 					}
-					// TODO Syntax Check
 				}
 			});
 			break;

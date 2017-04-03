@@ -2,15 +2,19 @@ import java.util.ArrayList;
 
 
 public class Energieeigenwerte {
-	//Variablendefinition
+	/**Potential */
 	private Potential potential;
+	/**aktuelle Energie*/
 	private double E_current,E_max,E_min;
+	/** Laenge der x-Achse */
 	private double xrange = Math.pow(10,-6);
+	/** Wurde bereits gesucht*/
 	private boolean searched;
 	
-	//Variable fuer die Loesungskurve
+	/**Loesung fuer die Wellenfunktion psi*/
 	private ArrayList<ArrayList<Double>> solution = new ArrayList<>();
 	
+	/**Speicher fuer den Loesungsweg*/
 	private ArrayList<ArrayList<ArrayList<ArrayList<Double>>>> loesungsschritte = new ArrayList<>();
 	
 	//Import der Konstanten
@@ -31,8 +35,9 @@ public class Energieeigenwerte {
 		searched = false;
 	}
 	
-	/*
+	/**
 	 * Fuehrt die Berechung des naechsten Energieeigenwerts aus
+	 * @return Energiewert gefunden, oder nicht
 	 */
 	public boolean step(){
 		searched = false;
@@ -65,9 +70,9 @@ public class Energieeigenwerte {
 								
 				cutoff(solution);
 				
-				for(int j = 0; j< solution.size(); j++){
-					solution.get(j).set(1, solution.get(j).get(1)+E_start);
-				}
+				/*for(int j = 0; j< solution.size(); j++){
+					solution.get(j).set(1, solution.get(j).get(1)+E_start/e);
+				}*/
 
 				loesungsblock.add(solution);
 				
@@ -113,8 +118,10 @@ public class Energieeigenwerte {
 	}
 	
 
-	/*
+	/**
 	 * Integration fuer einen Energiewert
+	 * @return -1 psi geht gegen -unendlich;
+	 * 			1 psi geht gegen +unendlich
 	 */
 	private int recursion(){
 		double border = potential.getBorder(E_current);
@@ -210,16 +217,20 @@ public class Energieeigenwerte {
 		}
 	}
 	
-	/*
+	/**
 	 * Berechnung der Proportionalitaetskonstanten
+	 * @param x Position zur Auswertung
+	 * @param step Schrittweite bei der Integration
+	 * 
+	 * @return Qi Porportionalitaetskonstante
 	 */
 	private double Qi(double x, double step){
 		return 2-step*step*8*pi*pi*u*(E_current-potential.getPotential(x))/(h*h);
 	}
 	
-	/*
+	/**
 	 * Gibt Energiewert zurueck
-	 * return: Energiewert, falls bereits gesucht
+	 * @return: Energiewert, falls bereits gesucht
 	 * 			-infinity falls noch nicht gesucht
 	 */
 	public double getEnergy(){
@@ -230,10 +241,10 @@ public class Energieeigenwerte {
 		}
 	}
 	
-	/*
+	/**
 	 * Gibt Loesungskurve zurueck
-	 * return: Loesungskurve, falls bereits gesucht
-	 * 			null, falls noch nicht gesucht
+	 * @return: Loesungskurve, falls bereits gesucht;
+	 * 			<code>null</code>, falls noch nicht gesucht
 	 */
 	public ArrayList<ArrayList<Double>> getSolution(){
 		if(searched){
@@ -255,7 +266,7 @@ public class Energieeigenwerte {
 	}
 	
 	
-	/*
+	/**
 	 * Setzt die Energiewerte auf den Anfang zurueck, z.B. vor Beginn einer neuen suche
 	 * 
 	 */
@@ -264,7 +275,7 @@ public class Energieeigenwerte {
 		searched = false;
 	}
 	
-	/*
+	/**
 	 * Gibt alle Loesungsschritte aus
 	 * Format:
 	 * - 1. Iteration:  1.Kurve
@@ -272,6 +283,7 @@ public class Energieeigenwerte {
 	 * 					3.Kurve ...
 	 * - 2. Iteration: 	1.Kurve
 	 * 					2.Kurve ...
+	 * @return Loesungsschritte
 	 */
 	public ArrayList<ArrayList<ArrayList<ArrayList<Double>>>> gibloesungsschritte(){
 		if(searched){

@@ -7,16 +7,25 @@ public class SchroedingerIntegration {
 	
 	private double e = Einstellungen.e;
 	
+	/**Potential fuer die Berechnung*/
 	public static Potential potential = new Coulomb(Einstellungen.e);
 
 	private Game g;
 	private Thread t1;
 
+	/**Konstruktor fuer SchroedingerIntegration
+	 * 
+	 * @param g Game-Klasse zum Zeichnen
+	 */
 	public SchroedingerIntegration(Game g) {
 		this.g = g;
 	}
 	
-	
+	/**
+	 * Berechnung durchfuehren
+	 * @return Energiewerte als  {@link ArrayList} von <code>double</code>-Werten
+	 * @throws InterruptedException
+	 */
 	public ArrayList<Double> run() throws InterruptedException{
 		clear();
 		Einstellungen.berechneteNiveaus = 0;
@@ -168,11 +177,16 @@ public class SchroedingerIntegration {
 		return energies;
 	}
 
-
+	/**
+	 * Stoppt die Anzeige
+	 */
 	public void stop() {
 		t1.interrupt();
 	}
 	
+	/**
+	 * Clear der Anzeige
+	 */
 	public void clear(){
 		if(t1!=null&&t1.isAlive()){
 			t1.interrupt();
