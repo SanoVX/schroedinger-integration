@@ -31,6 +31,20 @@ public class Game extends JPanel{
 	int currRange = 0;
 	int s = 0;
 	
+	public void reset(){
+		finished = false;
+		init = false;
+		firstPaint = true;
+		simulated = false;
+		end = false;
+		prepSimulationList = false;
+		
+		funktNr = 1;
+		currRange = 0;
+		s = 0;
+	}
+	
+	
 	public ArrayList<ArrayList<Double>> copyList(ArrayList<ArrayList<Double>> funkt , int currRange){
 		ArrayList<ArrayList<Double>> rfunkt = new ArrayList<>();
 		for(int i = 0; i < funkt.size() && i < currRange; i++){
@@ -137,6 +151,7 @@ public class Game extends JPanel{
 				ks.get(i).drawFunktions(ks.get(i).funktions, g2d);
 				ks.get(i).drawMeasure(false,g2d);
 				ks.get(i).drawKs(g2d);
+				
 			}
 		}	
 	}
@@ -144,8 +159,11 @@ public class Game extends JPanel{
 	
 	public void normalize(ArrayList<ArrayList<Double>> list){
 		double max = 0;
+		if(list.get(0).get(1) != 0 && list.get(0).get(1)>list.get(1).get(1)){
+			max = list.get(0).get(1);
+		}
 		for(int i = 0; i < list.size()-3; i++){
-			if(Math.abs(list.get(i).get(1)) < Math.abs(list.get(i+1).get(1)) && Math.abs(list.get(i+2).get(1)) < Math.abs(list.get(i+1).get(1))){
+			if((Math.abs(list.get(i).get(1)) < Math.abs(list.get(i+1).get(1))) && Math.abs(list.get(i+2).get(1)) < Math.abs(list.get(i+1).get(1))){
 				max = list.get(i+1).get(1);
 			}
 		}

@@ -175,6 +175,7 @@ public class CoordinateSystem {
 	// draws datapoints of the given list
 	public void drawMeasure(boolean errorbars , Graphics2D g){ // creates measured points
 		if(measure != null){
+			System.out.println("meas 1");
 			for(int s = 0; s < measure.size(); s++){
 				if(measure.get(s) != null){
 				double[][] mea = measure.get(s);
@@ -189,11 +190,11 @@ public class CoordinateSystem {
 				double px =(xsize/Math.abs(xmax - xmin));
 				double py =(ysize/Math.abs(ymax - ymin));
 				g.setColor(colorList[s%colorList.length]);
-
 				for(int i = 0; i < mea.length; i++){
 					//wertebereich anpassen
 					if(!noChange(calcxmin, calcxmax, calcymin, calcymax)){
 						i = mea.length;
+						break;
 					}
 					if(mea[i][1]==mea[i][1]){//Nan.check
 						if(drawpoints){
@@ -373,7 +374,7 @@ public class CoordinateSystem {
 			
 			}
 		}//prob here
-		if(yaxis){System.out.println("whats your problem? 1");
+		if(yaxis){
 			for(double i = ymin; i <= ymax ; i+=(Math.abs((ymax-ymin)))/((double)10)){
 				
 				int lineWidth = 5;
@@ -387,7 +388,6 @@ public class CoordinateSystem {
 				int x2 = xpos+lineWidth/2;
 				int y2 = (int)(ypos + ysize -k + ymin*py);
 				g.drawLine(x1, y1, x2, y2);
-				System.out.println(ymin+ " " + ymax + " " + i + " " + (Math.abs((ymax-ymin)))/((double)10));
 			}
 		}
 
@@ -584,7 +584,8 @@ public class CoordinateSystem {
 			}
 			g.drawLine(xl,yl,(int)xe,(int)ye);
 		}
-		if(!inKs(xr,yr,xl,yl)){
+		if(!inKs(xr,yr,xl,yl) && growingrange){
+			//improve
 			double[] vect = {xr-xl, yr-yl};
 			double a = Math.pow(vect[0],2)+Math.pow(vect[1],2);
 			double length = Math.pow(a, 0.5);

@@ -178,10 +178,8 @@ public class SchroedingerIntegration {
 			t1.interrupt();
 		}
 		g.ks.clear();
-		g.currRange = 0;
-		g.s = 0;
-		g.funktNr = 1;
-		g.simulated = false;
+
+		g.reset();
 	}
 
 }

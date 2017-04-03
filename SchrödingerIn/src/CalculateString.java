@@ -186,7 +186,6 @@ public class CalculateString {
 				if(list.get(idx).equals("+")){
 					d = Double.parseDouble(number1) + Double.parseDouble(number2);
 				}
-				System.out.println(number1 + " "+ number2);
 				if(list.get(idx).equals("-")){
 					d = Double.parseDouble(number1) - Double.parseDouble(number2);
 				}
