@@ -320,7 +320,6 @@ public class CoordinateSystem {
 	public void drawKs(Graphics2D g){
 		if(drawable){
 			drawKSy(g,xmin,xmax,ymin,ymax);
-							
 			}
 		else{
 			
@@ -352,6 +351,7 @@ public class CoordinateSystem {
 			g.drawLine(x1, y1, x2, y2);
 			
 		}
+
 		//y axis numbers
 		if(!yaxis){
 			if(energy.size()>0){
@@ -372,8 +372,8 @@ public class CoordinateSystem {
 				}
 			
 			}
-		}
-		if(yaxis){
+		}//prob here
+		if(yaxis){System.out.println("whats your problem? 1");
 			for(double i = ymin; i <= ymax ; i+=(Math.abs((ymax-ymin)))/((double)10)){
 				
 				int lineWidth = 5;
@@ -387,10 +387,10 @@ public class CoordinateSystem {
 				int x2 = xpos+lineWidth/2;
 				int y2 = (int)(ypos + ysize -k + ymin*py);
 				g.drawLine(x1, y1, x2, y2);
-				
+				System.out.println(ymin+ " " + ymax + " " + i + " " + (Math.abs((ymax-ymin)))/((double)10));
 			}
 		}
-		
+
 		//
 		if(ymin <= 0 && ymax >= 0){
 			int lines = xsize/10;
@@ -426,7 +426,6 @@ public class CoordinateSystem {
 			int y2 = ypos + ysize + 5;
 			g.drawLine(x1, y1, x2, y2);
 		}
-
 		//legend
 		if(legend != null){
 		for(int i = 0; i < legend.length; i++){

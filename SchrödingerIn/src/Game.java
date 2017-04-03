@@ -69,12 +69,11 @@ public class Game extends JPanel{
 			}
 			funktNr = 1;
 			ks.get(0).measure.clear();
-			ks.get(0).resetRange();
 		}
 		currRange += calcTime;
 		for(int j = 0; j < ks.get(0).simulation.get(s).size() && j <= funktNr; j++){
-			//int pos = ks.get(0).simulation.get(s).get(ks.get(0).simulation.get(s).size() -1).size();
-			//ks.get(0).xmax = (ks.get(0).simulation.get(s).get(funktNr -1).get(ks.get(0).simulation.get(s).size()-1).get(0));
+			int pos = ks.get(0).simulation.get(s).get(ks.get(0).simulation.get(s).size() -1).size();
+			ks.get(0).xmax = (ks.get(0).simulation.get(s).get(funktNr -1).get(ks.get(0).simulation.get(s).get(funktNr -1).size()-1).get(0));
 			ArrayList<ArrayList<Double>> add = copyList(ks.get(0).simulation.get(s).get(funktNr -1), currRange);
 			if(ks.get(0).simulation.get(s).get(funktNr -1).size() < currRange){
 				currRange = 0;
@@ -97,10 +96,15 @@ public class Game extends JPanel{
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		if(!prepSimulationList){//prepare simulation
 			if(ks.size() > 0){
-			/*ks.get(0).growingrange = false;
-			ks.get(0).ymin = -20;
-			ks.get(0).ymax = 20;
-			ks.get(0).xmin = 0;*/
+			for(int s = 0; s < ks.get(0).simulation.size(); s++){
+				for(int i = 0; i < ks.get(0).simulation.get(s).size(); i++){
+					normalize(ks.get(0).simulation.get(s).get(i));
+				}
+			}
+			ks.get(0).growingrange = false;
+			ks.get(0).ymin = -1;
+			ks.get(0).ymax = 1;
+			ks.get(0).xmin = 0;
 			prepSimulationList = true;
 			for(int i = 1; i < ks.get(0).simulation.size(); i++){
 				ArrayList<ArrayList<Double>> k = ks.get(0).simulation.get(i).get(0);
@@ -136,5 +140,22 @@ public class Game extends JPanel{
 			}
 		}	
 	}
+	}
+	
+	public void normalize(ArrayList<ArrayList<Double>> list){
+		double max = 0;
+		for(int i = 0; i < list.size()-3; i++){
+			if(Math.abs(list.get(i).get(1)) < Math.abs(list.get(i+1).get(1)) && Math.abs(list.get(i+2).get(1)) < Math.abs(list.get(i+1).get(1))){
+				max = list.get(i+1).get(1);
+			}
+		}
+		max = Math.abs(max);
+		if(max > 0){
+		for(int i = 0; i < list.size(); i++){
+			list.get(i).set(1, list.get(i).get(1)/max);
+		}
+		}
+		
+		
 	}
 }
