@@ -69,7 +69,7 @@ public class SchroedingerIntegration {
 			}
 			do{			
 				if(E.gibloesungsschritte()!= null){
-					ArrayList<ArrayList<ArrayList<Double>>> l = E.gibloesungsschritte();
+					ArrayList<Loesungskurve> l = E.gibloesungsschritte();
 
 					if(l.size() > 5){
 						//Beschraenkung der Loesungsschritte
@@ -107,7 +107,7 @@ public class SchroedingerIntegration {
 		}
 		do{			
 			if(E.gibloesungsschritte()!= null){
-				ArrayList<ArrayList<ArrayList<Double>>> l = E.gibloesungsschritte();
+				ArrayList<Loesungskurve> l = E.gibloesungsschritte();
 
 				if(l.size() > 1){
 					//Beschraenkung der Loesungsschritte
@@ -131,10 +131,12 @@ public class SchroedingerIntegration {
 			g.ks.get(1).solution.add(E.getSolution());
 			energies.add(E.getEnergy()/e);
 
-		
+	
 			count ++;
 			Einstellungen.berechneteNiveaus++;
 		}while(E.step()&&count<Einstellungen.maxNiveaus);
+		
+		
 			t1 = new Thread(){
 			public void run(){
 				long initsleeptime = 100;

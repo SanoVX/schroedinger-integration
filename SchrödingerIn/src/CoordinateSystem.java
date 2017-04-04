@@ -22,8 +22,8 @@ public class CoordinateSystem {
 	ArrayList<Double> energy = new ArrayList<>();
 	ArrayList<Double> solEnergy = new ArrayList<>();
 
-	ArrayList<ArrayList<ArrayList<ArrayList<Double>>>> simulation = new ArrayList<>();
-	ArrayList<ArrayList<ArrayList<Double>>> solution = new ArrayList<>();
+	ArrayList<ArrayList<Loesungskurve>> simulation = new ArrayList<>();
+	ArrayList<Loesungskurve> solution = new ArrayList<>();
 	
 	double xmin = 0;
 	double xmax = 0;

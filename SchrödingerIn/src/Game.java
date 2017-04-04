@@ -45,8 +45,8 @@ public class Game extends JPanel{
 	}
 	
 	
-	public ArrayList<ArrayList<Double>> copyList(ArrayList<ArrayList<Double>> funkt , int currRange){
-		ArrayList<ArrayList<Double>> rfunkt = new ArrayList<>();
+	public Loesungskurve copyList(Loesungskurve funkt , int currRange){
+		Loesungskurve rfunkt = new Loesungskurve(funkt.getEnergie());
 		for(int i = 0; i < funkt.size() && i < currRange; i++){
 			rfunkt.add(funkt.get(i));
 		}
@@ -73,7 +73,7 @@ public class Game extends JPanel{
 			funktNr += 1;
 		}	
 		if(ks.get(0).simulation.get(s).size() < funktNr+1){
-			ks.get(1).addMeasures(ks.get(1).solution.get(s));
+			ks.get(1).addMeasures(ks.get(1).solution.get(s).toArrayList());
 			ks.get(1).addEnergy(ks.get(1).solEnergy.get(s));
 			if(s < ks.get(1).solution.size() -1){
 				s += 1;
@@ -87,14 +87,14 @@ public class Game extends JPanel{
 		currRange += calcTime;
 		for(int j = 0; j < ks.get(0).simulation.get(s).size() && j <= funktNr; j++){
 			ks.get(0).xmax = (ks.get(0).simulation.get(s).get(funktNr -1).get(ks.get(0).simulation.get(s).get(funktNr -1).size()-1).get(0));
-			ArrayList<ArrayList<Double>> add = copyList(ks.get(0).simulation.get(s).get(funktNr -1), currRange);
+			Loesungskurve add = copyList(ks.get(0).simulation.get(s).get(funktNr -1), currRange);
 			if(ks.get(0).simulation.get(s).get(funktNr -1).size() < currRange){
 				currRange = 0;
 			}
 			if(ks.get(0).measure.size() > 0 && currRange != 0){
 				ks.get(0).measure.remove(ks.get(0).measure.size()-1);
 			}
-			ks.get(0).addMeasures(add);
+			ks.get(0).addMeasures(add.toArrayListOhneEnergie());
 			
 		}
 		
@@ -154,8 +154,9 @@ public class Game extends JPanel{
 	}
 	}
 	
-	public void normalize(ArrayList<ArrayList<ArrayList<Double>>> list){
+	public void normalize(ArrayList<Loesungskurve> list){
 		double max = 0;
+		ArrayList<Double> energies = new ArrayList<>();
 		for(int s = 0; s < list.size(); s++){
 			if(list.get(s).get(0).get(1) != 0 && list.get(0).get(s).get(1)>list.get(s).get(1).get(1)){
 				max = list.get(s).get(0).get(1);

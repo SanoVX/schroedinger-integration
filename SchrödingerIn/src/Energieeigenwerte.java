@@ -12,10 +12,10 @@ public class Energieeigenwerte {
 	private boolean searched;
 	
 	/**Loesung fuer die Wellenfunktion psi*/
-	private ArrayList<ArrayList<Double>> solution = new ArrayList<>();
+	private Loesungskurve solution = new Loesungskurve();
 	
 	/**Speicher fuer den Loesungsweg*/
-	private ArrayList<ArrayList<ArrayList<Double>>> loesungsschritte = new ArrayList<>();
+	private ArrayList<Loesungskurve> loesungsschritte;
 	
 	//Import der Konstanten
 	private double h = Einstellungen.h; // wirkungsquantum
@@ -46,7 +46,9 @@ public class Energieeigenwerte {
 		
 		loesungsschritte = new ArrayList<>();
 		//loesungsschritte.clear();
-		ArrayList<ArrayList<ArrayList<Double>>> loesungsblock = new ArrayList<>();
+		ArrayList<Loesungskurve> loesungsblock = new ArrayList<>();
+		
+		boolean first = true;
 		
 		for(int i = 1; i< Einstellungen.accuracy; i++){
 			int change_sign = (-1)*recursion();
@@ -57,22 +59,26 @@ public class Energieeigenwerte {
 					loesungsschritte = null;
 					return false;
 				}
-				int size = solution.size();
-				
-				
+
 				for(int j=0;j<solution.size();j++){
 					if(solution.get(j).get(1)>1E-7){
 						solution.remove(j);
 					}
 				}
+				
+
 								
-			
 				/*for(int j = 0; j< solution.size(); j++){
 					solution.get(j).set(1, solution.get(j).get(1)+E_current/e);
 				}*/
-				
 
-				loesungsblock.add(solution);
+				solution.setEnergie(E_current);
+				
+				if(first){
+					first = false;
+				}else{
+					loesungsblock.add(solution);
+				}
 				
 			}
 			int size = solution.size();
@@ -81,13 +87,11 @@ public class Energieeigenwerte {
 				solution.remove(j);
 			}
 			
-			cutoff(solution);
+			solution.cutoff(0.1, potential.getBorder(E_current));
+						
+			solution.normalizeMaximum();
 			
-			if(Einstellungen.normalizeIntegral){
-				normalizeIntegral(solution);
-			}else{
-				normalizeMaximum(solution);
-			}
+			solution.setEnergie(E_current);
 			
 			if(loesungsblock.size()>4){
 				int size2 = loesungsblock.size();
@@ -120,7 +124,7 @@ public class Energieeigenwerte {
 	 */
 	private int recursion(){
 		double border = potential.getBorder(E_current);
-		ArrayList<ArrayList<Double>> temp = new ArrayList<>();
+		Loesungskurve temp = new Loesungskurve();
 		//xrange = -e/(4*pi*e0*E);
 		double step = xrange/Einstellungen.steps;
 		//Anfangsbedingungen
@@ -167,50 +171,7 @@ public class Energieeigenwerte {
 		return 0;
 	}	
 	
-	private void normalizeIntegral(ArrayList<ArrayList<Double>> solution){
-		double integral = 0;
-		for(int i = 0; i<solution.size();i++){
-			integral+=(solution.get(i).get(1))*(solution.get(i).get(1))*xrange/10000;
-		}
-		
-		for(int i = 0; i < solution.size(); i++){
-			solution.get(i).set(1, solution.get(i).get(1)/(integral*1E8));
-			solution.get(i).set(1,solution.get(i).get(1) + E_current/e);
-		}
-	}
 	
-	private void normalizeMaximum(ArrayList<ArrayList<Double>> solution){
-		double max = 0;
-		for(int i = 0; i<solution.size();i++){
-			if(Math.abs(solution.get(i).get(1)) > max){
-				max = Math.abs(solution.get(i).get(1));
-			}
-		}
-		for(int i = 0; i < solution.size(); i++){
-			solution.get(i).set(1, solution.get(i).get(1)/(max));
-			solution.get(i).set(1,solution.get(i).get(1) + E_current/e);
-		}
-	}
-	
-	public void cutoff(ArrayList<ArrayList<Double>> solution){
-		double epsilon = 0.1;
-		int counter = 0;
-		double border = potential.getBorder(E_current);
-		
-		for(int i = 0; i < solution.size(); i++){
-			if(counter >50||solution.get(i).get(1)>1E4){
-				for(int j = solution.size()-1; j > i; j--){
-					solution.remove(j);
-				}
-				break;
-			}
-			if(solution.get(i).get(0)>border && Math.abs(solution.get(i).get(1))<epsilon){
-				counter++;
-			}else{
-				counter = 0;
-			}
-		}
-	}
 	
 	/**
 	 * Berechnung der Proportionalitaetskonstanten
@@ -241,19 +202,9 @@ public class Energieeigenwerte {
 	 * @return: Loesungskurve, falls bereits gesucht;
 	 * 			<code>null</code>, falls noch nicht gesucht
 	 */
-	public ArrayList<ArrayList<Double>> getSolution(){
+	public Loesungskurve getSolution(){
 		if(searched){
-			int size = solution.size();
-			for(int i = 1; i<solution.size();i+=2){
-				ArrayList<Double>  S = new ArrayList<>();
-				S.add(-solution.get(i).get(0));
-				if(Einstellungen.ungerade){
-					S.add(2*E_current/e-solution.get(i).get(1));
-				}else{
-					S.add(solution.get(i).get(1));
-				}
-				solution.add(0,S);
-			}
+			solution.mirror(Einstellungen.ungerade);
 			return solution;
 		}else{
 			return null;
@@ -272,15 +223,9 @@ public class Energieeigenwerte {
 	
 	/**
 	 * Gibt alle Loesungsschritte aus
-	 * Format:
-	 * - 1. Iteration:  1.Kurve
-	 * 					2.Kruve
-	 * 					3.Kurve ...
-	 * - 2. Iteration: 	1.Kurve
-	 * 					2.Kurve ...
-	 * @return Loesungsschritte
+	 * @return Arraylist von Loesungskurven
 	 */
-	public ArrayList<ArrayList<ArrayList<Double>>> gibloesungsschritte(){
+	public ArrayList<Loesungskurve> gibloesungsschritte(){
 		if(searched){
 			return loesungsschritte;
 		}else{
