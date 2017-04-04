@@ -69,7 +69,7 @@ public class SchroedingerIntegration {
 			}
 			do{			
 				if(E.gibloesungsschritte()!= null){
-					ArrayList<ArrayList<ArrayList<Double>>> l = E.gibloesungsschritte().get(0);
+					ArrayList<ArrayList<ArrayList<Double>>> l = E.gibloesungsschritte();
 
 					if(l.size() > 5){
 						//Beschraenkung der Loesungsschritte
@@ -107,7 +107,7 @@ public class SchroedingerIntegration {
 		}
 		do{			
 			if(E.gibloesungsschritte()!= null){
-				ArrayList<ArrayList<ArrayList<Double>>> l = E.gibloesungsschritte().get(0);
+				ArrayList<ArrayList<ArrayList<Double>>> l = E.gibloesungsschritte();
 
 				if(l.size() > 1){
 					//Beschraenkung der Loesungsschritte

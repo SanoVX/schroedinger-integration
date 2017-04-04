@@ -15,7 +15,7 @@ public class Energieeigenwerte {
 	private ArrayList<ArrayList<Double>> solution = new ArrayList<>();
 	
 	/**Speicher fuer den Loesungsweg*/
-	private ArrayList<ArrayList<ArrayList<ArrayList<Double>>>> loesungsschritte = new ArrayList<>();
+	private ArrayList<ArrayList<ArrayList<Double>>> loesungsschritte = new ArrayList<>();
 	
 	//Import der Konstanten
 	private double h = Einstellungen.h; // wirkungsquantum
@@ -44,12 +44,9 @@ public class Energieeigenwerte {
 		E_current += 0.00001*e;
 		double E_start = E_current;
 		
-		if(loesungsschritte == null){
-			loesungsschritte = new ArrayList<>();
-		}
-		loesungsschritte.clear();
+		loesungsschritte = new ArrayList<>();
+		//loesungsschritte.clear();
 		ArrayList<ArrayList<ArrayList<Double>>> loesungsblock = new ArrayList<>();
-		ArrayList<ArrayList<Double>>solutionTemp = new ArrayList<>();
 		
 		for(int i = 1; i< Einstellungen.accuracy; i++){
 			int change_sign = (-1)*recursion();
@@ -69,10 +66,9 @@ public class Energieeigenwerte {
 					}
 				}
 								
-				cutoff(solution);
-				
+			
 				/*for(int j = 0; j< solution.size(); j++){
-					solution.get(j).set(1, solution.get(j).get(1)+E_start/e);
+					solution.get(j).set(1, solution.get(j).get(1)+E_current/e);
 				}*/
 				
 
@@ -80,19 +76,6 @@ public class Energieeigenwerte {
 				
 			}
 			int size = solution.size();
-			
-			solutionTemp = new ArrayList<>();
-			for(int a = 0; a<solution.size();a++){
-				solutionTemp.add(new ArrayList<>(solution.get(a)));	
-			}
-						
-			for(int j=size-1;j>size-700 && j>1;j--){
-				solutionTemp.remove(j);
-			}
-			
-			cutoff(solutionTemp);
-	
-			loesungsblock.add(solutionTemp);
 			
 			for(int j=size-1;j>size-100 && j>1;j--){
 				solution.remove(j);
@@ -105,18 +88,22 @@ public class Energieeigenwerte {
 			}else{
 				normalizeMaximum(solution);
 			}
+			
+			if(loesungsblock.size()>4){
+				int size2 = loesungsblock.size();
+				for(int k=size2-2; k>=1;k--){
+					if(k%4 != 0){
+						loesungsblock.remove(k);
+					}
+				}
+			}
 
-			loesungsschritte.add(loesungsblock);
+			loesungsschritte.addAll(loesungsblock);
 			loesungsblock = new ArrayList<>();
 			E_current -= Math.pow(10,-i)*e;
 		}
 		
-		loesungsschritte.get(0).add(solutionTemp);
-		loesungsschritte.get(0).add(solutionTemp);
-
-
-		
-				
+			
 		searched = true;
 		if(E_current>E_max){
 			return false;
@@ -293,7 +280,7 @@ public class Energieeigenwerte {
 	 * 					2.Kurve ...
 	 * @return Loesungsschritte
 	 */
-	public ArrayList<ArrayList<ArrayList<ArrayList<Double>>>> gibloesungsschritte(){
+	public ArrayList<ArrayList<ArrayList<Double>>> gibloesungsschritte(){
 		if(searched){
 			return loesungsschritte;
 		}else{
