@@ -119,12 +119,10 @@ public class Game extends JPanel{
 			ks.get(0).ymax = 1;
 			ks.get(0).xmin = 0;
 			prepSimulationList = true;
-			/*for(int i = 1; i < ks.get(0).simulation.size(); i++){
-				ArrayList<ArrayList<Double>> k = ks.get(0).simulation.get(i).get(0);
-				ks.get(0).simulation.get(i-1).add(k);
+			for(int i = 1; i < ks.get(0).simulation.size(); i++){
 				ks.get(0).simulation.get(i).remove(0);
 				
-			}*/
+			}
 			}
 		}
 		
