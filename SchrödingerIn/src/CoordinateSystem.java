@@ -52,7 +52,7 @@ public class CoordinateSystem {
 	boolean yaxis = false;
 	
 	
-	Color[] colorList = {Color.RED, Color.BLUE, Color.GREEN, Color.ORANGE, Color.PINK};
+	Color[] colorList = {Color.PINK, Color.BLUE, Color.GREEN, Color.ORANGE, Color.MAGENTA,};
 
 	//plot
 	int plotThickness = 0;
@@ -175,7 +175,6 @@ public class CoordinateSystem {
 	// draws datapoints of the given list
 	public void drawMeasure(boolean errorbars , Graphics2D g){ // creates measured points
 		if(measure != null){
-			System.out.println("meas 1");
 			for(int s = 0; s < measure.size(); s++){
 				if(measure.get(s) != null){
 				double[][] mea = measure.get(s);
@@ -190,6 +189,9 @@ public class CoordinateSystem {
 				double px =(xsize/Math.abs(xmax - xmin));
 				double py =(ysize/Math.abs(ymax - ymin));
 				g.setColor(colorList[s%colorList.length]);
+				if(s == measure.size()-1){
+					g.setColor(Color.RED);
+				}
 				for(int i = 0; i < mea.length; i++){
 					//wertebereich anpassen
 					if(!noChange(calcxmin, calcxmax, calcymin, calcymax)){
