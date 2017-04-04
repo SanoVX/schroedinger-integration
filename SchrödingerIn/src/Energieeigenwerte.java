@@ -86,7 +86,7 @@ public class Energieeigenwerte {
 				solutionTemp.add(new ArrayList<>(solution.get(a)));	
 			}
 						
-			for(int j=size-1;j>size-1700 && j>1;j--){
+			for(int j=size-1;j>size-700 && j>1;j--){
 				solutionTemp.remove(j);
 			}
 			
