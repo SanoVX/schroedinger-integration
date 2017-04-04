@@ -86,7 +86,6 @@ public class Game extends JPanel{
 		}
 		currRange += calcTime;
 		for(int j = 0; j < ks.get(0).simulation.get(s).size() && j <= funktNr; j++){
-			int pos = ks.get(0).simulation.get(s).get(ks.get(0).simulation.get(s).size() -1).size();
 			ks.get(0).xmax = (ks.get(0).simulation.get(s).get(funktNr -1).get(ks.get(0).simulation.get(s).get(funktNr -1).size()-1).get(0));
 			ArrayList<ArrayList<Double>> add = copyList(ks.get(0).simulation.get(s).get(funktNr -1), currRange);
 			if(ks.get(0).simulation.get(s).get(funktNr -1).size() < currRange){
@@ -111,21 +110,21 @@ public class Game extends JPanel{
 		if(!prepSimulationList){//prepare simulation
 			if(ks.size() > 0){
 			for(int s = 0; s < ks.get(0).simulation.size(); s++){
-				for(int i = 0; i < ks.get(0).simulation.get(s).size(); i++){
-					normalize(ks.get(0).simulation.get(s).get(i));
-				}
+				
+				normalize(ks.get(0).simulation.get(s));
+				
 			}
 			ks.get(0).growingrange = false;
 			ks.get(0).ymin = -1;
 			ks.get(0).ymax = 1;
 			ks.get(0).xmin = 0;
 			prepSimulationList = true;
-			for(int i = 1; i < ks.get(0).simulation.size(); i++){
+			/*for(int i = 1; i < ks.get(0).simulation.size(); i++){
 				ArrayList<ArrayList<Double>> k = ks.get(0).simulation.get(i).get(0);
+				ks.get(0).simulation.get(i-1).add(k);
 				ks.get(0).simulation.get(i).remove(0);
-				ks.get(0).simulation.get(i-1).add(ks.get(1).solution.get(i-1));
 				
-			}
+			}*/
 			}
 		}
 		
@@ -157,21 +156,27 @@ public class Game extends JPanel{
 	}
 	}
 	
-	public void normalize(ArrayList<ArrayList<Double>> list){
+	public void normalize(ArrayList<ArrayList<ArrayList<Double>>> list){
 		double max = 0;
-		if(list.get(0).get(1) != 0 && list.get(0).get(1)>list.get(1).get(1)){
-			max = list.get(0).get(1);
-		}
-		for(int i = 0; i < list.size()-3; i++){
-			if((Math.abs(list.get(i).get(1)) < Math.abs(list.get(i+1).get(1))) && Math.abs(list.get(i+2).get(1)) < Math.abs(list.get(i+1).get(1))){
-				max = list.get(i+1).get(1);
+		for(int s = 0; s < list.size(); s++){
+			if(list.get(s).get(0).get(1) != 0 && list.get(0).get(s).get(1)>list.get(s).get(1).get(1)){
+				max = list.get(s).get(0).get(1);
+			}
+			for(int i = 0; i < list.get(s).size()-3; i++){
+			
+				if((Math.abs(list.get(s).get(i).get(1)) < Math.abs(list.get(s).get(i+1).get(1))) && Math.abs(list.get(s).get(i+2).get(1)) < Math.abs(list.get(s).get(i+1).get(1))){
+					max = list.get(s).get(i+1).get(1);
+				}
+			
 			}
 		}
 		max = Math.abs(max);
 		if(max > 0){
-		for(int i = 0; i < list.size(); i++){
-			list.get(i).set(1, list.get(i).get(1)/max);
-		}
+			for(int s = 0; s < list.size(); s++){
+				for(int i = 0; i < list.get(s).size(); i++){
+					list.get(s).get(i).set(1, list.get(s).get(i).get(1)/max);
+				}
+			}
 		}
 		
 		
