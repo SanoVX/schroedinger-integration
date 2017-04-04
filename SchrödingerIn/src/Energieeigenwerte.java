@@ -49,6 +49,7 @@ public class Energieeigenwerte {
 		}
 		loesungsschritte.clear();
 		ArrayList<ArrayList<ArrayList<Double>>> loesungsblock = new ArrayList<>();
+		ArrayList<ArrayList<Double>>solutionTemp = new ArrayList<>();
 		
 		for(int i = 1; i< Einstellungen.accuracy; i++){
 			int change_sign = (-1)*recursion();
@@ -73,18 +74,19 @@ public class Energieeigenwerte {
 				/*for(int j = 0; j< solution.size(); j++){
 					solution.get(j).set(1, solution.get(j).get(1)+E_start/e);
 				}*/
+				
 
 				loesungsblock.add(solution);
 				
 			}
 			int size = solution.size();
 			
-			ArrayList<ArrayList<Double>>solutionTemp = new ArrayList<>();
+			solutionTemp = new ArrayList<>();
 			for(int a = 0; a<solution.size();a++){
-				solutionTemp.add(new ArrayList<>(solution.get(a)));		
+				solutionTemp.add(new ArrayList<>(solution.get(a)));	
 			}
 						
-			for(int j=size-1;j>size-700 && j>1;j--){
+			for(int j=size-1;j>size-1700 && j>1;j--){
 				solutionTemp.remove(j);
 			}
 			
@@ -109,6 +111,12 @@ public class Energieeigenwerte {
 			E_current -= Math.pow(10,-i)*e;
 		}
 		
+		loesungsschritte.get(0).add(solutionTemp);
+		loesungsschritte.get(0).add(solutionTemp);
+
+
+		
+				
 		searched = true;
 		if(E_current>E_max){
 			return false;
