@@ -88,6 +88,10 @@ public class Game extends JPanel{
 		for(int j = 0; j < ks.get(0).simulation.get(s).size() && j <= funktNr; j++){
 			ks.get(0).xmax = (ks.get(0).simulation.get(s).get(funktNr -1).get(ks.get(0).simulation.get(s).get(funktNr -1).size()-1).get(0));
 			Loesungskurve add = copyList(ks.get(0).simulation.get(s).get(funktNr -1), currRange);
+			double energy = add.getEnergie()/Einstellungen.e;
+			ks.get(0).ymin = -1 + energy;
+			ks.get(0).ymax = 1 + energy;
+			ks.get(0).headline = "Seachring for energy level at " + energy + " eV";
 			if(ks.get(0).simulation.get(s).get(funktNr -1).size() < currRange){
 				currRange = 0;
 			}
@@ -114,9 +118,9 @@ public class Game extends JPanel{
 				normalize(ks.get(0).simulation.get(s));
 				
 			}
-			ks.get(0).growingrange = false;
 			ks.get(0).ymin = -1;
 			ks.get(0).ymax = 1;
+			ks.get(0).growingrange = false;
 			ks.get(0).xmin = 0;
 			prepSimulationList = true;
 			for(int i = 1; i < ks.get(0).simulation.size(); i++){
@@ -173,7 +177,7 @@ public class Game extends JPanel{
 		if(max > 0){
 			for(int s = 0; s < list.size(); s++){
 				for(int i = 0; i < list.get(s).size(); i++){
-					list.get(s).get(i).set(1, list.get(s).get(i).get(1)/max);
+					list.get(s).get(i).set(1, list.get(s).get(i).get(1)/max + list.get(s).getEnergie()/Einstellungen.e);
 				}
 			}
 		}
