@@ -1,7 +1,9 @@
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Random;
@@ -213,26 +215,27 @@ public class CoordinateSystem {
 						}else{
 							if(i != 0){
 								//better thickness
-								double[] vect = {mea[i][0]-mea[i-1][0], mea[i][1]-mea[i-1][1]};
-								double xcomp = -vect[1];
-								double ycomp = vect[0];
-								double length = Math.sqrt(Math.pow(xcomp, 2)+Math.pow(ycomp, 2));
-								if(length != 0){
-									xcomp /= length;
-									ycomp /= length;
-								}
-								for(int j = -plotThickness; Math.abs(j) <= plotThickness+1; j++){//for thickness
+//								double[] vect = {mea[i][0]-mea[i-1][0], mea[i][1]-mea[i-1][1]};
+//								double xcomp = -vect[1];
+//								double ycomp = vect[0];
+//								double length = Math.sqrt(Math.pow(xcomp, 2)+Math.pow(ycomp, 2));
+//								if(length != 0){
+//									xcomp /= length;
+//									ycomp /= length;
+//								}
+//								for(int j = -plotThickness; Math.abs(j) <= plotThickness+1; j++){//for thickness
 									int xr = (int)(xpos + mea[i][0]*px + (-xmin)*px);
-									xr += (int)(xcomp*j);
 									int yr = (int)(ypos + ysize -mea[i][1]*py+(ymin)*py);
-									yr += (int)(ycomp*j);
 									int xl = (int)(xpos + mea[i-1][0]*px + (-xmin)*px);
-									xl += (int)(xcomp*j);
 									int yl = (int)(ypos + ysize -mea[i-1][1]*py+(ymin)*py);
-									yl += (int)(ycomp*j);
-									drawLogic(g, xl, yl, xr,yr);
 									
-								}
+									Stroke stroke = new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER);
+									Stroke oldStroke = g.getStroke();
+									
+									g.setStroke(stroke);
+									drawLogic(g, xl, yl, xr,yr);
+									g.setStroke(oldStroke);
+//								}
 		
 							}
 						}

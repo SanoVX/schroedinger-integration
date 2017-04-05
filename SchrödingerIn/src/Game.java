@@ -91,7 +91,7 @@ public class Game extends JPanel{
 			double energy = add.getEnergie()/Einstellungen.e;
 			ks.get(0).ymin = -1 + energy;
 			ks.get(0).ymax = 1 + energy;
-			ks.get(0).headline = "Seachring for energy level at " + energy + " eV";
+			ks.get(0).headline = "Seachring for booty level at " + energy + " eV";
 			if(ks.get(0).simulation.get(s).get(funktNr -1).size() < currRange){
 				currRange = 0;
 			}
@@ -135,7 +135,7 @@ public class Game extends JPanel{
 			if(ks.size() > 0){
 			ks.get(0).yaxis = true;
 			ks.get(0).legend = new String[1];
-			ks.get(0).legend[0] = "Rechengeschwindigkeit = "+ calcTime;
+			ks.get(0).legend[0] = "Rechengeschwindigkeit = "+ calcTime + " Bratwürste";
 			}
 		}
 
