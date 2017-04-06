@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class CoordinateSystem {
-
+//
 	Game game;
 	int xpos;
 	int ypos;
