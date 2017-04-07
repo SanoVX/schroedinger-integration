@@ -334,7 +334,18 @@ public class CoordinateSystem {
 		}
 		
 	}
+	
+	public boolean inBounds(int xmin, int xmax, int ymin, int ymax, int xminBound, int xmaxBound, int yminBound, int ymaxBound){
+		System.out.println(xmin + " " + xmax + " " + ymin + " "+ ymax);
+		if(xmin >= xminBound && xmax <= xmaxBound){
+			if(ymin >= yminBound && ymax <= ymaxBound){
+				return true;
+			}
+		}
+		return false;
+	}
 
+	
 	public void drawKSy(Graphics2D g, double xmin, double xmax, double ymin, double ymax){
 		g.setColor(Color.BLACK);
 		double px =(xsize/Math.abs(xmax - xmin));
@@ -347,13 +358,30 @@ public class CoordinateSystem {
 		for(double i = xmin; i <= xmax ; i+=(Math.abs((xmax-xmin)))/((double)10)){
 			String str = KsDigit(i, 2); 
 			double k = ((double)px)*i;
+
+			int lineLength = (int)(1/100.0*ysize);
 			int x = (int)(xpos -xmin*px +k-g.getFontMetrics().stringWidth(str)/2);
-			int y = ypos + ysize+g.getFontMetrics().getHeight();
+			int y = ypos + ysize+g.getFontMetrics().getHeight() + lineLength;
+			int xend = x + g.getFontMetrics().stringWidth(str);
+			int yend = ypos + ysize + lineLength ;
+			/*while(!inBounds(x,xend,yend,y,(int)(xpos - (i+1) * xsize/20.0),(int)(xpos + (i+1) * xsize/20.0),yend,(int)(yend + 1/5.0*(ybounds[1])-yend))){
+				System.out.println(numberTextSize);
+				if(numberTextSize - 1 >= 7){
+				numberTextSize -= 1;
+				}else{
+					break;
+				}
+				g.setFont(new Font("TimesRoman", Font.PLAIN, numberTextSize));
+				x = (int)(xpos -xmin*px +k-g.getFontMetrics().stringWidth(str)/2);
+				y = ypos + ysize+g.getFontMetrics().getHeight() + lineLength;
+				xend = x + g.getFontMetrics().stringWidth(str);
+				yend = ypos + ysize + lineLength;
+			}*/
 			g.drawString(str, x, y);
 			int x1 = (int)(xpos -xmin*px +k);
-			int y1 = ypos + ysize - 5;
+			int y1 = ypos + ysize - lineLength;
 			int x2 = (int)(xpos -xmin*px +k);
-			int y2 = ypos + ysize + 5;
+			int y2 = ypos + ysize + lineLength;
 			g.drawLine(x1, y1, x2, y2);
 			
 		}

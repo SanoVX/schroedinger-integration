@@ -135,7 +135,7 @@ public class Game extends JPanel{
 			if(ks.size() > 0){
 			ks.get(0).yaxis = true;
 			ks.get(0).legend = new String[1];
-			ks.get(0).legend[0] = "Rechengeschwindigkeit = "+ calcTime + " Bratwürste";
+			ks.get(0).legend[0] = "Rechengeschwindigkeit = "+ calcTime;
 			}
 		}
 
