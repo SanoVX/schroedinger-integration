@@ -285,6 +285,7 @@ public class Hauptfenster extends JFrame {
 		btnFaster.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				g.unchanged = false;
 				g.calcTime += 10;
 				if(g.calcTime>500){
 					btnFaster.setEnabled(false);
@@ -299,6 +300,7 @@ public class Hauptfenster extends JFrame {
 		btnSlower.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e){
+				g.unchanged = false;
 				g.calcTime -= 10;
 				if(g.calcTime<20){
 					btnSlower.setEnabled(false);
@@ -313,6 +315,7 @@ public class Hauptfenster extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e){
 				if(buttonPause.getText().equals("Pause")){
+					g.unchanged = false;
 					calcOld = g.calcTime;
 					g.calcTime = 0;
 					btnFaster.setEnabled(false);

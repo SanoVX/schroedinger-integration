@@ -26,12 +26,14 @@ public class Game extends JPanel{
 	boolean simulated = false;
 	boolean end = false;
 	boolean prepSimulationList = false;
+	boolean unchanged = true;
 	
 	int funktNr = 1;
 	int currRange = 0;
 	int s = 0;
 	
 	public void reset(){
+		unchanged = true;
 		finished = false;
 		init = false;
 		firstPaint = true;
@@ -87,12 +89,20 @@ public class Game extends JPanel{
 		currRange += calcTime;
 		for(int j = 0; j < ks.get(0).simulation.get(s).size() && j <= funktNr; j++){
 			ks.get(0).xmax = (ks.get(0).simulation.get(s).get(funktNr -1).get(ks.get(0).simulation.get(s).get(funktNr -1).size()-1).get(0));
+			if(unchanged){
+				calcTime = (int) (ks.get(0).simulation.get(s).get(funktNr -1).size()/50.0);
+				if(calcTime < 1){
+					calcTime = 1;
+				}
+			}
 			Loesungskurve add = copyList(ks.get(0).simulation.get(s).get(funktNr -1), currRange);
 			double energy = add.getEnergie()/Einstellungen.e;
-			ks.get(0).ymin = -1 + energy;
-			ks.get(0).ymax = 1 + energy;
+			ks.get(0).ymin = -1.5 + energy;
+			ks.get(0).ymax = 1.5 + energy;
 			ks.get(0).headline = "Seachring for energy level at " + energy + " eV";
-			if(ks.get(0).simulation.get(s).get(funktNr -1).size() < currRange){
+			double y = ks.get(0).simulation.get(s).get(funktNr -1).get(currRange).get(1);
+			if(ks.get(0).simulation.get(s).get(funktNr -1).size() < currRange || (y < ks.get(0).ymin || y > ks.get(0).ymax)){
+				add = copyList(ks.get(0).simulation.get(s).get(funktNr -1), ks.get(0).simulation.get(s).get(funktNr -1).size());
 				currRange = 0;
 			}
 			if(ks.get(0).measure.size() > 0 && currRange != 0){
@@ -106,7 +116,6 @@ public class Game extends JPanel{
 	
 	
 	public void paintComponent(Graphics g) {
-		System.out.println("runnign");
 		super.paintComponent(g);
 		if(ks.size() > 0){
 		Graphics2D g2d = (Graphics2D) g;
@@ -177,7 +186,14 @@ public class Game extends JPanel{
 		if(max > 0){
 			for(int s = 0; s < list.size(); s++){
 				for(int i = 0; i < list.get(s).size(); i++){
-					list.get(s).get(i).set(1, list.get(s).get(i).get(1)/max + list.get(s).getEnergie()/Einstellungen.e);
+					/*if(list.get(s).get(i).get(1)/max > 1){
+						for(int j = i; j < list.get(s).size(); j++){
+							list.get(s).remove(j);
+						}
+						break;
+					}*/
+						list.get(s).get(i).set(1, list.get(s).get(i).get(1)/max + list.get(s).getEnergie()/Einstellungen.e);
+					
 				}
 			}
 		}

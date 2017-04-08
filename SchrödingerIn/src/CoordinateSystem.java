@@ -356,6 +356,7 @@ public class CoordinateSystem {
 
 		g.setFont(new Font("TimesRoman", Font.PLAIN, numberTextSize));
 		for(double i = xmin; i <= xmax ; i+=(Math.abs((xmax-xmin)))/((double)10)){
+			if(i != 0){
 			String str = KsDigit(i, 2); 
 			double k = ((double)px)*i;
 
@@ -383,6 +384,7 @@ public class CoordinateSystem {
 			int x2 = (int)(xpos -xmin*px +k);
 			int y2 = ypos + ysize + lineLength;
 			g.drawLine(x1, y1, x2, y2);
+			}
 			
 		}
 
