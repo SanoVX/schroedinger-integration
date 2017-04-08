@@ -177,6 +177,9 @@ public class CoordinateSystem {
 	// draws datapoints of the given list
 	public void drawMeasure(boolean errorbars , Graphics2D g){ // creates measured points
 		if(measure != null){
+			//remove some list content
+
+			
 			for(int s = 0; s < measure.size(); s++){
 				if(measure.get(s) != null){
 				double[][] mea = measure.get(s);
@@ -190,7 +193,9 @@ public class CoordinateSystem {
 				double calcymax = ymax;
 				double px =(xsize/Math.abs(xmax - xmin));
 				double py =(ysize/Math.abs(ymax - ymin));
-				g.setColor(colorList[s%colorList.length]);
+				Color c = new Color(0, 0, 255, (int)(s/(double)(measure.size())*255));
+				g.setColor(c);
+				//g.setColor(colorList[s%colorList.length]);
 				if(s == measure.size()-1){
 					g.setColor(Color.RED);
 				}
