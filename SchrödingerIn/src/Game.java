@@ -106,9 +106,11 @@ public class Game extends JPanel{
 				currRange = 0;
 			}
 			if(ks.get(0).measure.size() > 0 && currRange != 0){
-				ks.get(0).measure.remove(ks.get(0).measure.size()-1);
+				ks.get(0).measure.remove(ks.get(0).measure.get(ks.get(0).measure.size()-1));
+				ks.get(0).measure.trimToSize();
 			}
 			ks.get(0).addMeasures(add.toArrayListOhneEnergie());
+			
 			
 		}
 		

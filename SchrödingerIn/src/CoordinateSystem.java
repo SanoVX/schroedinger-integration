@@ -178,8 +178,14 @@ public class CoordinateSystem {
 	public void drawMeasure(boolean errorbars , Graphics2D g){ // creates measured points
 		if(measure != null){
 			//remove some list content
-
+			int kmax = 0;
+			for(int s = 0; s < measure.size(); s++){
+				if(measure.get(s).length > 0){
+					kmax ++;
+				}
+			}
 			
+			int k = 0;
 			for(int s = 0; s < measure.size(); s++){
 				if(measure.get(s) != null){
 				double[][] mea = measure.get(s);
@@ -193,12 +199,19 @@ public class CoordinateSystem {
 				double calcymax = ymax;
 				double px =(xsize/Math.abs(xmax - xmin));
 				double py =(ysize/Math.abs(ymax - ymin));
-				Color c = new Color(0, 0, 255, (int)(s/(double)(measure.size())*255));
+				if(mea.length > 0){
+					k++;
+				}
+				
+				int alpha = (int)(Math.pow(1.5, k)/((double)(Math.pow(1.5,kmax)))*255);
+				
+				Color c = new Color(0, 0, 255, alpha);
 				g.setColor(c);
-				//g.setColor(colorList[s%colorList.length]);
 				if(s == measure.size()-1){
+					alpha = 255;
 					g.setColor(Color.RED);
 				}
+				if(alpha > 10){
 				for(int i = 0; i < mea.length; i++){
 					//wertebereich anpassen
 					if(!noChange(calcxmin, calcxmax, calcymin, calcymax)){
@@ -245,6 +258,7 @@ public class CoordinateSystem {
 							}
 						}
 					}
+				}
 				}
 			}
 		}
