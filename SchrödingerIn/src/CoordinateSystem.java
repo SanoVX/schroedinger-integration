@@ -232,16 +232,6 @@ public class CoordinateSystem {
 
 						}else{
 							if(i != 0){
-								//better thickness
-//								double[] vect = {mea[i][0]-mea[i-1][0], mea[i][1]-mea[i-1][1]};
-//								double xcomp = -vect[1];
-//								double ycomp = vect[0];
-//								double length = Math.sqrt(Math.pow(xcomp, 2)+Math.pow(ycomp, 2));
-//								if(length != 0){
-//									xcomp /= length;
-//									ycomp /= length;
-//								}
-//								for(int j = -plotThickness; Math.abs(j) <= plotThickness+1; j++){//for thickness
 									int xr = (int)(xpos + mea[i][0]*px + (-xmin)*px);
 									int yr = (int)(ypos + ysize -mea[i][1]*py+(ymin)*py);
 									int xl = (int)(xpos + mea[i-1][0]*px + (-xmin)*px);
@@ -251,9 +241,15 @@ public class CoordinateSystem {
 									Stroke oldStroke = g.getStroke();
 									
 									g.setStroke(stroke);
-									drawLogic(g, xl, yl, xr,yr);
+									if(growingrange){
+										drawLogic(g, xl, yl, xr,yr);
+									}
+									else{
+										if(yr >= ypos && yr <= ypos+ysize){
+										g.drawLine(xl,yl,xr,yr);
+										}
+									}
 									g.setStroke(oldStroke);
-//								}
 		
 							}
 						}
@@ -638,7 +634,7 @@ public class CoordinateSystem {
 			}
 			g.drawLine(xl,yl,(int)xe,(int)ye);
 		}
-		if(!inKs(xr,yr,xl,yl) && growingrange){
+		if(!inKs(xr,yr,xl,yl)){
 			//improve
 			double[] vect = {xr-xl, yr-yl};
 			double a = Math.pow(vect[0],2)+Math.pow(vect[1],2);
