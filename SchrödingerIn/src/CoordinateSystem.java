@@ -610,65 +610,90 @@ public class CoordinateSystem {
 	public void drawLogic(Graphics2D g, int xl, int yl, int xr, int yr){
 		if(inKs(xr,yr,xl,yl)){
 			g.drawLine(xl,yl,xr,yr);
-		}if(inKs(xr,yr,xpos,ypos) && !inKs(xr,yr,xl,yl)){
-			double[] vect = {xl-xr, yl-yr};
-			double a = Math.pow(vect[0],2)+Math.pow(vect[1],2);
-			double length = Math.pow(a, 0.5);
-			vect[0] = vect[0]/length;
-			vect[1] = vect[1]/length;
-			double xe = xr;
-			double ye = yr; 
-			while(inKs((int)xe, (int)ye, xpos, ypos)){
-				xe +=vect[0];
-				ye +=vect[1];
-			}
-			g.drawLine(xr,yr,(int)xe,(int)ye);
 		}
-		if(inKs(xl,yl,xpos,ypos)&& !inKs(xr,yr,xl,yl)){
-			double[] vect = {xr-xl, yr-yl};
-			double a = Math.pow(vect[0],2)+Math.pow(vect[1],2);
-			double length = Math.pow(a, 0.5);
-			vect[0] = vect[0]/length;
-			vect[1] = vect[1]/length;
-			double xe = xl;
-			double ye = yl; 
-			while(inKs((int)xe, (int)ye, xpos, ypos)){
-				xe += vect[0];
-				ye += vect[1];
-			}
-			g.drawLine(xl,yl,(int)xe,(int)ye);
-		}
-		if(!inKs(xr,yr,xl,yl) && growingrange){
-			//improve
-			double[] vect = {xr-xl, yr-yl};
-			double a = Math.pow(vect[0],2)+Math.pow(vect[1],2);
-			double length = Math.pow(a, 0.5);
-			vect[0] = vect[0]/length;
-			vect[1] = vect[1]/length;
-			double xe = xl;
-			double ye = yl; 
-			double bx = 0;
-			double by = 0;
-			double ex = 0;
-			double ey = 0;
-			boolean hit = false;
-			for(double i = 0; i < length; i ++){
-				xe += vect[0];
-				ye += vect[1];
-				if(inKs(xpos,ypos,(int)xe, (int)ye)){
-					hit = true;
-					bx = xe;
-					by = ye;
+		else{
+			double[] A = {xl, yl};
+			double[] Avec = {xr-xl, yr-yl};
+			double[][] ksVectors= {{xpos, ypos, xsize, 0},{xpos + xsize, ypos, 0, ysize},{xpos,ypos+ysize, xsize, 0},{xpos, ypos, 0, ysize}};
+			ArrayList<double[]> intersections = new ArrayList<>();
+			for(int i = 0; i < ksVectors.length; i++){
+				double[] values = calcIntersec(ksVectors[i],A,Avec,i);
+				if(values != null){
+					if(values[1] <= 1 && values[1] >= 0){
+						intersections.add(values);
+					}
 				}
-				if(!inKs(xpos,ypos,(int)xe, (int)ye) && hit){
-					ex = xe;
-					ey = ye;
-					g.drawLine((int)bx,(int)by,(int)ex,(int)ey);
-					i = length;
-				}
-				
 			}
+			if(intersections.size() > 1){
+			if(intersections.get(0)[0] >= 0 && intersections.get(0)[0] <= 1 && intersections.get(1)[0] >= 0 && intersections.get(1)[0] <= 1){
+					int x1 = (int)(A[0] + Avec[0]*intersections.get(0)[0]);
+					int y1 = (int)(A[1] + Avec[1]*intersections.get(0)[0]);
+					int x2 = (int)(A[0] + Avec[0]*intersections.get(1)[0]);
+					int y2 = (int)(A[1] + Avec[1]*intersections.get(1)[0]);
+					g.drawLine(x1,y1,x2,y2);
+			}
+
+			else if(intersections.get(0)[0] >= 0 && intersections.get(0)[0] <= 1){
+				if(inKs(xr,yr,xpos,ypos)){
+					int x1 = (int)(A[0] + Avec[0]*intersections.get(0)[0]);
+					int y1 = (int)(A[1] + Avec[1]*intersections.get(0)[0]);
+					g.drawLine(x1,y1,xr,yr);
+				}
+				if(inKs(xpos,ypos,xl,yl)){
+					int x1 = (int)(A[0] + Avec[0]*intersections.get(0)[0]);
+					int y1 = (int)(A[1] + Avec[1]*intersections.get(0)[0]);
+					g.drawLine(x1,y1,xl,yl);
+				}
+			}
+			else if(intersections.get(1)[0] >= 0 && intersections.get(1)[0] <= 1){
+				if(inKs(xr,yr,xpos,ypos)){
+					int x1 = (int)(A[0] + Avec[0]*intersections.get(1)[0]);
+					int y1 = (int)(A[1] + Avec[1]*intersections.get(1)[0]);
+					g.drawLine(x1,y1,xr,yr);
+				}
+				if(inKs(xpos,ypos,xl,yl)){
+					int x1 = (int)(A[0] + Avec[0]*intersections.get(1)[0]);
+					int y1 = (int)(A[1] + Avec[1]*intersections.get(1)[0]);
+					g.drawLine(x1,y1,xl,yl);
+				}
+			}
+			}
+			
+			
+			
+			
 		}
 	}
+	
+	public double[] calcIntersec(double[] A, double[] B, double[] Bvec, int i){ //first vektor kordinate system
+		double[] val = new double[3];
+		double kx = A[2];
+		double ky = A[3];
+		double px = Bvec[0];
+		double py = Bvec[1];
+		double bcx = Bvec[0]-A[0];
+		double bcy = Bvec[1]-A[1];
+		if(kx*py-ky*px != 0){
+		double lamda  = (bcx*py-bcy*px)/(kx*py-ky*px);
+		double mu;
+		if(px != 0){
+			mu =(bcx-ky*lamda)/-px;
+		}else{
+			mu = (bcy-ky*lamda)/(-py);
+		}
+		val[0] = mu;
+		val[1] = lamda;
+		val[2] = i;
+		return val;
+		
+		}
+		return null;
+		
+		
+		
+		
+	}
+	
+	
 	
 }
