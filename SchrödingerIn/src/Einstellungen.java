@@ -13,8 +13,6 @@ public class Einstellungen {
 	//Einstellungen zur Anzeige
 	/**Soll die Eigenwertberechnung angezeigt werden*/
 	public static boolean showCalculation = true;
-	/**mit integral normieren*/
-	public static boolean normalizeIntegral = false;
 	
 	//Einstellung fuer Berechnung
 	/**maximale Energie fuer die Suche*/

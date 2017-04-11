@@ -132,7 +132,7 @@ public class Potentialeinstellungen extends JFrame {
 		}else if(potential.getClass().getName().equals("Kasten")){
 			potentialAuswahl = Potentialarten.Kasten;
 			potOpt2.setSelected(true);
-		}else if(potential.getClass().getName().equals("PeriodicPotential")){
+		}else if(potential.getClass().getName().equals("UserFunction")){
 			potentialAuswahl = Potentialarten.benutzerdefiniert;
 			potOpt4.setSelected(true);
 		}else {

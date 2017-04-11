@@ -25,7 +25,7 @@ public class Simulationseinstellungen extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textAnzSuchEW;
-	private JCheckBox chckbxBerechnungAnzeigen, chckboxNorInt;
+	private JCheckBox chckbxBerechnungAnzeigen;
 	private JTextField textMaxAmpl;
 	private JLabel lblAmplitudengrenzeBeiEigenwertberechnung;
 	private JCheckBox rdbtnUngeradeNiveaus, rdbtnGeradeNiveaus;
@@ -95,10 +95,6 @@ public class Simulationseinstellungen extends JFrame {
 		btnAbbrechen.setBounds(109, 228, 107, 23);
 		contentPane.add(btnAbbrechen);
 		
-		chckboxNorInt = new JCheckBox("Normiere mit Integral");
-		chckboxNorInt.setBounds(5, 146, 172, 23);
-		contentPane.add(chckboxNorInt);
-		
 		textMaxAmpl = new JTextField();
 		textMaxAmpl.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -149,7 +145,6 @@ public class Simulationseinstellungen extends JFrame {
 	private void fertig() {
 		Einstellungen.maxNiveaus = Integer.parseUnsignedInt(textAnzSuchEW.getText());
 		Einstellungen.Amplitudengrenze = Double.parseDouble(textMaxAmpl.getText());
-		Einstellungen.normalizeIntegral = chckboxNorInt.isSelected();
 		Einstellungen.showCalculation = chckbxBerechnungAnzeigen.isSelected();
 		if(rdbtnUngeradeNiveaus.isSelected() && rdbtnGeradeNiveaus.isSelected()){
 			Einstellungen.alleNiveaus = true;
