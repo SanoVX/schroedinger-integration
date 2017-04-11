@@ -202,14 +202,22 @@ public class CoordinateSystem {
 				if(mea.length > 0){
 					k++;
 				}
-				
-				int alpha = (int)(Math.pow(1.5, k)/((double)(Math.pow(1.5,kmax)))*255);
+				int alpha = 255;
+				if(!growingrange){
+				alpha = (int)(Math.pow(1.5, k)/((double)(Math.pow(1.5,kmax)))*255);
 				
 				Color c = new Color(0, 0, 255, alpha);
 				g.setColor(c);
 				if(s == measure.size()-1){
 					alpha = 255;
 					g.setColor(Color.RED);
+				}
+				}
+				if(growingrange){
+					g.setColor(colorList[s%colorList.length]);
+					if(s == measure.size()-1){
+						g.setColor(Color.RED);
+					}
 				}
 				if(alpha > 10){
 				for(int i = 0; i < mea.length; i++){

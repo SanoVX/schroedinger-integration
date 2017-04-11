@@ -100,6 +100,9 @@ public class Game extends JPanel{
 			ks.get(0).ymin = -1.5 + energy;
 			ks.get(0).ymax = 1.5 + energy;
 			ks.get(0).headline = "Seachring for energy level at " + energy + " eV";
+			if(currRange -1 >= ks.get(0).simulation.get(s).get(funktNr -1).size()){
+				currRange = ks.get(0).simulation.get(s).get(funktNr -1).size() - 1;
+			}
 			double y = ks.get(0).simulation.get(s).get(funktNr -1).get(currRange).get(1);
 			if(ks.get(0).simulation.get(s).get(funktNr -1).size() < currRange || (y < ks.get(0).ymin || y > ks.get(0).ymax)){
 				add = copyList(ks.get(0).simulation.get(s).get(funktNr -1), ks.get(0).simulation.get(s).get(funktNr -1).size());
