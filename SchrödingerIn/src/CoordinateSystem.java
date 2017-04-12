@@ -180,8 +180,10 @@ public class CoordinateSystem {
 			//remove some list content
 			int kmax = 0;
 			for(int s = 0; s < measure.size(); s++){
+				if(measure.get(s) != null){
 				if(measure.get(s).length > 0){
 					kmax ++;
+				}
 				}
 			}
 			
@@ -203,9 +205,7 @@ public class CoordinateSystem {
 					k++;
 				}
 				int alpha = 255;
-				System.out.println(k + " " + measure.size());
 				if(!growingrange){
-					System.out.println(s);
 					alpha = (int)(Math.pow(1.5, k)/((double)(Math.pow(1.5,kmax)))*255);
 					
 					Color c = new Color(0, 0, 255, alpha);
@@ -216,15 +216,12 @@ public class CoordinateSystem {
 					}
 				}
 				if(growingrange){
-
-					System.out.println(s);
 					g.setColor(colorList[s%colorList.length]);
 					if(s == measure.size()-1){
 
 						Color c = new Color(255, 0, 0, 255);
 						g.setColor(c);
 					}
-					System.out.println(g.getColor());
 				}
 				if(alpha > 10 && mea.length > 0){
 				for(int i = 0; i < mea.length; i++){
@@ -252,19 +249,19 @@ public class CoordinateSystem {
 									int xl = (int)(xpos + mea[i-1][0]*px + (-xmin)*px);
 									int yl = (int)(ypos + ysize -mea[i-1][1]*py+(ymin)*py);
 									if(growingrange || yl >= ypos && yl <= ypos+ysize){
-									Stroke stroke = new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER);
-									Stroke oldStroke = g.getStroke();
+									//Stroke stroke = new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER);
+									//Stroke oldStroke = g.getStroke();
 									
-									g.setStroke(stroke);
+									//g.setStroke(stroke);
 									drawLogic(g, xl, yl, xr,yr);
-									g.setStroke(oldStroke);
+									//g.setStroke(oldStroke);
 									}else{
-										Stroke stroke = new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER);
-										Stroke oldStroke = g.getStroke();
+										//Stroke stroke = new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER);
+										//Stroke oldStroke = g.getStroke();
 										
-										g.setStroke(stroke);
+										//g.setStroke(stroke);
 										drawLogic(g, xl, yl, xr,yr);
-										g.setStroke(oldStroke);
+										//g.setStroke(oldStroke);
 										break;
 									}
 								}
