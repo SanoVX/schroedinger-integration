@@ -248,21 +248,20 @@ public class CoordinateSystem {
 									int yr = (int)(ypos + ysize -mea[i][1]*py+(ymin)*py);
 									int xl = (int)(xpos + mea[i-1][0]*px + (-xmin)*px);
 									int yl = (int)(ypos + ysize -mea[i-1][1]*py+(ymin)*py);
-									if(growingrange || yl >= ypos && yl <= ypos+ysize){
-									//Stroke stroke = new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER);
-									//Stroke oldStroke = g.getStroke();
-									
-									//g.setStroke(stroke);
-									drawLogic(g, xl, yl, xr,yr);
-									//g.setStroke(oldStroke);
-									}else{
-										//Stroke stroke = new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER);
-										//Stroke oldStroke = g.getStroke();
+									Stroke stroke = new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER);
+									Stroke oldStroke = g.getStroke();
+									if(growingrange){
+										g.setStroke(stroke);
+									}
+										if(growingrange || yl >= ypos && yl <= ypos+ysize){
 										
-										//g.setStroke(stroke);
 										drawLogic(g, xl, yl, xr,yr);
-										//g.setStroke(oldStroke);
-										break;
+										}else{
+											drawLogic(g, xl, yl, xr,yr);
+											break;
+										}
+									if(growingrange)
+										g.setStroke(oldStroke);
 									}
 								}
 							}
@@ -271,7 +270,7 @@ public class CoordinateSystem {
 				}
 				}
 			}
-		}
+		
 		
 		
 	}
