@@ -34,7 +34,7 @@ public class CoordinateSystem {
 	int recsize = 6; // size of rectangle representing the data point
 	
 	//legend
-	public int numberTextSize = 10;//
+	public int numberTextSize = 9;//
 	public String xlabel = " ";
 	public int xlabelFontSize = 20;
 	public String ylabel = " ";
@@ -518,7 +518,7 @@ public class CoordinateSystem {
 		// y Achse
 		str = ylabel;
 		g.setFont(new Font("TimesRoman", Font.PLAIN, ylabelFontSize));
-		x = xpos - g.getFontMetrics().getHeight()*2;
+		x = (int)(xbounds[0] + g.getFontMetrics().getHeight());
 		y = ypos + ysize/2 + g.getFontMetrics().stringWidth(str)/2;
 	    
 	    g.translate((float)x,(float)y);
