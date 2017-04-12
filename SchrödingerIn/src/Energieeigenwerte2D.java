@@ -149,7 +149,7 @@ public class Energieeigenwerte2D {
 		        frame.add(lbl);
 		        frame.setVisible(true);
 		        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				chart.saveToFile(new File("C:/Users/jneuser/Documents/test"+i+".png"));
+				chart.saveToFile(new File("test"+i+".png"));//TODO set correct path
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
