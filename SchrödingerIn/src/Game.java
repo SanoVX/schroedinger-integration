@@ -90,7 +90,7 @@ public class Game extends JPanel{
 		for(int j = 0; j < ks.get(0).simulation.get(s).size() && j <= funktNr; j++){
 			ks.get(0).xmax = (ks.get(0).simulation.get(s).get(funktNr -1).get(ks.get(0).simulation.get(s).get(funktNr -1).size()-1).get(0));
 			if(unchanged){
-				calcTime = (int) (ks.get(0).simulation.get(s).get(funktNr -1).size()/50.0);
+				calcTime = (int) (ks.get(0).simulation.get(s).get(funktNr -1).size()/30.0);
 				if(calcTime < 1){
 					calcTime = 1;
 				}

@@ -54,7 +54,7 @@ public class CoordinateSystem {
 	boolean yaxis = false;
 	
 	
-	Color[] colorList = {Color.PINK, Color.BLUE, Color.GREEN, Color.ORANGE, Color.MAGENTA,};
+	Color[] colorList = {Color.GREEN, Color.PINK, Color.BLUE, Color.ORANGE, Color.MAGENTA,};
 
 	//plot
 	int plotThickness = 0;
@@ -203,23 +203,30 @@ public class CoordinateSystem {
 					k++;
 				}
 				int alpha = 255;
+				System.out.println(k + " " + measure.size());
 				if(!growingrange){
-				alpha = (int)(Math.pow(1.5, k)/((double)(Math.pow(1.5,kmax)))*255);
-				
-				Color c = new Color(0, 0, 255, alpha);
-				g.setColor(c);
-				if(s == measure.size()-1){
-					alpha = 255;
-					g.setColor(Color.RED);
-				}
-				}
-				if(growingrange){
-					g.setColor(colorList[s%colorList.length]);
+					System.out.println(s);
+					alpha = (int)(Math.pow(1.5, k)/((double)(Math.pow(1.5,kmax)))*255);
+					
+					Color c = new Color(0, 0, 255, alpha);
+					g.setColor(c);
 					if(s == measure.size()-1){
+						alpha = 255;
 						g.setColor(Color.RED);
 					}
 				}
-				if(alpha > 10){
+				if(growingrange){
+
+					System.out.println(s);
+					g.setColor(colorList[s%colorList.length]);
+					if(s == measure.size()-1){
+
+						Color c = new Color(255, 0, 0, 255);
+						g.setColor(c);
+					}
+					System.out.println(g.getColor());
+				}
+				if(alpha > 10 && mea.length > 0){
 				for(int i = 0; i < mea.length; i++){
 					//wertebereich anpassen
 					if(!noChange(calcxmin, calcxmax, calcymin, calcymax)){
@@ -244,21 +251,23 @@ public class CoordinateSystem {
 									int yr = (int)(ypos + ysize -mea[i][1]*py+(ymin)*py);
 									int xl = (int)(xpos + mea[i-1][0]*px + (-xmin)*px);
 									int yl = (int)(ypos + ysize -mea[i-1][1]*py+(ymin)*py);
-									
+									if(growingrange || yl >= ypos && yl <= ypos+ysize){
 									Stroke stroke = new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER);
 									Stroke oldStroke = g.getStroke();
 									
 									g.setStroke(stroke);
-									if(growingrange){
-										drawLogic(g, xl, yl, xr,yr);
-									}
-									else{
-										if(yr >= ypos && yr <= ypos+ysize){
-										g.drawLine(xl,yl,xr,yr);
-										}
-									}
+									drawLogic(g, xl, yl, xr,yr);
 									g.setStroke(oldStroke);
-		
+									}else{
+										Stroke stroke = new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER);
+										Stroke oldStroke = g.getStroke();
+										
+										g.setStroke(stroke);
+										drawLogic(g, xl, yl, xr,yr);
+										g.setStroke(oldStroke);
+										break;
+									}
+								}
 							}
 						}
 					}
@@ -266,7 +275,7 @@ public class CoordinateSystem {
 				}
 			}
 		}
-		}
+		
 		
 	}
 	
