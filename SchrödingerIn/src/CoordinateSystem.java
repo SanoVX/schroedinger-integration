@@ -31,6 +31,12 @@ public class CoordinateSystem {
 	double xmax = 0;
 	double ymin = 0;
 	double ymax = 0;
+	
+	double lastxmin;
+	double lastxmax;
+	double lastymin;
+	double lastymax;
+	
 	int recsize = 6; // size of rectangle representing the data point
 	
 	//legend
@@ -248,6 +254,16 @@ public class CoordinateSystem {
 									int yr = (int)(ypos + ysize -mea[i][1]*py+(ymin)*py);
 									int xl = (int)(xpos + mea[i-1][0]*px + (-xmin)*px);
 									int yl = (int)(ypos + ysize -mea[i-1][1]*py+(ymin)*py);
+									while(xr == xl ){
+										i++;
+										if(i < mea.length){
+										xr = (int)(xpos + mea[i][0]*px + (-xmin)*px);
+										yr = (int)(ypos + ysize -mea[i][1]*py+(ymin)*py);
+										}else{
+											break;
+										}
+									}
+									
 									Stroke stroke = new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER);
 									Stroke oldStroke = g.getStroke();
 									if(growingrange){
@@ -263,6 +279,7 @@ public class CoordinateSystem {
 									if(growingrange)
 										g.setStroke(oldStroke);
 									}
+								
 								}
 							}
 						}
@@ -275,8 +292,18 @@ public class CoordinateSystem {
 		
 	}
 	
+	public boolean checkChange(){
+		if(lastxmin == xmin && lastxmax == xmax && lastymin == ymin && lastymax == ymax){
+			return true;
+		}
+		
+		return false;
+		
+	}
+	
 	// draws all funktions of the given list
 	public void drawFunktions(ArrayList<Funktion> funktions2,Graphics2D g){
+
 		if(funktions2 != null){
 			if(drawable){
 				double calcxmin = xmin;
@@ -289,8 +316,18 @@ public class CoordinateSystem {
 				for(int i = 0; i < funktions2.size(); i++){
 					g.setColor(Color.GRAY);
 					if(funktions2.get(i) != null){
+						/*if(!checkChange()){
+						if(growingrange){
+							System.out.println("test");
+						}
+						System.out.println(funktions2.get(i).xmin);*/
 						funktions2.get(i).refresh(this);
-						if(funktions2.get(i) != null && funktions2.get(i).plot != null){
+						/*lastxmin = xmin;
+						lastxmax = xmax;
+						lastymin = ymin;
+						lastymax = ymax;
+						}*/
+						if(funktions2.get(i).plot != null){
 							for(int j = 0; j+1 < funktions2.get(i).plot.size(); j++){
 								if(funktions2.get(i).plot.get(j) != null && funktions2.get(i).plot.get(j+1) != null){
 									if(!noChange(calcxmin, calcxmax, calcymin, calcymax)){

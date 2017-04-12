@@ -20,7 +20,7 @@ public class Einstellungen {
 	/**minimale Energie fuer die Suche*/
 	public static double E_min = -20*e;
 	/**maximale Anzahl an Energieniveaus*/
-	public static int maxNiveaus = 7;
+	public static int maxNiveaus = 4;
 	/**Grenze bei der Berechnung der Amplitude der Eigenfunktionen*/
 	public static double Amplitudengrenze = 1E4;
 	/**Genauigkeit der Energieeigenwerte*/
