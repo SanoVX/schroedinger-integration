@@ -30,7 +30,7 @@ public class Einstellungen {
 	/**ungerade Funktionen?*/
 	public static boolean ungerade = true;
 	/**gerade und ungerade Niveaus?*/
-	public static boolean alleNiveaus = false;
+	public static boolean alleNiveaus = true;
 
 	
 	//Steuerung des Hauptfensters

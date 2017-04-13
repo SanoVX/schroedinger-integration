@@ -8,7 +8,7 @@ public class SchroedingerIntegration {
 	private double e = Einstellungen.e;
 	
 	/**Potential fuer die Berechnung*/
-	public static Potential potential = new Coulomb(Einstellungen.e);
+	public static Potential potential = new CoulombL(Einstellungen.e);
 
 	private Game g;
 	private Thread t1;

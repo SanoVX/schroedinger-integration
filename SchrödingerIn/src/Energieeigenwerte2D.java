@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -25,6 +26,8 @@ public class Energieeigenwerte2D {
 	private double e = Einstellungen.e;
 	private double pi = Math.PI; 
 	private double e0 = Einstellungen.e0;
+	
+	private RealMatrix A,G,S;
 	
 	Potential c = new Parabel(0,1);
 	
@@ -69,7 +72,7 @@ public class Energieeigenwerte2D {
 		
 		double C = h*h/(8*pi*pi*u*step*step);
 		
-		RealMatrix A = MatrixUtils.createRealMatrix(a_max, a_max);
+		A = MatrixUtils.createRealMatrix(a_max, a_max);
 				
 		System.out.println("Building Matrix A");
 		//Build Matrix A
@@ -91,8 +94,8 @@ public class Energieeigenwerte2D {
 		System.out.println("Begin search");
 				
 		RealMatrix X = MatrixUtils.createRealMatrix(a_max, EW);
-		RealMatrix S = MatrixUtils.createRealMatrix(a_max,a_max);
-		RealMatrix G = MatrixUtils.createRealMatrix(a_max, a_max);
+		S = MatrixUtils.createRealMatrix(a_max,a_max);
+		G = MatrixUtils.createRealMatrix(a_max, a_max);
 		RealMatrix Lambda = MatrixUtils.createRealMatrix(EW,EW);
 		
 		for(int i = 0; i<EW; i++){
@@ -105,7 +108,7 @@ public class Energieeigenwerte2D {
 		Lambda = X.transpose().multiply(A.multiply(X));
 		S = A.multiply(X).subtract(X.multiply(Lambda));
 		G=S;
-		int iterations = 100;
+		int iterations = 101;
 		for(int i=0;i<iterations;i++){
 			System.out.println("Finished "+i*100/iterations+"%");
 			
@@ -123,12 +126,31 @@ public class Energieeigenwerte2D {
 				G=S;
 			}else{
 				//Standard
-				for(int j = 0; j<EW;j++){
-					RealVector g_alt = G.getColumnVector(j);
-					RealVector g = A.operate(X.getColumnVector(j)).subtract(X.getColumnVector(j).mapMultiply(RQ(A,X.getColumnVector(j))));
-					RealVector s = g.subtract(S.getColumnVector(j).mapMultiply(g.dotProduct(g)/g_alt.dotProduct(g_alt))); 
-					G.setColumnVector(j,g);
-					S.setColumnVector(j,s);
+				ArrayList<Thread> thread= new ArrayList<>();
+				for(int k = 0; k<EW;k++){
+					final int j = k;
+					final RealVector g_alt = G.getColumnVector(j);
+					final RealVector x = X.getColumnVector(j);
+					final RealVector s_ = S.getColumnVector(j);
+					thread.add(new Thread(){
+						public void run(){
+							RealVector g = A.operate(x).subtract(x.mapMultiply(RQ(A,x)));
+							RealVector s = g.subtract(s_.mapMultiply(g.dotProduct(g)/g_alt.dotProduct(g_alt))); 
+							G.setColumnVector(j,g);
+							S.setColumnVector(j,s);
+						}
+					});
+				}
+				for(Thread th: thread){
+					th.start();
+				}
+				for(Thread th: thread){
+					try {
+						th.join();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		}
@@ -183,22 +205,39 @@ public class Energieeigenwerte2D {
 		return X;
 	}
 
-	private RealMatrix minimizeRQ(RealMatrix X, RealMatrix S, RealMatrix A) {
-		for(int i = 0; i<X.getColumnDimension();i++){
-			double sx = S.getColumnVector(i).dotProduct(X.getColumnVector(i));
-			double xx = X.getColumnVector(i).dotProduct(X.getColumnVector(i));
-			double ss = S.getColumnVector(i).dotProduct(S.getColumnVector(i));
-			double sAs = S.getColumnVector(i).dotProduct(A.operate(S.getColumnVector(i)));
-			double xAs = X.getColumnVector(i).dotProduct(A.operate(S.getColumnVector(i)));
-			double xAx = X.getColumnVector(i).dotProduct(A.operate(X.getColumnVector(i)));
+	private RealMatrix minimizeRQ(final RealMatrix X, final RealMatrix S, final RealMatrix A) {
+		ArrayList<Thread> thread = new ArrayList<>();
+		for(int j = 0; j<X.getColumnDimension();j++){
+			final int i = j;
+			thread.add(new Thread(){
+				public void run(){
+					double sx = S.getColumnVector(i).dotProduct(X.getColumnVector(i));
+					double xx = X.getColumnVector(i).dotProduct(X.getColumnVector(i));
+					double ss = S.getColumnVector(i).dotProduct(S.getColumnVector(i));
+					double sAs = S.getColumnVector(i).dotProduct(A.operate(S.getColumnVector(i)));
+					double xAs = X.getColumnVector(i).dotProduct(A.operate(S.getColumnVector(i)));
+					double xAx = X.getColumnVector(i).dotProduct(A.operate(X.getColumnVector(i)));
 			
-			double p = sx*sAs-ss*xAs;
-			double q = xx*sAs-ss*xAx;
-			double r = xx*xAs-sx*xAx;
+					double p = sx*sAs-ss*xAs;
+					double q = xx*sAs-ss*xAx;
+					double r = xx*xAs-sx*xAx;
 			
-			double alpha = (-q + Math.sqrt(q*q - 4*p*r))/(2*p);
+					double alpha = (-q + Math.sqrt(q*q - 4*p*r))/(2*p);
 			
-			X.setColumnVector(i,X.getColumnVector(i).add(S.getColumnVector(i).mapMultiply(alpha)));
+					X.setColumnVector(i,X.getColumnVector(i).add(S.getColumnVector(i).mapMultiply(alpha)));
+				}
+			});
+		}
+		for(Thread th: thread){
+			th.start();
+		}
+		for(Thread th: thread){
+			try {
+				th.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return X;
 	}
