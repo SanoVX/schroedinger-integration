@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -35,12 +36,14 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.schrodinger.Einstellungen;
+import org.schrodinger.Energieeigenwerte2D;
 import org.schrodinger.SchroedingerIntegration;
 
 import javax.swing.JProgressBar;
 
 public class Hauptfenster extends JFrame {
 
+	private JCheckBox check2d;
 	private JPanel contentPane;
 	private JLabel lblEnergies;
 	private JButton btnclear, btnStart;
@@ -284,6 +287,10 @@ public class Hauptfenster extends JFrame {
 		simulation = new SchroedingerIntegration(g);
 		g.setLayout(new GridLayout(1, 0, 0, 0));
 		
+		check2d = new JCheckBox("2D-Simulation");
+		check2d.setBounds(width-buttonPlace, height-buttonDistance*7  - progressBarHeight - 2*bbuttonHeight-4*sbuttonHeight, buttonWidth, sbuttonHeight);
+		contentPane.add(check2d);
+		
 		final JButton btnFaster = new JButton("schneller");
 		final JButton btnSlower = new JButton("langsamer");
 		
@@ -366,70 +373,112 @@ public class Hauptfenster extends JFrame {
 			public void actionPerformed(ActionEvent e){
 				try{
 					if(btnStart.getText().equals("Start")){
-						menuBar.getMenu(1).getItem(0).setEnabled(false);
-						progressBar.setVisible(true);
-						progressBar.setMaximum(Einstellungen.maxNiveaus);
-						progressBar.setValue(0);
-						new Thread(){
-							public void run(){
-								try {
-									energies = simulation.run();
-								} catch (Exception e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-								if(energies == null){
-									return;
-								}
-								lblEnergies.setText("<html>Energieniveaus:");
-								for(int i = 0; i<energies.size();i++){
-									lblEnergies.setText(lblEnergies.getText()+"<br>"+
-												new DecimalFormat("###.###").format(energies.get(i))+" eV");
-								}
-								lblEnergies.setText(lblEnergies.getText()+"</html>");
-								
-								menuBar.getMenu(1).getItem(0).setEnabled(true);;
-								btnStart.setEnabled(true);
-								btnclear.setEnabled(true);
-								progressBar.setVisible(false);
-								btnFaster.setEnabled(true);
-								btnSlower.setEnabled(true);
-								buttonPause.setEnabled(true);
-							}		
-						}.start();
-						btnStart.setText("Stopp");
-						btnStart.setEnabled(false);
-						btnclear.setEnabled(false);
-						
-						Einstellungen.allesGezeichnet = false;
-						new Thread(){
-							public void run(){
-								while(!Einstellungen.allesGezeichnet){
-									progressBar.setValue(Einstellungen.berechneteNiveaus);
+						if(!check2d.isSelected()){
+							menuBar.getMenu(1).getItem(0).setEnabled(false);
+							progressBar.setVisible(true);
+							progressBar.setMaximum(Einstellungen.maxNiveaus);
+							progressBar.setValue(0);
+							new Thread(){
+								public void run(){
 									try {
-										Thread.sleep(100);
-									} catch (InterruptedException e) {
+										energies = simulation.run();
+									} catch (Exception e) {
 										// TODO Auto-generated catch block
 										e.printStackTrace();
 									}
+									if(energies == null){
+										return;
+									}
+									lblEnergies.setText("<html>Energieniveaus:");
+									for(int i = 0; i<energies.size();i++){
+										lblEnergies.setText(lblEnergies.getText()+"<br>"+
+												new DecimalFormat("###.###").format(energies.get(i))+" eV");
+									}
+									lblEnergies.setText(lblEnergies.getText()+"</html>");
+								
+									menuBar.getMenu(1).getItem(0).setEnabled(true);;
+									btnStart.setEnabled(true);
+									btnclear.setEnabled(true);
+									progressBar.setVisible(false);
+									btnFaster.setEnabled(true);
+									btnSlower.setEnabled(true);
+									buttonPause.setEnabled(true);
+								}		
+							}.start();
+							btnStart.setText("Stopp");
+							btnStart.setEnabled(false);
+							btnclear.setEnabled(false);
+						
+							Einstellungen.allesGezeichnet = false;
+							new Thread(){
+								public void run(){
+									while(!Einstellungen.allesGezeichnet){
+										progressBar.setValue(Einstellungen.berechneteNiveaus);
+										try {
+											Thread.sleep(100);
+										} catch (InterruptedException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+									}
+									btnStart.setText("Start");
+									btnclear.setEnabled(false);
+									btnFaster.setEnabled(false);
+									btnSlower.setEnabled(false);
+									buttonPause.setEnabled(false);
+									//simulation.clear();
 								}
-								btnStart.setText("Start");
-								btnclear.setEnabled(false);
-								btnFaster.setEnabled(false);
-								btnSlower.setEnabled(false);
-								buttonPause.setEnabled(false);
-								//simulation.clear();
-							}
-						}.start();
+							}.start();
+						}else{
+							menuBar.getMenu(1).getItem(0).setEnabled(false);
+							progressBar.setVisible(true);
+							progressBar.setMaximum(100);
+							progressBar.setValue(0);
+							final Energieeigenwerte2D E = new Energieeigenwerte2D(SchroedingerIntegration.potential);
+							new Thread(){
+								public void run(){
+									E.run();
+									
+									menuBar.getMenu(1).getItem(0).setEnabled(true);;
+									btnStart.setEnabled(true);
+									btnclear.setEnabled(true);
+									progressBar.setVisible(false);
+								}
+							}.start();
+							btnStart.setText("Stopp");
+							btnStart.setEnabled(false);
+							btnclear.setEnabled(false);
+							Einstellungen.allesGezeichnet = false;
+							new Thread(){
+								public void run(){
+									while(!Einstellungen.allesGezeichnet){
+										progressBar.setValue(Einstellungen.berechneteNiveaus);
+										try {
+											Thread.sleep(100);
+										} catch (InterruptedException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+									}
+									btnStart.setText("Start");
+									btnclear.setEnabled(false);
+									btnFaster.setEnabled(false);
+									btnSlower.setEnabled(false);
+									buttonPause.setEnabled(false);
+									//simulation.clear();
+								}
+							}.start();
+						}
 					}else{
-						simulation.stop();
 						buttonPause.setEnabled(false);
 						buttonPause.setText("Pause");
 						btnStart.setText("Start");
 					}
+
 				}catch(Exception ex){
 					ex.printStackTrace();
 				}
+				
 			}
 		});
 		

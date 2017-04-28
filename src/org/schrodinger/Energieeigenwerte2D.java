@@ -19,6 +19,9 @@ import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
 import org.apache.commons.math3.util.FastMath;
+import org.schrodinger.gui.Map2D;
+import org.schrodinger.potential.Coulomb;
+import org.schrodinger.potential.CoulombL;
 import org.schrodinger.potential.Parabel;
 import org.schrodinger.potential.Potential;
 import org.tc33.jheatchart.HeatChart;
@@ -33,19 +36,17 @@ public class Energieeigenwerte2D {
 	
 	private RealMatrix A,G,S;
 	
-	Potential c = new Parabel(0,1);
+	Potential c;
 	
 	int dimension = 2;
-	
 
-	public static void main(String[] args) {
-		Energieeigenwerte2D E = new Energieeigenwerte2D();
-		E.run();
-	}	
+	public Energieeigenwerte2D(Potential p){
+		c = p;
+	}
 	
 	public void run1(){
 		double step = 1E-10;
-		int N = 10;
+		int N = 500;
 		int EW = 1;
 		int a_max = (int) Math.pow(N, dimension);
 		
@@ -56,25 +57,30 @@ public class Energieeigenwerte2D {
 		}
 		
 		
-		final HeatChart chart = new HeatChart(to2D(A.toArray(),N));
-		chart.setColourScale(HeatChart.SCALE_LINEAR);
-		chart.setHighValueColour(Color.red);
-		chart.setLowValueColour(Color.blue);
-		try {
-			chart.saveToFile(new File("C:/Users/jneuser/Documents/test.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		JFrame frame=new JFrame();
+        frame.setLayout(new FlowLayout());
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setSize(500,600);
+        Map2D m = new Map2D();
+        m.setSize(frame.getWidth(), frame.getHeight());
+        m.setLocation(20, 20);
+        m.setData(to2D(A.toArray(),N));
+        m.repaint();
+        frame.setContentPane(m);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.repaint();
 	}
 
 	public void run(){
 		System.out.println("Search started with "+dimension+"dimensions");
+		System.out.println("Available Memory"+Runtime.getRuntime().maxMemory()/1024/1024+"MB");
 		double step = 1E-10;
-		int N = 60;
-		int EW = 5;
+		int N = 70;
+		int EW = Einstellungen.maxNiveaus;
 		int a_max = (int) Math.pow(N, dimension);
 		
-		double C = h*h/(8*pi*pi*u*step*step);
+		double C = -h*h/(8*pi*pi*u*step*step);
 		
 		A = MatrixUtils.createRealMatrix(a_max, a_max);
 				
@@ -114,6 +120,7 @@ public class Energieeigenwerte2D {
 		G=S;
 		int iterations = 101;
 		for(int i=0;i<iterations;i++){
+			Einstellungen.berechneteNiveaus = i*100/iterations;
 			System.out.println("Finished "+i*100/iterations+"%");
 			
 			X = minimizeRQ(X, S, A);
@@ -136,17 +143,16 @@ public class Energieeigenwerte2D {
 					final RealVector g_alt = G.getColumnVector(j);
 					final RealVector x = X.getColumnVector(j);
 					final RealVector s_ = S.getColumnVector(j);
-					thread.add(new Thread(){
+					Thread t = new Thread(){
 						public void run(){
 							RealVector g = A.operate(x).subtract(x.mapMultiply(RQ(A,x)));
 							RealVector s = g.subtract(s_.mapMultiply(g.dotProduct(g)/g_alt.dotProduct(g_alt))); 
 							G.setColumnVector(j,g);
 							S.setColumnVector(j,s);
 						}
-					});
-				}
-				for(Thread th: thread){
-					th.start();
+					};
+					t.start();
+					thread.add(t);
 				}
 				for(Thread th: thread){
 					try {
@@ -160,26 +166,21 @@ public class Energieeigenwerte2D {
 		}
 
 		for(int i = 0; i< EW; i++){
-			System.out.println(Lambda.getEntry(i,i)/e);
-			final HeatChart chart = new HeatChart(to2D(X.getColumn(i),N));
-			chart.setColourScale(HeatChart.SCALE_LINEAR);
-			chart.setHighValueColour(Color.red);
-			chart.setLowValueColour(Color.blue);
-			try {
 				JFrame frame=new JFrame();
 		        frame.setLayout(new FlowLayout());
-		        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		        frame.setSize(500,600);
-		        JLabel lbl = new JLabel(new ImageIcon(chart.getChartImage()));
-		        lbl.setBounds(0, 0, frame.getWidth(), frame.getHeight());
-		        frame.add(lbl);
+		        frame.setSize(500,500);
+		        frame.setBounds(i%3*500, i/3*500, 500,500);
+		        Map2D m = new Map2D();
+		        m.setSize(frame.getWidth(), frame.getHeight());
+		        m.setLocation(20, 20);
+		        m.setData(to2D(X.getColumn(i),N));
+		        m.repaint();
+		        frame.setContentPane(m);
 		        frame.setVisible(true);
 		        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				chart.saveToFile(new File("test"+i+".png"));//TODO set correct path
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		        frame.repaint();
 		}
+		Einstellungen.allesGezeichnet = true;
 	}
 
 	private double[][] to2D(double[] x, int N) {
@@ -213,7 +214,7 @@ public class Energieeigenwerte2D {
 		ArrayList<Thread> thread = new ArrayList<>();
 		for(int j = 0; j<X.getColumnDimension();j++){
 			final int i = j;
-			thread.add(new Thread(){
+			Thread t = new Thread(){
 				public void run(){
 					double sx = S.getColumnVector(i).dotProduct(X.getColumnVector(i));
 					double xx = X.getColumnVector(i).dotProduct(X.getColumnVector(i));
@@ -230,10 +231,9 @@ public class Energieeigenwerte2D {
 			
 					X.setColumnVector(i,X.getColumnVector(i).add(S.getColumnVector(i).mapMultiply(alpha)));
 				}
-			});
-		}
-		for(Thread th: thread){
-			th.start();
+			};
+			t.start();
+			thread.add(t);
 		}
 		for(Thread th: thread){
 			try {
