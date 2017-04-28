@@ -77,8 +77,9 @@ public class Matrix {
 	      double[][] ret = new double[m1][n2];
 	      for (int i = 0; i < m1; i++)
 	          for (int j = 0; j < n2; j++)
-	              for (int k = 0; k < n1; k++)
+	              for (int k = 0; k < n1; k++){
 	                  ret[i][j] += A[i][k] * B[k][j];
+	              }
 	      return ret;
 	}
 	

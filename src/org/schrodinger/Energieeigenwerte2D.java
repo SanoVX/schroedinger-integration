@@ -11,8 +11,10 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import org.apache.commons.math3.exception.MaxCountExceededException;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.EigenDecomposition;
 import org.apache.commons.math3.linear.MatrixUtils;
@@ -76,7 +78,7 @@ public class Energieeigenwerte2D {
 		System.out.println("Search started with "+dimension+"dimensions");
 		System.out.println("Available Memory"+Runtime.getRuntime().maxMemory()/1024/1024+"MB");
 		double step = 1E-10;
-		int N = 70;
+		int N = 50;
 		int EW = Einstellungen.maxNiveaus;
 		int a_max = (int) Math.pow(N, dimension);
 		
@@ -115,6 +117,7 @@ public class Energieeigenwerte2D {
 		}
 		gramSchmidt(X);
 		
+		Matrix.multiply(Matrix.transpose(X.getData()),Matrix.multiply(A.getData(), X.getData()));
 		Lambda = X.transpose().multiply(A.multiply(X));
 		S = A.multiply(X).subtract(X.multiply(Lambda));
 		G=S;
@@ -129,12 +132,18 @@ public class Energieeigenwerte2D {
 				//Ritz
 				RealMatrix A_ = X.transpose().multiply(A.multiply(X));
 				A_ = A_.scalarMultiply(1E20);
-				EigenDecomposition eigen = new EigenDecomposition(A_);
-				RealMatrix Q = eigen.getV();
-				Lambda = eigen.getD().scalarMultiply(1E-20);
-				X = X.multiply(Q);
-				S = A.multiply(X).subtract(X.multiply(Lambda));
-				G=S;
+				try{
+					EigenDecomposition eigen = new EigenDecomposition(A_);
+					RealMatrix Q = eigen.getV();
+					Lambda = eigen.getD().scalarMultiply(1E-20);
+					X = X.multiply(Q);
+					S = A.multiply(X).subtract(X.multiply(Lambda));
+					G=S;
+				}catch(MaxCountExceededException e){
+					JOptionPane.showMessageDialog(null,"Error: Konvergenz fehlgeschlagen");
+					Einstellungen.allesGezeichnet = true;
+					return;
+				}
 			}else{
 				//Standard
 				ArrayList<Thread> thread= new ArrayList<>();
@@ -250,11 +259,16 @@ public class Energieeigenwerte2D {
 		int i=0;
 		for(int j=dimension; j>0;j--){
 			int temp = (int)FastMath.floor(a/FastMath.pow(N, j-1));
-			i += (temp-(N+1)/2)*(temp-(N+1)/2);//Quadrate der einzelnen Zahlen addieren
+			i += (temp-(N+1)/2.)*(temp-(N+1)/2.);//Quadrate der einzelnen Zahlen addieren
 			a-=temp * FastMath.pow(N, j-1); // abziehen
 		}
 		
 		double x = Math.sqrt(i)*step;
-		return c.getPotential(x);
+		double ret = c.getPotential(x);
+		if(ret<-500*e){
+			return -500*e;
+		}else{
+			return ret;
+		}
 	}
 }
