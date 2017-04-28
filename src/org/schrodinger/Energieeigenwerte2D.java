@@ -1,6 +1,7 @@
 package org.schrodinger;
 
 import java.awt.FlowLayout;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -162,8 +163,10 @@ public class Energieeigenwerte2D {
 			}
 		}
 
+		Lambda = X.transpose().multiply(A.multiply(X));
 		for(int i = 0; i< EW; i++){
 				JFrame frame=new JFrame();
+				frame.setTitle(new DecimalFormat("##.### eV").format(Lambda.getEntry(i,i)/e));
 		        frame.setLayout(new FlowLayout());
 		        frame.setSize(500,500);
 		        frame.setBounds(i%3*500, i/3*500, 500,500);

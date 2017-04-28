@@ -422,11 +422,15 @@ public class Potentialeinstellungen extends JFrame {
 			});
 			break;
 		case Parabel:
+			
+			E_min_Eingabe.setText("0");
+			E_max_Eingabe.setText("20");
+			
 			JLabel lblparab1 = new JLabel("Tiefe des Scheitels: ");
 			lblparab1.setBounds(5, 5, 200, 10);
 			settings.add(lblparab1);
 			
-			parabelTiefe = new JTextField("-20");
+			parabelTiefe = new JTextField("0");
 			parabelTiefe.setBounds(205,5,50,20);
 			settings.add(parabelTiefe);
 			parabelTiefe.setColumns(5);
@@ -437,11 +441,11 @@ public class Potentialeinstellungen extends JFrame {
 						double value = Double.parseDouble(kastenHoehe.getText());
 						if(value<=0){
 							JOptionPane.showMessageDialog(null, "Error: Tiefe muss positiv sein","Error", JOptionPane.WARNING_MESSAGE);
-							parabelTiefe.setText("-20");
+							parabelTiefe.setText("0");
 						}
 					}catch(Exception exception){
 						JOptionPane.showMessageDialog(null, "Error: Geben Sie eine gueltige Zahl ein","Error", JOptionPane.ERROR_MESSAGE);
-						parabelTiefe.setText("-20");
+						parabelTiefe.setText("0");
 					}
 				}
 			});
