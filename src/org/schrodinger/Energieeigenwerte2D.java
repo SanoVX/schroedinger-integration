@@ -1,18 +1,10 @@
 package org.schrodinger;
 
-import java.awt.Color;
 import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 import org.apache.commons.math3.exception.MaxCountExceededException;
 import org.apache.commons.math3.linear.ArrayRealVector;
@@ -22,11 +14,7 @@ import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
 import org.apache.commons.math3.util.FastMath;
 import org.schrodinger.gui.Map2D;
-import org.schrodinger.potential.Coulomb;
-import org.schrodinger.potential.CoulombL;
-import org.schrodinger.potential.Parabel;
 import org.schrodinger.potential.Potential;
-import org.tc33.jheatchart.HeatChart;
 
 public class Energieeigenwerte2D {
 
