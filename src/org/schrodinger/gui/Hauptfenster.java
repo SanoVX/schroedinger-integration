@@ -469,7 +469,8 @@ public class Hauptfenster extends JFrame {
 								}
 							}.start();
 						}
-					}else{
+					}else{						
+						simulation.stop();
 						buttonPause.setEnabled(false);
 						buttonPause.setText("Pause");
 						btnStart.setText("Start");
