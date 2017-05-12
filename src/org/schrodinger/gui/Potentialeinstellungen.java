@@ -22,6 +22,7 @@ import javax.swing.border.EmptyBorder;
 import org.schrodinger.Einstellungen;
 import org.schrodinger.SchroedingerIntegration;
 import org.schrodinger.potential.Coulomb;
+import org.schrodinger.potential.CoulombL;
 import org.schrodinger.potential.Kasten;
 import org.schrodinger.potential.Parabel;
 import org.schrodinger.potential.PeriodicPotential;
@@ -47,6 +48,8 @@ public class Potentialeinstellungen extends JFrame {
 	private JTextField E_max_Eingabe;
 	private JTextField TextPeriodAnz;
 	private JTextField TextPeriodDist;
+
+	private JCheckBox coulomb2;
 
 
 	/**
@@ -134,16 +137,16 @@ public class Potentialeinstellungen extends JFrame {
 		lblDetails.setBounds(201, 38, 117, 22);
 		contentPane.add(lblDetails);
 		
-		if(potential.getClass().getName().equals("Coulomb")){
+		if(potential.getClass().getName().contains("Coulomb")){
 			potentialAuswahl = Potentialarten.Coulomb;
 			potOpt1.setSelected(true);
-		}else if(potential.getClass().getName().equals("Parabel")){
+		}else if(potential.getClass().getName().contains("Parabel")){
 			potentialAuswahl = Potentialarten.Parabel;
 			potOpt3.setSelected(true);
-		}else if(potential.getClass().getName().equals("Kasten")){
+		}else if(potential.getClass().getName().contains("Kasten")){
 			potentialAuswahl = Potentialarten.Kasten;
 			potOpt2.setSelected(true);
-		}else if(potential.getClass().getName().equals("UserFunction")){
+		}else if(potential.getClass().getName().contains("UserFunction")){
 			potentialAuswahl = Potentialarten.benutzerdefiniert;
 			potOpt4.setSelected(true);
 		}else {
@@ -287,7 +290,8 @@ public class Potentialeinstellungen extends JFrame {
 		this.dispose();
 		switch(potentialAuswahl){
 		case Coulomb:
-			potential = new Coulomb(Double.parseDouble(coulomb1.getText())*e);
+			potential = new CoulombL(Double.parseDouble(coulomb1.getText())*e);
+			Einstellungen.divideR = coulomb2.isSelected();
 			break;
 		case Kasten:
 			potential = new Kasten(Double.parseDouble(kastenBoden.getText())*e,Double.parseDouble(kastenHoehe.getText())*e,Double.parseDouble(kastenBreite.getText())*1E-9);
@@ -348,6 +352,10 @@ public class Potentialeinstellungen extends JFrame {
 					}
 				}
 			});
+			coulomb2 = new JCheckBox("durch Abstand dividieren");
+			coulomb2.setBounds(205,30,50,20);
+			coulomb2.setSelected(false);
+			settings.add(coulomb2);
 			break;
 		case Kasten:
 			JLabel label2 = new JLabel("unteres Niveau des Kasten in eV");

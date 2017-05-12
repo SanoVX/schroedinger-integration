@@ -77,7 +77,6 @@ public class Energieeigenwerte {
 				}*/
 
 				solution.setEnergie(E_current);
-				
 				if(first){
 					first = false;
 				}else{
@@ -94,7 +93,7 @@ public class Energieeigenwerte {
 			solution.cutoff(0.1, potential.getBorder(E_current));
 						
 			solution.normalizeMaximum();
-			
+						
 			solution.setEnergie(E_current);
 			
 			if(loesungsblock.size()>4){
@@ -135,10 +134,10 @@ public class Energieeigenwerte {
 		ArrayList<Double> Sx = new ArrayList<>(); // Liste mit x,y koordinaten der punkte 
 		
 		if(Einstellungen.ungerade){
-			Sx.add(0.); Sx.add(0.); // initialisiere ersten Punkt auf 0/0
+			Sx.add(-step/2); Sx.add(-1.); // initialisiere ersten Punkt auf 0/0
 			temp.add(Sx);				// fÃ¯Â¿Â½gt punkt in liste f hinzu
 			Sx = new ArrayList<>();
-			Sx.add(step); Sx.add(1.0); // initialisiere zweiten punkt auf step/step
+			Sx.add(step/2); Sx.add(1.0); // initialisiere zweiten punkt auf step/step
 			temp.add(Sx);
 		}else{
 			Sx.add(-step/2); Sx.add(1.); // initialisiere ersten Punkt auf 0/0
@@ -208,7 +207,11 @@ public class Energieeigenwerte {
 	 */
 	public Loesungskurve getSolution(){
 		if(searched){
-			solution.mirror(Einstellungen.ungerade);
+			if(!potential.getClass().getName().contains("Coulomb")){
+				solution.mirror(Einstellungen.ungerade);
+			}else if(Einstellungen.divideR){
+				solution.divideR();
+			}
 			return solution;
 		}else{
 			return null;

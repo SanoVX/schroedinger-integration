@@ -55,7 +55,7 @@ public class Map2D extends JPanel {
 		
 		for(int i = 0; i<rows; i++){
 			for(int j = 0; j<columns; j++){//1. Eintrag von 0 bis 360°
-				g.setColor(Color.getHSBColor(0.7f*(float) ((data[i][j]-min_value)/(max_value-min_value)), 1.0f, 1.0f));
+				g.setColor(Color.getHSBColor(0.7f*(float) ((data[i][j]*data[i][j]-min_value)/(max_value-min_value)), 1.0f, 1.0f));
 				g.fillRect((int)column_width*j, (int)row_width*i, (int)column_width, (int)row_width);
 			}
 		}
@@ -75,11 +75,11 @@ public class Map2D extends JPanel {
 		int columns = data[0].length; 
 		for(int i = 0; i<rows; i++){
 			for(int j = 0; j<columns; j++){
-				if(data[i][j]>max_value){
-					max_value = data[i][j];
+				if(data[i][j]*data[i][j]>max_value){
+					max_value = data[i][j]*data[i][j];
 				}
-				if(data[i][j]<min_value){
-					min_value = data[i][j];
+				if(data[i][j]*data[i][j]<min_value){
+					min_value = data[i][j]*data[i][j];
 				}
 			}
 		}

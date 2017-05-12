@@ -40,6 +40,11 @@ public class SchroedingerIntegration {
 		clear();
 		Einstellungen.berechneteNiveaus = 0;
 		ArrayList<Double> energies = new ArrayList<>();
+		
+		if(potential.getClass().getName().contains("Coulomb")){
+			Einstellungen.alleNiveaus =false;
+			Einstellungen.ungerade = true;
+		}
 
 		int dis = (int)(1/10.0*g.width);
 		int anzahlks = 2;

@@ -15,6 +15,8 @@ import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
 import org.apache.commons.math3.util.FastMath;
 import org.schrodinger.gui.Map2D;
+import org.schrodinger.potential.Coulomb;
+import org.schrodinger.potential.Parabel2;
 import org.schrodinger.potential.Potential;
 
 public class Energieeigenwerte2D {
@@ -33,6 +35,10 @@ public class Energieeigenwerte2D {
 
 	public Energieeigenwerte2D(Potential p){
 		c = p;
+	}
+	
+	public static void main(String[] args){
+		new Energieeigenwerte2D(new Parabel2(Einstellungen.e,1E-10)).run();
 	}
 	
 	public void run1(){
@@ -78,7 +84,7 @@ public class Energieeigenwerte2D {
 		System.out.println("Building Matrix A");
 		//Build Matrix A
 		for(int a=0;a<A.getRowDimension();a++){
-			A.setEntry(a, a, potential(a,N,step));
+			A.setEntry(a, a, potential(a,N,step));//zurückändern
 			for(int j=0;j<dimension;j++){
 				int temp = (int) Math.pow(N, j);
 				if(a+temp<a_max){
@@ -110,7 +116,7 @@ public class Energieeigenwerte2D {
 		Lambda = X.transpose().multiply(A.multiply(X));
 		S = A.multiply(X).subtract(X.multiply(Lambda));
 		G=S;
-		int iterations = 101;
+		int iterations = 301;
 		for(int i=0;i<iterations;i++){
 			Einstellungen.berechneteNiveaus = i*100/iterations;
 			System.out.println("Finished "+i*100/iterations+"%");
@@ -247,7 +253,8 @@ public class Energieeigenwerte2D {
 	}
 
 	private double potential(int a,int N, double step) {
-		int i=0;
+		float i=0;
+
 		for(int j=dimension; j>0;j--){
 			int temp = (int)FastMath.floor(a/FastMath.pow(N, j-1));
 			i += (temp-(N+1)/2.)*(temp-(N+1)/2.);//Quadrate der einzelnen Zahlen addieren
@@ -255,11 +262,33 @@ public class Energieeigenwerte2D {
 		}
 		
 		double x = Math.sqrt(i)*step;
+
 		double ret = c.getPotential(x);
-		if(ret<-500*e){
-			return -500*e;
+		if(ret<-200*e){
+			return ret;
 		}else{
 			return ret;
 		}
+	}
+	
+	private double potential2(int a0, int N, double step){
+		float i = 0;
+		if(dimension != 2){
+			throw new IllegalArgumentException("Dimension is not 2");
+		}
+		
+		int temp = (int)FastMath.floor(a0/FastMath.pow(N, 1));
+		double x = temp*step;
+		a0-=temp * FastMath.pow(N, 1); // abziehen
+
+		temp = (int)FastMath.floor(a0);
+		double y = temp*step;
+		
+			
+		double x0 = 1E-10;
+		double V0 = 1;
+		double c=1E30;
+				
+		return V0/FastMath.pow(x0, 4)*(x-x0)*(x-x0)*(x+x0)*(x+x0)+c*y*y;
 	}
 }

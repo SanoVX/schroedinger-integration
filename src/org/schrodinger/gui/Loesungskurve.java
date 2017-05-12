@@ -131,5 +131,12 @@ public class Loesungskurve extends ArrayList<ArrayList<Double>> {
 		return ret;
 	}
 
+	public void divideR() {
+		for (ArrayList<Double> e: this){
+			e.set(1,e.get(1)/e.get(0));
+		}
+		normalizeMaximum();
+	}
+
 
 }

@@ -32,6 +32,8 @@ public class Einstellungen {
 	public static boolean ungerade = true;
 	/**gerade und ungerade Niveaus?*/
 	public static boolean alleNiveaus = true;
+	/**durch R im Coulombfall dividieren*/
+	public static boolean divideR = false;
 
 	
 	//Steuerung des Hauptfensters
@@ -39,5 +41,6 @@ public class Einstellungen {
 	public static int berechneteNiveaus = 0;
 	/**Wurden alle Niveaus gezeichnet?*/
 	public volatile static boolean allesGezeichnet = false;
+
 	
 }
