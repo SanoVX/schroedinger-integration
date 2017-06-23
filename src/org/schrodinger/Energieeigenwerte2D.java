@@ -42,7 +42,7 @@ public class Energieeigenwerte2D {
 	}
 	
 	public void run1(){
-		double step = 1E-10;
+		double step = 1E-11;
 		int N = 500;
 		int EW = 1;
 		int a_max = (int) Math.pow(N, dimension);
@@ -72,7 +72,7 @@ public class Energieeigenwerte2D {
 	public void run(){
 		System.out.println("Search started with "+dimension+"dimensions");
 		System.out.println("Available Memory"+Runtime.getRuntime().maxMemory()/1024/1024+"MB");
-		double step = 1E-10;
+		double step = 5E-11;
 		int N = 50;
 		int EW = Einstellungen.maxNiveaus;
 		int a_max = (int) Math.pow(N, dimension);
@@ -84,7 +84,7 @@ public class Energieeigenwerte2D {
 		System.out.println("Building Matrix A");
 		//Build Matrix A
 		for(int a=0;a<A.getRowDimension();a++){
-			A.setEntry(a, a, potential(a,N,step));//zurückändern
+			A.setEntry(a, a, potential(a,N,step)+h*h*dimension/(4*pi*pi*u*step*step));//zurückändern
 			for(int j=0;j<dimension;j++){
 				int temp = (int) Math.pow(N, j);
 				if(a+temp<a_max){
@@ -116,7 +116,7 @@ public class Energieeigenwerte2D {
 		Lambda = X.transpose().multiply(A.multiply(X));
 		S = A.multiply(X).subtract(X.multiply(Lambda));
 		G=S;
-		int iterations = 301;
+		int iterations = 101;
 		for(int i=0;i<iterations;i++){
 			Einstellungen.berechneteNiveaus = i*100/iterations;
 			System.out.println("Finished "+i*100/iterations+"%");
@@ -172,7 +172,7 @@ public class Energieeigenwerte2D {
 		Lambda = X.transpose().multiply(A.multiply(X));
 		for(int i = 0; i< EW; i++){
 				JFrame frame=new JFrame();
-				frame.setTitle(new DecimalFormat("##.### eV").format(Lambda.getEntry(i,i)/e));
+				frame.setTitle(new DecimalFormat("##.### eV").format(RQ(A,X.getColumnVector(i))/e));
 		        frame.setLayout(new FlowLayout());
 		        frame.setSize(500,500);
 		        frame.setBounds(i%3*500, i/3*500, 500,500);
@@ -200,7 +200,7 @@ public class Energieeigenwerte2D {
 	}
 
 	private double RQ(RealMatrix A,RealVector x) {
-		return x.dotProduct(A.operate(x))/x.getNorm();
+		return x.dotProduct(A.operate(x))/x.getNorm()*x.getNorm();
 	}
 
 	private RealMatrix gramSchmidt(RealMatrix X) {	

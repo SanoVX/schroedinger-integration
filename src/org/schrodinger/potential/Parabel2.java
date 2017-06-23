@@ -18,7 +18,8 @@ public class Parabel2 extends Potential {
 	
 	@Override
 	public double getPotential(double x) {
-		return tiefe/FastMath.pow(breite, 4)*(x-breite)*(x-breite)*(x+breite)*(x+breite);
+		//return tiefe/FastMath.pow(breite, 4)*(x-breite)*(x-breite)*(x+breite)*(x+breite);
+		return 1-FastMath.pow(x*1E10,2)/6+FastMath.pow(x*1E10,4)/120;
 	}
 
 	@Override
